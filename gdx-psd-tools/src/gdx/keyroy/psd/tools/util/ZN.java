@@ -73,6 +73,7 @@ public class ZN {
 		public static final String used_libgdx_coordinate = "使用 libgdx 的坐标系";
 		public static final String used_texture_packer = "使用 TexturePacker 打包图片";
 		public static final String used_android_assets_name = "使用 Android Assets 名称规范";
+		public static final String copy_to_clipboard = "拷贝到剪切板";
 		//
 		public static final String help = "使用帮助" + "\n导入PSD文件的方法 " + "\n拖拽PSD文件 或者 文件夹 , 到  [PSD文件列表] (左上)面板"
 				+ "\n导入INI文件的方法 \n拖拽INI文件 或者 文件夹 , 到  [INI文件列表] (左下)面板" + "\n\nINI 的参数设定方式 有两种"

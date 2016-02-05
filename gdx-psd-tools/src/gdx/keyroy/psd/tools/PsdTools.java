@@ -24,6 +24,9 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -228,6 +231,17 @@ public class PsdTools {
 		mnMenuabout.add(menu_help);
 		//
 		JMenuItem menu_source_code = new JMenuItem(l("menu.source_code"));
+		menu_source_code.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+				Clipboard clipboard = toolkit.getSystemClipboard();
+				StringSelection selection = new StringSelection(
+						"https://github.com/keyroyx/com.keyroy.gdx.psd.tools");
+				clipboard.setContents(selection, null);
+				JOptionPane.showMessageDialog(frame, "https://github.com/keyroyx/com.keyroy.gdx.psd.tools",
+						L.get("text.copy_to_clipboard"), JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 		mnMenuabout.add(menu_source_code);
 
 		// »ù±¾Ãæ°å
