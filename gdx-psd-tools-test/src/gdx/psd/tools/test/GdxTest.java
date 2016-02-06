@@ -1,6 +1,5 @@
 package gdx.psd.tools.test;
 
-import gdx.keyroy.psd.tools.models.EditorConfig;
 import psd.PsdFile;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -31,7 +30,6 @@ import com.keyroy.util.json.Json;
 public class GdxTest {
 	public static void main(String[] args) {
 		try {
-			EditorConfig.load();
 			Json json = new Json(GdxTest.class.getResourceAsStream("/xianshiguanka.json"));
 			System.out.println(json);
 			final PsdFile psdFile = json.toObject(PsdFile.class);
@@ -86,13 +84,14 @@ public class GdxTest {
 		} else if (actor instanceof psd.Pic) {
 			psd.Pic image = (psd.Pic) actor;
 			TextureRegion texture = null;
-			if (EditorConfig.used_texture_packer) {
-				if (assetManager.isLoaded(psdFile.psdName, TextureAtlas.class)) {
+			if (psdFile.used_texture_packer) {
+				String fileName = psdFile.psdName + ".atlas";
+				if (assetManager.isLoaded(fileName, TextureAtlas.class)) {
 				} else {
-					assetManager.load(psdFile.psdName, TextureAtlas.class);
+					assetManager.load(fileName, TextureAtlas.class);
 					assetManager.finishLoading();
 				}
-				TextureAtlas textureAtlas = assetManager.get(psdFile.psdName, TextureAtlas.class);
+				TextureAtlas textureAtlas = assetManager.get(fileName, TextureAtlas.class);
 
 				Array<AtlasRegion> array = textureAtlas.getRegions();
 				for (AtlasRegion atlasRegion : array) {
@@ -107,7 +106,6 @@ public class GdxTest {
 				tx.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 				texture = new TextureRegion(tx);
 			}
-
 			rt = new Image(texture);
 		} else if (actor instanceof psd.Text) {
 			psd.Text psdLabel = (psd.Text) actor;
@@ -121,4 +119,5 @@ public class GdxTest {
 
 		return rt;
 	}
+
 }
