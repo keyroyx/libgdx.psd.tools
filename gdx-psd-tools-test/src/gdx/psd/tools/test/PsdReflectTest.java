@@ -14,7 +14,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -125,34 +124,26 @@ public class PsdReflectTest {
 		public static final void initButtonStyle(final Image image) {
 			image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
 			image.addListener(new ClickListener() {
-				private float pressedScale = 0.8f;
+				private float pressedScale = 0.85f;
 				private float duration = 0.1f;
 
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int pointer, int b) {
-					// play(image, duration, pressedScale,
-					// Interpolation.swingOut);
-					play(image, duration, pressedScale, Interpolation.circleIn);
+					play(image, pressedScale);
 					return true;
 				}
 
 				@Override
 				public void touchUp(InputEvent event, float x, float y, int pointer, int b) {
-					play(image, duration, 1, Interpolation.circleOut);
+					play(image, 1);
 				}
 
-				public void play(final Image image, float duration, float scale, Interpolation interpolation) {
+				public void play(final Image image, float scale) {
 					if (image != null) {
 						image.clearActions();
-						ScaleToAction scaleToAction = new ScaleToAction() {
-							protected void update(float percent) {
-								super.update(percent);
-								image.setScale(image.getScaleX(), image.getScaleY());
-							};
-						};
+						ScaleToAction scaleToAction = new ScaleToAction();
 						scaleToAction.setDuration(duration);
 						scaleToAction.setScale(scale);
-						scaleToAction.setInterpolation(interpolation);
 						image.addAction(scaleToAction);
 					}
 				}
