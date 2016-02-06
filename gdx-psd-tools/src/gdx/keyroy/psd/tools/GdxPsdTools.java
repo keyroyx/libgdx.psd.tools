@@ -172,6 +172,7 @@ public class GdxPsdTools {
 			}
 
 			if (actor != null) { // зјБъ
+				actor.layerName = layer.getName();
 				if (actor instanceof PsdFile) {
 				} else {
 					LayerBoundary boundary = LayerBoundary.getLayerBoundary(layer);
