@@ -61,9 +61,7 @@ public class GdxPsdTools {
 			try {
 				send("saving json on : " + psdData.getFileName(), MessageKey.H2);
 				PsdFile psdFile = translate(psdData);
-				if (EditorConfig.used_texture_packer) {
-					psdFile.psdName = psdData.getFileName() + ".atlas";
-				}
+				psdFile.used_texture_packer = EditorConfig.used_texture_packer;
 				String json = new Json(psdFile).toString();
 				System.out.println(json);
 				File file = new File(packFolder, psdData.getFileName() + ".json");

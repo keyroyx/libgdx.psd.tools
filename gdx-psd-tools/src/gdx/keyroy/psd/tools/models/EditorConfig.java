@@ -6,8 +6,11 @@ import gdx.keyroy.psd.tools.util.Message;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Date;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.keyroy.util.json.Json;
 
 public class EditorConfig {
@@ -20,6 +23,7 @@ public class EditorConfig {
 	// 使用 Android Assets 名称规范
 	public static boolean used_android_assets_name;
 
+	// 桌面项目加载方式
 	public static final void load() {
 		try {
 			File file = getFile();
@@ -36,6 +40,19 @@ public class EditorConfig {
 
 		if (export_path == null) {
 			export_path = new File(FileUtil.getRoot(), "out").getPath();
+		}
+	}
+
+	// GDX 项目加载方式
+	public static final void loadOnGdx() {
+		try {
+			FileHandle handle = Gdx.files.internal("EditorConfig");
+			InputStream inputStream = handle.read();
+			Json json = new Json(inputStream);
+			inputStream.close();
+			json.toObject(EditorConfig.class);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

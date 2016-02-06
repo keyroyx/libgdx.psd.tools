@@ -2,14 +2,16 @@ package psd;
 
 import library.psd.parser.object.PsdText;
 
+/***
+ * PSD 的文字
+ * @author roy
+ */
 public class Text extends Element {
-	/** The value. */
+	// 显示文字
 	public String text;
-
-	public float a;
-	public float r;
-	public float g;
-	public float b;
+	// 文字颜色
+	public float a, r, g, b;
+	// 文字大小
 	public int fontSize;
 
 	public void setPsdText(PsdText psdText) {
