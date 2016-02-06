@@ -238,7 +238,7 @@ public class PsdTools {
 				StringSelection selection = new StringSelection(
 						"https://github.com/keyroyx/com.keyroy.gdx.psd.tools");
 				clipboard.setContents(selection, null);
-				JOptionPane.showMessageDialog(frame, "https://github.com/keyroyx/com.keyroy.gdx.psd.tools",
+				JOptionPane.showMessageDialog(frame, "https://github.com/keyroyx/libgdx.psd.tools",
 						L.get("text.copy_to_clipboard"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
