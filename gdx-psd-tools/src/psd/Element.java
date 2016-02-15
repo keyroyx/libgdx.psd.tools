@@ -1,7 +1,5 @@
 package psd;
 
-import gdx.keyroy.psd.tools.models.LayerParam;
-
 import java.util.List;
 
 import com.keyroy.util.json.JsonAn;

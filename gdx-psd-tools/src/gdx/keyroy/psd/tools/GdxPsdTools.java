@@ -2,7 +2,6 @@ package gdx.keyroy.psd.tools;
 
 import gdx.keyroy.psd.tools.models.EditorConfig;
 import gdx.keyroy.psd.tools.models.EditorData;
-import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
@@ -27,6 +26,7 @@ import library.psd.LayersContainer;
 import library.psd.Psd;
 import psd.Element;
 import psd.Folder;
+import psd.LayerParam;
 import psd.Pic;
 import psd.PsdFile;
 import psd.Text;

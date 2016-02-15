@@ -2,7 +2,6 @@ package gdx.keyroy.psd.tools.widgets;
 
 import gdx.keyroy.psd.tools.models.EditorData;
 import gdx.keyroy.psd.tools.models.KeyVal;
-import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.models.ParamData;
 import gdx.keyroy.psd.tools.util.Icons;
@@ -40,6 +39,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import psd.LayerParam;
 import library.psd.Layer;
 import library.psd.Psd;
 

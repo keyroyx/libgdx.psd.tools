@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
  * @author roy
  */
 public class PsdGroup extends Group {
+	// 默认的资源加载器
 	private static AssetManager assetManager;
 	// 文件夹的源
 	private final psd.Folder psdFolder;

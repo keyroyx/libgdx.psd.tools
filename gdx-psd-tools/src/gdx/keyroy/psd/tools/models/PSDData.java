@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import psd.LayerParam;
 import library.psd.Layer;
 import library.psd.Psd;
 

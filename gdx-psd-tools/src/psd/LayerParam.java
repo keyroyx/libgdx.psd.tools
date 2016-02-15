@@ -1,4 +1,4 @@
-package gdx.keyroy.psd.tools.models;
+package psd;
 
 public class LayerParam {
 	// Í¼²ãid
