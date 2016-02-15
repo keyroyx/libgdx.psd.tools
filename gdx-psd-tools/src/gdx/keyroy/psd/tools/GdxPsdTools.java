@@ -2,6 +2,7 @@ package gdx.keyroy.psd.tools;
 
 import gdx.keyroy.psd.tools.models.EditorConfig;
 import gdx.keyroy.psd.tools.models.EditorData;
+import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
@@ -26,7 +27,7 @@ import library.psd.LayersContainer;
 import library.psd.Psd;
 import psd.Element;
 import psd.Folder;
-import psd.LayerParam;
+import psd.Param;
 import psd.Pic;
 import psd.PsdFile;
 import psd.Text;
@@ -145,8 +146,15 @@ public class GdxPsdTools {
 		psdFile.height = psd.getHeight();
 		psdFile.maxWidth = rect.width;
 		psdFile.maxHeight = rect.height;
-		psdFile.params = psdData.getLayerParams(null);
 		psdFile.psdName = psdData.getFileName();
+		// 参数
+		List<LayerParam> layerParams = psdData.getLayerParams(null);
+		if (layerParams != null) {
+			psdFile.params = new ArrayList<Param>(layerParams.size());
+			for (LayerParam layerParam : layerParams) {
+				psdFile.params.add(new Param(layerParam));
+			}
+		}
 		addChild(psdData, psd, psdFile);
 		return psdFile;
 	}
@@ -193,11 +201,9 @@ public class GdxPsdTools {
 				// 事件 , 这里需要去掉事件的映射 id
 				List<LayerParam> layerParams = psdData.getLayerParams(layer);
 				if (layerParams != null) {
-					actor.params = new ArrayList<LayerParam>(layerParams.size());
+					actor.params = new ArrayList<Param>(layerParams.size());
 					for (LayerParam layerParam : layerParams) {
-						LayerParam newParam = new LayerParam(layerParam);
-						newParam.setLayerId(null);
-						actor.params.add(newParam);
+						actor.params.add(new Param(layerParam));
 					}
 				}
 				//

@@ -15,7 +15,7 @@ public class Element {
 	// 坐标 , 大小
 	public int x, y, width, height;
 	// 绑定参数
-	public List<LayerParam> params;
+	public List<Param> params;
 
 	// 自定义对象
 	@JsonAn(skip = true)

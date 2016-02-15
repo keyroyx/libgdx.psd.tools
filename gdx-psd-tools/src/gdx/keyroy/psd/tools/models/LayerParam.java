@@ -1,4 +1,4 @@
-package psd;
+package gdx.keyroy.psd.tools.models;
 
 public class LayerParam {
 	// Í¼²ãid
@@ -9,12 +9,6 @@ public class LayerParam {
 	protected String data;
 
 	public LayerParam() {
-	}
-
-	public LayerParam(LayerParam param) {
-		this.layerId = param.layerId;
-		this.paramId = param.paramId;
-		this.data = param.data;
 	}
 
 	public String getLayerId() {

@@ -12,8 +12,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import psd.LayerParam;
-
 import com.keyroy.util.json.Json;
 import com.keyroy.util.json.JsonAn;
 

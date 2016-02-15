@@ -2,6 +2,7 @@ package gdx.keyroy.psd.tools.widgets;
 
 import gdx.keyroy.psd.tools.models.EditorData;
 import gdx.keyroy.psd.tools.models.KeyVal;
+import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.L;
 import gdx.keyroy.psd.tools.util.Message;
@@ -37,7 +38,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import psd.LayerParam;
 import library.psd.Layer;
 
 @SuppressWarnings("serial")
