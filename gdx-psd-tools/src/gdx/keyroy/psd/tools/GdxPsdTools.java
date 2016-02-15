@@ -149,7 +149,7 @@ public class GdxPsdTools {
 		psdFile.psdName = psdData.getFileName();
 		// 参数
 		List<LayerParam> layerParams = psdData.getLayerParams(null);
-		if (layerParams != null) {
+		if (layerParams != null && layerParams.size() > 0) {
 			psdFile.params = new ArrayList<Param>(layerParams.size());
 			for (LayerParam layerParam : layerParams) {
 				psdFile.params.add(new Param(layerParam));
@@ -200,7 +200,7 @@ public class GdxPsdTools {
 				folder.childs.add(actor);
 				// 事件 , 这里需要去掉事件的映射 id
 				List<LayerParam> layerParams = psdData.getLayerParams(layer);
-				if (layerParams != null) {
+				if (layerParams != null && layerParams.size() > 0) {
 					actor.params = new ArrayList<Param>(layerParams.size());
 					for (LayerParam layerParam : layerParams) {
 						actor.params.add(new Param(layerParam));

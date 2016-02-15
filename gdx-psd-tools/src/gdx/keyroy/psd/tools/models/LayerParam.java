@@ -8,9 +8,6 @@ public class LayerParam {
 	// ²ÎÊıÄÚÈİ
 	protected String data;
 
-	public LayerParam() {
-	}
-
 	public String getLayerId() {
 		return layerId;
 	}
