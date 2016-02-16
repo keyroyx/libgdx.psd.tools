@@ -8,9 +8,13 @@ public class Icons {
 	public static final Icon PRARM_FILE = new ImageIcon(Icons.class.getResource("/folder.png"));
 	public static final Icon PRARM_LIST_FILE = new ImageIcon(Icons.class.getResource("/documentation.png"));
 	public static final Icon PRARM_KEY_VAL = new ImageIcon(Icons.class.getResource("/config.png"));
-
+	//
 	public static final Icon LAYER_FOLDER = new ImageIcon(Icons.class.getResource("/folder.png"));
 	public static final Icon LAYER_IMAGE = new ImageIcon(Icons.class.getResource("/custom.png"));
 	public static final Icon LAYER_TEXT = new ImageIcon(Icons.class.getResource("/text.png"));
 
+	//
+	public static final Icon CLASS_FILE = new ImageIcon(Icons.class.getResource("/class.png"));
+	public static final Icon IMAGE_FILE = new ImageIcon(Icons.class.getResource("/custom.png"));
+	public static final Icon IMAGE_ATLAS_FILE = new ImageIcon(Icons.class.getResource("/uiForm.png"));
 }

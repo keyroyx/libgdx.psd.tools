@@ -109,6 +109,7 @@ public class GdxPsdTools {
 			String imagePath = psdData.getFileName() + ".atlas";
 			Message.send("saving image : " + imagePath);
 			packer.pack(packFolder, imagePath);
+
 		} else {
 			for (Layer layer : layers) {
 				BufferedImage bufferedImage = layer.getImage();
