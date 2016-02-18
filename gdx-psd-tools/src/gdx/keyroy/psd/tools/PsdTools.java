@@ -5,7 +5,7 @@ import gdx.keyroy.psd.tools.models.EditorData;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.PSDUtil;
 import gdx.keyroy.psd.tools.util.SwingUtil;
@@ -279,14 +279,14 @@ public class PsdTools {
 		{//
 			final JLabel message_label = new JLabel(" ");
 			panel_bottom.add(message_label);
-			Message.register(String.class, new MessageListener<String>() {
+			Messager.register(String.class, new MessageListener<String>() {
 				@Override
 				public void onMessage(String t, Object[] params) {
 					message_label.setText(t);
 					frame.repaint();
 				}
 			});
-			Message.register(PSDData.class, new MessageListener<PSDData>() {
+			Messager.register(PSDData.class, new MessageListener<PSDData>() {
 				@Override
 				public void onMessage(PSDData t, Object[] params) {
 					Psd psd = t.getCache();

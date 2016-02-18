@@ -1,10 +1,11 @@
-package gdx.keyroy.data.tools.util;
+package gdx.keyroy.data.tools;
 
+import gdx.keyroy.data.tools.models.ClassElement;
 import gdx.keyroy.data.tools.models.ClassPath;
 import gdx.keyroy.data.tools.models.ImagePath;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,23 +23,20 @@ public class DataManage {
 	@JsonAn(skip = true)
 	private static int hashCode;
 	// 类数据
+	@JsonAn(skip = true)
 	private static List<ClassPath> classPaths = new ArrayList<ClassPath>();
 	// 图片数据
 	private static List<ImagePath> imagePaths = new ArrayList<ImagePath>();
 
 	// 添加新的类
 	public static final void addClass(Class<?> clazz, boolean autoSave) {
-		addClass((File) null, clazz, autoSave);
-	}
-
-	// 添加新的类
-	public static final void addClass(File jarFile, Class<?> clazz, boolean autoSave) {
 		for (ClassPath classPath : classPaths) {
 			if (classPath.getClassName().equals(clazz.getName())) {
 				return;
 			}
 		}
-		classPaths.add(new ClassPath(jarFile, clazz));
+		ClassPath classPath = new ClassPath(clazz);
+		classPaths.add(classPath);
 		if (autoSave) {
 			save();
 		}
@@ -92,9 +90,31 @@ public class DataManage {
 			if (file.exists()) {
 				FileInputStream inputStream = new FileInputStream(file);
 				Json json = new Json(inputStream);
-				inputStream.close();
 				json.toObject(DataManage.class);
+				inputStream.close();
 				//
+			}
+			// 加载 ClassPath
+			for (ClassPath classPath : DataManage.classPaths) {
+				File folder = getFile(classPath);
+				if (folder.exists()) {
+					Class<?> clazz = classPath.getClazz();
+					File[] files = folder.listFiles();
+					for (File jsonFile : files) {
+						try {
+							FileInputStream stream = new FileInputStream(jsonFile);
+							Json j = new Json(stream);
+							stream.close();
+							Object object = j.toObject(clazz);
+							ClassElement classElement = new ClassElement();
+							classElement.setObjId(jsonFile.getName());
+							classElement.setObject(object);
+							classPath.addElement(classElement);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,15 +129,64 @@ public class DataManage {
 				hashCode = text.hashCode();
 				System.out.println("save data");
 				FileUtil.save(getFile(), text);
-				Message.send(L.get("Message.data_save") + "    " + new Date().toString());
+				Messager.send(L.get("Message.data_save") + "    " + new Date().toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public static final void reset(ClassElement classElement, String id) {
+		try {
+			delete(classElement);
+			classElement.setObjId(id);
+			save(classElement);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	public static final void delete(ClassElement classElement) {
+
+		ClassPath classPath = classElement.getParent();
+		// 删除元素
+		classPath.delElement(classElement);
+		// 删除文件
+		File folder = getFile(classPath);
+		File file = new File(folder, classElement.getObjId());
+		file.delete();
+
+	}
+
+	public static final void save(ClassElement classElement) {
+		try {
+			ClassPath classPath = classElement.getParent();
+			File folder = getFile(classPath);
+			if (folder.exists() == false) {
+				folder.mkdirs();
+			}
+			File jsonFile = new File(folder, classElement.getObjId());
+			jsonFile.createNewFile();
+			FileUtil.save(jsonFile, new Json(classElement.getObject()).toString());
+			Messager.send(L.get("message.class_element_save") + "  " + classPath.getClassName() + "  "
+					+ classElement.getObjId() + "  " + new Date().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static final void save(List<ClassElement> classElements) {
+		for (ClassElement classElement : classElements) {
+			save(classElement);
+		}
+	}
+
 	private static final File getFile() {
 		return new File(DataManage.class.getSimpleName());
+	}
+
+	private static final File getFile(ClassPath classPath) {
+		return new File(classPath.getClassName());
 	}
 
 	public static final List<ClassPath> getClassPaths() {

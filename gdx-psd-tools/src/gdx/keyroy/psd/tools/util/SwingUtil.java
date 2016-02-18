@@ -7,17 +7,28 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceContext;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 
@@ -62,15 +73,101 @@ public class SwingUtil {
 		});
 	}
 
+	public static final void addPopup(Component component, final PopmenuListener listener) {
+		component.addMouseListener(new SwingUtil.MouseRightButtonListener() {
+			@Override
+			protected void onMouseClicked(MouseEvent e) {
+				JPopupMenu popup = new JPopupMenu();
+				listener.onInitPopmenu(popup);
+				if (popup.getComponentCount() > 0) {
+					popup.show(e.getComponent(), e.getX(), e.getY());
+					popup.repaint();
+				}
+			}
+		});
+	}
+
+	public static final void addPopup(JPopupMenu popupMenu, String label, ActionListener actionListener) {
+		JMenuItem menuItem = new JMenuItem(L.get(label));
+		menuItem.addActionListener(actionListener);
+		popupMenu.add(menuItem);
+	}
+
 	//
 	public static final DropTarget addDropIn(Component component, final DropInAdapter dropInAdapter) {
 		return new DropTarget(component, dropInAdapter);
+	}
+
+	public static final void addDropOut(Component component, final OnPopOutListener onPopOutListener) {
+		addDropOut(component, onPopOutListener, null);
+	}
+
+	public static final void addDropOut(Component component, final OnPopOutListener onPopOutListener,
+			final DragDropEndListener listener) {
+		// http://www.java2s.com/Code/Java/Swing-JFC/TreeDragandDrop.htm
+		DragSource dragSource = DragSource.getDefaultDragSource();
+		dragSource.createDefaultDragGestureRecognizer(component, DnDConstants.ACTION_COPY_OR_MOVE,
+				new DragGestureListener() {
+
+					@Override
+					public void dragGestureRecognized(DragGestureEvent dragGestureEvent) {
+						dragGestureEvent.startDrag(DragSource.DefaultCopyDrop, new Transferable() {
+
+							@Override
+							public boolean isDataFlavorSupported(DataFlavor flavor) {
+								return true;
+
+							}
+
+							@Override
+							public DataFlavor[] getTransferDataFlavors() {
+								return new DataFlavor[] { DataFlavor.stringFlavor };
+							}
+
+							@Override
+							public Object getTransferData(DataFlavor flavor)
+									throws UnsupportedFlavorException, IOException {
+								return onPopOutListener.onPopOut();
+							}
+						}, new DragSourceAdapter() {
+							@Override
+							public void dragEnter(DragSourceDragEvent dragSourceDragEvent) {
+								DragSourceContext context = dragSourceDragEvent.getDragSourceContext();
+								int dropAction = dragSourceDragEvent.getDropAction();
+								if ((dropAction & DnDConstants.ACTION_COPY) != 0) {
+									context.setCursor(DragSource.DefaultCopyDrop);
+								} else if ((dropAction & DnDConstants.ACTION_MOVE) != 0) {
+									context.setCursor(DragSource.DefaultMoveDrop);
+								} else {
+									context.setCursor(DragSource.DefaultCopyNoDrop);
+								}
+							}
+
+							@Override
+							public void dragDropEnd(DragSourceDropEvent dragSourceDropEvent) {
+								if (dragSourceDropEvent.getDropSuccess()) {
+									if (listener != null) {
+										listener.dragDropEnd(dragSourceDropEvent);
+									}
+								}
+							}
+						});
+					}
+				});
+
 	}
 
 	public static class MouseRightButtonListener extends MouseButtonListener {
 		@Override
 		public boolean isListenerButton(MouseEvent e) {
 			return e.getButton() == MouseEvent.BUTTON3;
+		}
+	}
+
+	public static class MouseLeftButtonListener extends MouseButtonListener {
+		@Override
+		public boolean isListenerButton(MouseEvent e) {
+			return e.getButton() == MouseEvent.BUTTON1;
 		}
 	}
 
@@ -123,7 +220,6 @@ public class SwingUtil {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("mousePressed");
 			if (isListenerButton(e)) {
 				isPressed = true;
 				onMousePressed(e);
@@ -252,4 +348,11 @@ public class SwingUtil {
 
 	}
 
+	public interface OnPopOutListener {
+		public String onPopOut();
+	}
+
+	public interface DragDropEndListener {
+		public void dragDropEnd(DragSourceDropEvent dragSourceDropEvent);
+	}
 }

@@ -1,6 +1,6 @@
 package gdx.keyroy.psd.tools.widgets;
 
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.MessageListener;
 
@@ -65,7 +65,7 @@ public class DialogProgress extends JDialog {
 		contentPanel.add(h3);
 
 		//
-		Message.register(String.class, messageListener);
+		Messager.register(String.class, messageListener);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -74,7 +74,7 @@ public class DialogProgress extends JDialog {
 
 			@Override
 			public void windowClosed(WindowEvent e) {
-				Message.unregister(String.class, messageListener);
+				Messager.unregister(String.class, messageListener);
 			}
 		});
 	}

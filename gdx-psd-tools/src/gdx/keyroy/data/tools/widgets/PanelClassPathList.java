@@ -1,10 +1,10 @@
 package gdx.keyroy.data.tools.widgets;
 
+import gdx.keyroy.data.tools.DataManage;
 import gdx.keyroy.data.tools.models.ClassPath;
-import gdx.keyroy.data.tools.util.DataManage;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 
 import java.awt.BorderLayout;
@@ -67,7 +67,7 @@ public class PanelClassPathList extends JPanel {
 						}
 						DataManage.save();
 						updateList();
-						Message.send(MessageKey.CLEAN);
+						Messager.send(MessageKey.CLEAN);
 					}
 				}
 			}

@@ -2,7 +2,7 @@ package gdx.keyroy.psd.tools.models;
 
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -129,7 +129,7 @@ public class EditorData {
 				System.out.println("save data");
 				FileUtil.save(getFile(), text);
 
-				Message.send(L.get("Message.data_save") + "    " + new Date().toString());
+				Messager.send(L.get("Message.data_save") + "    " + new Date().toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

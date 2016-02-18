@@ -5,7 +5,7 @@ import gdx.keyroy.psd.tools.models.KeyVal;
 import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.PSDUtil;
@@ -68,7 +68,7 @@ public class PanelPSDParamTable extends JPanel {
 	private final void initMessageListener() {
 
 		// 点击到 PSD 文件
-		Message.register(PSDData.class, new MessageListener<PSDData>() {
+		Messager.register(PSDData.class, new MessageListener<PSDData>() {
 			@Override
 			public void onMessage(PSDData t, Object[] params) {// psd 文件变化
 				model.show(t, null);
@@ -76,7 +76,7 @@ public class PanelPSDParamTable extends JPanel {
 		});
 
 		// 点击到图层
-		Message.register(Layer.class, new MessageListener<Layer>() {
+		Messager.register(Layer.class, new MessageListener<Layer>() {
 			@Override
 			public void onMessage(Layer t, Object[] params) { // 图层变化
 				PSDData psdData = get(PSDData.class, params);
@@ -87,7 +87,7 @@ public class PanelPSDParamTable extends JPanel {
 		});
 
 		// 清除
-		Message.register(MessageKey.class, new MessageListener<MessageKey>() {
+		Messager.register(MessageKey.class, new MessageListener<MessageKey>() {
 
 			@Override
 			public void onMessage(MessageKey t, Object[] params) {
@@ -125,7 +125,7 @@ public class PanelPSDParamTable extends JPanel {
 								Layer layer = PSDUtil.getLayerById(model.psdData.getCache(),
 										param.getLayerId());
 								if (layer != null) {
-									Message.send(layer, MessageKey.OPEN);
+									Messager.send(layer, MessageKey.OPEN);
 								}
 							}
 						});

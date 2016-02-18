@@ -2,7 +2,7 @@ package gdx.keyroy.psd.tools.widgets;
 
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.CenterLayout;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.PSDUtil;
@@ -52,7 +52,7 @@ public class PanelPsdViewer extends JPanel {
 		add(scrollPane);
 
 		// 点击到 PSD 文件
-		Message.register(PSDData.class, new MessageListener<PSDData>() {
+		Messager.register(PSDData.class, new MessageListener<PSDData>() {
 			@Override
 			public void onMessage(PSDData t, Object[] params) {
 				// if (is(MessageKey.SELECTED, params)) {
@@ -64,7 +64,7 @@ public class PanelPsdViewer extends JPanel {
 		});
 
 		// 点击到图层
-		Message.register(Layer.class, new MessageListener<Layer>() {
+		Messager.register(Layer.class, new MessageListener<Layer>() {
 			@Override
 			public void onMessage(Layer t, Object[] params) {
 				psdView.setLayer(t);
@@ -72,7 +72,7 @@ public class PanelPsdViewer extends JPanel {
 		});
 
 		// 清除
-		Message.register(MessageKey.class, new MessageListener<MessageKey>() {
+		Messager.register(MessageKey.class, new MessageListener<MessageKey>() {
 
 			@Override
 			public void onMessage(MessageKey t, Object[] params) {

@@ -7,7 +7,7 @@ import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.models.ParamData;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.PSDUtil;
@@ -71,10 +71,10 @@ public class PanelPSDLayerTree extends JPanel {
 							.getLastPathComponent();
 					Object object = treeNode.getObject();
 					if (object instanceof Psd) {
-						Message.send(psdData);
+						Messager.send(psdData);
 					} else if (object instanceof Layer) {
 						Layer layer = (Layer) object;
-						Message.send(layer, psdData);
+						Messager.send(layer, psdData);
 					}
 				}
 			}
@@ -82,7 +82,7 @@ public class PanelPSDLayerTree extends JPanel {
 		scrollPane.setViewportView(layersTree);
 
 		// 点击到图层
-		Message.register(PSDData.class, new MessageListener<PSDData>() {
+		Messager.register(PSDData.class, new MessageListener<PSDData>() {
 			@Override
 			public void onMessage(PSDData t, Object[] params) {
 				psdData = t;
@@ -96,7 +96,7 @@ public class PanelPSDLayerTree extends JPanel {
 		});
 
 		// 点击到图层
-		Message.register(Layer.class, new MessageListener<Layer>() {
+		Messager.register(Layer.class, new MessageListener<Layer>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Layer t, Object[] params) {
@@ -132,7 +132,7 @@ public class PanelPSDLayerTree extends JPanel {
 		});
 
 		// 清除
-		Message.register(MessageKey.class, new MessageListener<MessageKey>() {
+		Messager.register(MessageKey.class, new MessageListener<MessageKey>() {
 			@Override
 			public void onMessage(MessageKey t, Object[] params) {
 				if (t == MessageKey.CLEAN) {
@@ -219,9 +219,9 @@ public class PanelPSDLayerTree extends JPanel {
 					//
 					EditorData.save();
 					if (layer != null) {
-						Message.send(layer, psdData);
+						Messager.send(layer, psdData);
 					} else {
-						Message.send(Layer.class, psdData);
+						Messager.send(Layer.class, psdData);
 					}
 				}
 			}

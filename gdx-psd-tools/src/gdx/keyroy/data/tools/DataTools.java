@@ -1,13 +1,10 @@
 package gdx.keyroy.data.tools;
 
-import gdx.keyroy.data.tools.util.DataManage;
 import gdx.keyroy.data.tools.widgets.Lable;
-import gdx.keyroy.data.tools.widgets.PanelClassPathList;
-import gdx.keyroy.data.tools.widgets.PanelElementList;
+import gdx.keyroy.data.tools.widgets.PanelElementTable;
+import gdx.keyroy.data.tools.widgets.PanelElementTree;
 import gdx.keyroy.data.tools.widgets.PanelFieldsTree;
-import gdx.keyroy.data.tools.widgets.PanelImagePathList;
 import gdx.keyroy.psd.tools.models.EditorConfig;
-import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.L;
 import gdx.keyroy.psd.tools.util.SwingUtil;
 
@@ -17,14 +14,17 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.JScrollPane;
+
+import a.test.Monster;
 
 public class DataTools {
-
-	private JFrame frmLabledatamanage;
+	protected static float scale = 0.5f;
+	private JFrame frame;
 
 	private static final void init() throws Exception {
 		// LOOK AND FEEL
@@ -32,10 +32,12 @@ public class DataTools {
 		// 加载语言
 		L.load("/zn");
 		// 加载编辑器 数据
+		DataManage.addClass(Monster.class, false);
 		DataManage.load();
-		DataManage.addClass(PSDData.class, false);
 		// 加载配置信息
 		EditorConfig.load();
+
+		scale = 1;
 	}
 
 	/**
@@ -48,7 +50,8 @@ public class DataTools {
 				public void run() {
 					try {
 						DataTools window = new DataTools();
-						window.frmLabledatamanage.setVisible(true);
+						SwingUtil.center(window.frame);
+						window.frame.setVisible(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -73,57 +76,51 @@ public class DataTools {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmLabledatamanage = new JFrame();
-		frmLabledatamanage.setTitle(L.get("window.data_manage"));
-		frmLabledatamanage.setBounds(0, 0, 1280, 720);
-		frmLabledatamanage.setMinimumSize(new Dimension(1280, 720));
-		frmLabledatamanage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame = new JFrame();
+		frame.setTitle(L.get("window.data_manage"));
+		frame.setBounds(0, 0, scale(1280), scale(720));
+		frame.setMinimumSize(new Dimension(scale(1280), scale(720)));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JMenuBar menuBar = new JMenuBar();
-		frmLabledatamanage.setJMenuBar(menuBar);
+		frame.setJMenuBar(menuBar);
 
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.5);
-		splitPane.setPreferredSize(new Dimension(320, 320));
-		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		frmLabledatamanage.getContentPane().add(splitPane, BorderLayout.WEST);
+		JMenu mnNewMenu = new JMenu("New menu");
+		menuBar.add(mnNewMenu);
 
 		JPanel panel_class_tree = new JPanel();
-		splitPane.setLeftComponent(panel_class_tree);
+		panel_class_tree.setPreferredSize(new Dimension(scale(320), scale(320)));
 		panel_class_tree.setLayout(new BorderLayout(0, 0));
+		frame.getContentPane().add(panel_class_tree, BorderLayout.WEST);
 
-		JLabel lable_class_tree = new Lable("lable.class_tree");
-		panel_class_tree.add(lable_class_tree, BorderLayout.NORTH);
+		JLabel label_element_tree = new Lable("lable.class_tree");
+		label_element_tree.setText("label.element_tree");
+		panel_class_tree.add(label_element_tree, BorderLayout.NORTH);
 
-		panel_class_tree.add(new PanelClassPathList(), BorderLayout.CENTER);
-
-		JPanel panel_image_list = new JPanel();
-		splitPane.setRightComponent(panel_image_list);
-		panel_image_list.setLayout(new BorderLayout(0, 0));
-
-		JLabel label_image_list = new Lable("label.image_list");
-		panel_image_list.add(label_image_list, BorderLayout.NORTH);
-
-		panel_image_list.add(new PanelImagePathList(), BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(new PanelElementTree());
+		panel_class_tree.add(scrollPane, BorderLayout.CENTER);
 
 		JPanel panel_elements = new JPanel();
-		frmLabledatamanage.getContentPane().add(panel_elements, BorderLayout.CENTER);
+		frame.getContentPane().add(panel_elements, BorderLayout.CENTER);
 		panel_elements.setLayout(new BorderLayout(0, 0));
 
-		JLabel lable_class_name = new Lable("label.class_name");
-		panel_elements.add(lable_class_name, BorderLayout.NORTH);
-
-		panel_elements.add(new PanelElementList(), BorderLayout.CENTER);
+		PanelElementTable panelElementTable = new PanelElementTable();
+		panel_elements.add(panelElementTable, BorderLayout.CENTER);
 
 		JPanel panel_field_tree = new JPanel();
-		panel_field_tree.setPreferredSize(new Dimension(320, 320));
-		frmLabledatamanage.getContentPane().add(panel_field_tree, BorderLayout.EAST);
+		panel_field_tree.setPreferredSize(new Dimension(scale(320), scale(320)));
+		frame.getContentPane().add(panel_field_tree, BorderLayout.EAST);
 		panel_field_tree.setLayout(new BorderLayout(0, 0));
 
-		JLabel lblLablefieldtree = new Lable("lable.field_tree");
-		panel_field_tree.add(lblLablefieldtree, BorderLayout.NORTH);
+		JLabel label_field_tree = new Lable("lable.field_tree");
+		label_field_tree.setText("label.field_tree");
+		panel_field_tree.add(label_field_tree, BorderLayout.NORTH);
 
 		panel_field_tree.add(new PanelFieldsTree(), BorderLayout.CENTER);
+	}
+
+	private static final int scale(int input) {
+		return (int) (input * scale);
 	}
 
 }

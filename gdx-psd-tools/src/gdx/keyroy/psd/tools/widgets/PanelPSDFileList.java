@@ -4,7 +4,7 @@ import gdx.keyroy.psd.tools.models.EditorData;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.PSDUtil;
 import gdx.keyroy.psd.tools.util.SwingUtil;
@@ -63,7 +63,7 @@ public class PanelPSDFileList extends JPanel {
 					try {
 						PSDData psdData = (PSDData) list.getSelectedValue();
 						PSDUtil.updateLayerParent(psdData.getCache());
-						Message.send(psdData, MessageKey.SELECTED);
+						Messager.send(psdData, MessageKey.SELECTED);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -109,7 +109,7 @@ public class PanelPSDFileList extends JPanel {
 						}
 						EditorData.save();
 						updateList();
-						Message.send(MessageKey.CLEAN);
+						Messager.send(MessageKey.CLEAN);
 					}
 				}
 

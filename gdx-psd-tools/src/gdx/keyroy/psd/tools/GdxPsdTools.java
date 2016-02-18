@@ -6,7 +6,7 @@ import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.PSDUtil;
 import gdx.keyroy.psd.tools.util.PSDUtil.LayerBoundary;
@@ -43,7 +43,7 @@ public class GdxPsdTools {
 	}
 
 	private static final void send(String msg, MessageKey messageKey) {
-		Message.send(msg, messageKey);
+		Messager.send(msg, messageKey);
 	}
 
 	public static final void export() {
@@ -71,7 +71,7 @@ public class GdxPsdTools {
 			} catch (Exception e) {
 				// e.printStackTrace();
 				errors.add(psdData);
-				Message.send(L.get("error.parse_psd_file_failed") + " : " + psdData.getFilePath());
+				Messager.send(L.get("error.parse_psd_file_failed") + " : " + psdData.getFilePath());
 			}
 		}
 
@@ -85,7 +85,7 @@ public class GdxPsdTools {
 				}
 			} catch (Exception e) {
 				// e.printStackTrace();
-				Message.send(L.get("error.parse_psd_file_failed") + " : " + psdData.getFilePath());
+				Messager.send(L.get("error.parse_psd_file_failed") + " : " + psdData.getFilePath());
 			}
 		}
 
@@ -107,7 +107,7 @@ public class GdxPsdTools {
 				packer.addImage(layer.getImage(), layer.getName());
 			}
 			String imagePath = psdData.getFileName() + ".atlas";
-			Message.send("saving image : " + imagePath);
+			Messager.send("saving image : " + imagePath);
 			packer.pack(packFolder, imagePath);
 
 		} else {
@@ -115,7 +115,7 @@ public class GdxPsdTools {
 				BufferedImage bufferedImage = layer.getImage();
 				File file = new File(packFolder, layer.getName() + ".png");
 				try {
-					Message.send("saving image : " + file.getPath());
+					Messager.send("saving image : " + file.getPath());
 					FileOutputStream outputStream = new FileOutputStream(file);
 					ImageIO.write(bufferedImage, "png", outputStream);
 					outputStream.close();

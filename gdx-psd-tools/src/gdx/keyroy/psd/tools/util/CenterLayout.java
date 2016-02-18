@@ -31,13 +31,11 @@ public class CenterLayout implements LayoutManager {
 
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void removeLayoutComponent(Component comp) {
-		// TODO Auto-generated method stub
 
 	}
 

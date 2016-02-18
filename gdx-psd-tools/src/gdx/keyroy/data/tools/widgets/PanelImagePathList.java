@@ -1,10 +1,10 @@
 package gdx.keyroy.data.tools.widgets;
 
+import gdx.keyroy.data.tools.DataManage;
 import gdx.keyroy.data.tools.models.ImagePath;
-import gdx.keyroy.data.tools.util.DataManage;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Message;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.SwingUtil;
 import gdx.keyroy.psd.tools.util.SwingUtil.DropInAdapter;
@@ -77,7 +77,7 @@ public class PanelImagePathList extends JPanel {
 						}
 						DataManage.save();
 						updateList();
-						Message.send(MessageKey.CLEAN);
+						Messager.send(MessageKey.CLEAN);
 					}
 				}
 			}
