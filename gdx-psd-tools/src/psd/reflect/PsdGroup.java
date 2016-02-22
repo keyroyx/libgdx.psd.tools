@@ -1,17 +1,18 @@
 package psd.reflect;
 
+import psd.Element;
 import psd.PsdFile;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 /**
  * PSD 的文件夹
  * 
  * @author roy
  */
-public class PsdGroup extends Group {
+public class PsdGroup extends WidgetGroup {
 	// 默认的资源加载器
 	private static AssetManager assetManager;
 	// 文件夹的源
@@ -27,6 +28,15 @@ public class PsdGroup extends Group {
 			Actor actor = PsdElement.toGdxActor(psdFile, element, assetManager);
 			addActor(actor);
 		}
+	}
+
+	@Override
+	public <T extends Actor> T findActor(final String name) {
+		Element element = psdFolder.get(name);
+		if (element != null) {
+			return element.getUserObject();
+		}
+		return null;
 	}
 
 	//

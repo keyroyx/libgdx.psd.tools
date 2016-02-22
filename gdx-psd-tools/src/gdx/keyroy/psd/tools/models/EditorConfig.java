@@ -39,7 +39,7 @@ public class EditorConfig {
 		}
 
 		if (export_path == null) {
-			export_path = new File(FileUtil.getRoot(), "out").getPath();
+			export_path = new File(FileUtil.getRoot(), "assets").getPath();
 		}
 	}
 

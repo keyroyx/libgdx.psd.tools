@@ -19,6 +19,10 @@ public class Folder extends Element {
 		return list;
 	}
 
+	public final Element get(String layerName) {
+		return get(new ElementNameFilter(layerName));
+	}
+
 	// 获取一个
 	public final Element get(ElementFilter filter) {
 		return filterOne(this, filter);

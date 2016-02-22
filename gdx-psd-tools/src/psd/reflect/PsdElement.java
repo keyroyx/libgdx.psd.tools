@@ -71,8 +71,8 @@ class PsdElement {
 							&& (Actor.class.isAssignableFrom(field.getType()) || Element.class
 									.isAssignableFrom(field.getType()))) {
 						Element element = psdFile.get(new NameFilter(field, an));
-						Actor actor = element.getUserObject();
-						if (actor != null) {
+						if (element != null && element.getUserObject() != null) {
+							Actor actor = element.getUserObject();
 							field.setAccessible(true);
 							if (Actor.class.isAssignableFrom(field.getType())) {
 								field.set(object, actor);

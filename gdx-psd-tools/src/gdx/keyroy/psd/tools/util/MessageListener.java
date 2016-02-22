@@ -19,7 +19,7 @@ public abstract class MessageListener<T> {
 	@SuppressWarnings({ "unchecked", "hiding" })
 	protected final <T> T get(Class<T> clazz, Object[] params) {
 		for (Object object : params) {
-			if (object.getClass().equals(clazz)) {
+			if (object != null && object.getClass().equals(clazz)) {
 				return (T) object;
 			}
 		}
