@@ -42,7 +42,7 @@ public class PsdImage extends Image {
 	}
 
 	// ∂¡»°Õº∆¨
-	private static final Texture getTexture(psd.Pic pic, AssetManager assetManager) {
+	protected static final Texture getTexture(psd.Pic pic, AssetManager assetManager) {
 		if (assetManager == null) {
 			assetManager = PsdGroup.getAssetManager();
 		}
@@ -52,7 +52,7 @@ public class PsdImage extends Image {
 	}
 
 	// ∂¡»°Õº∆¨
-	private static final TextureRegion getTexture(psd.PsdFile psdFile, psd.Pic pic, AssetManager assetManager) {
+	protected static final TextureRegion getTexture(psd.PsdFile psdFile, psd.Pic pic, AssetManager assetManager) {
 		if (assetManager == null) {
 			assetManager = PsdGroup.getAssetManager();
 		}
