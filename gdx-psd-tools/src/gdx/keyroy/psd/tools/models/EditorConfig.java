@@ -14,8 +14,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.keyroy.util.json.Json;
 
 public class EditorConfig {
-	// 清除缓存
-	public static boolean clean_folder;
 	// 导出路径
 	public static String export_path;
 	// 使用 LIBGDX 的坐标系

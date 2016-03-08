@@ -96,13 +96,13 @@ public class FrameEditorConfig extends JFrame {
 
 		{
 			final JCheckBox cb_uaan = new JCheckBox(L.get("text.used_clean_folder"));
-			cb_uaan.setSelected(EditorConfig.clean_folder);
+//			cb_uaan.setSelected(EditorConfig.clean_folder);
 			cb_uaan.setBounds(10, 83, 446, 23);
 			panel.add(cb_uaan);
 			cb_uaan.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
-					EditorConfig.clean_folder = cb_uaan.isSelected();
-					EditorConfig.save();
+//					EditorConfig.clean_folder = cb_uaan.isSelected();
+//					EditorConfig.save();
 				}
 			});
 		}
