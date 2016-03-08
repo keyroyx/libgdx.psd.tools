@@ -112,6 +112,15 @@ public class GdxPsdTools {
 				packer.addImage(layer.getImage(), layer.getName());
 			}
 			String imagePath = psdData.getFileName() + ".atlas";
+			File atlas = new File(imagePath);
+			if (atlas.exists()) {
+				atlas.delete();
+			}
+			File png = new File(imagePath.replace(".atlas", ".png"));
+			if (png.exists()) {
+				png.delete();
+			}
+
 			Messager.send("saving image : " + imagePath);
 			packer.pack(packFolder, imagePath);
 
