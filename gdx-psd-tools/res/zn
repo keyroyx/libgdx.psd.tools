@@ -1,4 +1,4 @@
-#Mon Feb 29 20:09:15 CST 2016
+#Tue Mar 08 18:44:53 CST 2016
 dialog.del_class_element=\u5220\u9664\u5143\u7D20
 dialog.delete_layer_param=\u786E\u5B9A\u8981\u5220\u9664 \u9009\u4E2D\u7684\u56FE\u5C42\u53C2\u6570?
 dialog.delete_param_file=\u5220\u9664\u9009\u4E2D\u7684 \u53C2\u6570\u8BBE\u5B9A \u6587\u4EF6?
@@ -63,6 +63,7 @@ text.param_key=\u952E
 text.param_val=\u503C
 text.select_folder=\u9009\u62E9\u76EE\u5F55
 text.used_android_assets_name=\u4F7F\u7528 Android Assets \u540D\u79F0\u89C4\u8303
+text.used_clean_folder=\u6E05\u9664\u76EE\u5F55\u7F13\u5B58
 text.used_libgdx_coordinate=\u4F7F\u7528 libgdx \u7684\u5750\u6807\u7CFB
 text.used_texture_packer=\u4F7F\u7528 TexturePacker \u6253\u5305\u56FE\u7247
 window.data_manage=\u6570\u636E\u7F16\u8F91\u5DE5\u5177

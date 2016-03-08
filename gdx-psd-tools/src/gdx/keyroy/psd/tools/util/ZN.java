@@ -94,6 +94,7 @@ public class ZN {
 		public static final String add_param = "添加事件";
 		public static final String input_param_value = "输入事件的值";
 		//
+		public static final String used_clean_folder = "清除目录缓存";
 		public static final String pack_folder = "导出目录";
 		public static final String select_folder = "选择目录";
 		public static final String used_libgdx_coordinate = "使用 libgdx 的坐标系";

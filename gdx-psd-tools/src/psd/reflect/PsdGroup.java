@@ -1,6 +1,10 @@
 package psd.reflect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import psd.Element;
+import psd.ElementFilter;
 import psd.PsdFile;
 
 import com.badlogic.gdx.assets.AssetManager;
@@ -38,6 +42,22 @@ public class PsdGroup extends WidgetGroup {
 		return null;
 	}
 
+	// ¹ýÂËÔªËØ
+	public final List<Actor> filter(final ActorFilter filter) {
+		List<Element> elements = psdFolder.filter(new ElementFilter() {
+
+			@Override
+			public boolean accept(Element element) {
+				return filter.accept(element, (Actor) element.getUserObject());
+			}
+		});
+		List<Actor> actors = new ArrayList<Actor>(elements.size());
+		for (Element element : elements) {
+			actors.add((Actor) element.getUserObject());
+		}
+		return actors;
+	}
+
 	//
 	public psd.Folder getPsdFolder() {
 		return psdFolder;
@@ -53,4 +73,9 @@ public class PsdGroup extends WidgetGroup {
 		}
 		return assetManager;
 	}
+
+	public static interface ActorFilter {
+		public boolean accept(Element element, Actor actor);
+	}
+
 }

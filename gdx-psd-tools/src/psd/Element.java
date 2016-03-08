@@ -18,7 +18,6 @@ public class Element {
 	public List<Param> params;
 	// 是否显示
 	public boolean isVisible;
-
 	// 自定义对象
 	@JsonAn(skip = true)
 	protected Object userObject;
