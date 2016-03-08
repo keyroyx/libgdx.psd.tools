@@ -51,10 +51,10 @@ public class GdxPsdTools {
 		File packFolder = new File(EditorConfig.export_path);
 		send("cleaning", MessageKey.H2);
 		// 清空文件夹目录
-		if (EditorConfig.clean_folder) {
+//		if (EditorConfig.clean_folder) {
 			FileUtil.delete(packFolder);
 			packFolder.mkdirs();
-		}
+//		}
 
 		send("cleaning ok", MessageKey.H2);
 		// 保存数据文件
