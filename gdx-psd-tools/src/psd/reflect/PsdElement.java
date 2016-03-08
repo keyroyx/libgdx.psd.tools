@@ -117,7 +117,7 @@ class PsdElement {
 			actor = new PsdLabel(psdText);
 		}
 		PsdElement.setBounds(element, actor);
-		
+		actor.setVisible(element.isVisible);
 		return actor;
 	}
 
