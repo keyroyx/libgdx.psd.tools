@@ -2,9 +2,10 @@ package gdx.keyroy.data.tools;
 
 import gdx.keyroy.data.tools.models.ClassElement;
 import gdx.keyroy.data.tools.models.ClassPath;
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
+import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.Messager;
 
 import java.io.File;
@@ -12,8 +13,6 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import com.keyroy.util.json.Json;
 import com.keyroy.util.json.JsonAn;
@@ -25,8 +24,18 @@ public class DataManage {
 	// 类数据
 	@JsonAn(skip = true)
 	private static List<ClassPath> classPaths = new ArrayList<ClassPath>();
-	// 图片数据
-	private static List<ImagePath> imagePaths = new ArrayList<ImagePath>();
+	// 资源数据
+	private static List<ResoucePath> resourcePaths = new ArrayList<ResoucePath>();
+
+	// 添加新的类
+	public static final void edit(Class<?> clazz) {
+		addClass(clazz);
+	}
+
+	// 添加新的类
+	public static final void addClass(Class<?> clazz) {
+		addClass(clazz, false);
+	}
 
 	// 添加新的类
 	public static final void addClass(Class<?> clazz, boolean autoSave) {
@@ -42,17 +51,17 @@ public class DataManage {
 		}
 	}
 
-	public static final void addImage(File imageFile, boolean autoSave) {
-		_addImage(imageFile);
+	public static final void addResource(File file, boolean autoSave) {
+		_addResource(file.isDirectory() ? file : null, file);
 		if (autoSave) {
 			save();
 		}
 	}
 
-	private static final void _addImage(File file) {
+	private static final void _addResource(File rootFolder, File file) {
 		if (file != null && file.exists()) {
-			for (ImagePath imagePath : imagePaths) {
-				if (imagePath.getFilePath().equals(file.getPath())) {
+			for (ResoucePath resoucePath : resourcePaths) {
+				if (resoucePath.getFilePath().equals(file.getPath())) {
 					return;
 				}
 			}
@@ -60,20 +69,19 @@ public class DataManage {
 				File[] files = file.listFiles();
 				if (files != null) {
 					for (File cFile : files) {
-						_addImage(cFile);
+						_addResource(rootFolder, cFile);
 					}
 				}
-			} else if (file.getName().toString().endsWith(".atlas")) {
-				// 检查图片在不在
-
-				imagePaths.add(new ImagePath(file));
-			} else {
-				try {
-					FileInputStream inputStream = new FileInputStream(file);
-					ImageIO.read(inputStream);
-					inputStream.close();
-					imagePaths.add(new ImagePath(file));
-				} catch (Exception e) {
+			} else { // 文件
+				ResoucePath path = new ResoucePath(rootFolder, file);
+				if (path.isAtlas()) {
+					resourcePaths.add(path);
+				} else {
+					try {
+						// 检查图片在不在
+						resourcePaths.add(path);
+					} catch (Exception e) {
+					}
 				}
 			}
 		}
@@ -96,7 +104,7 @@ public class DataManage {
 			}
 			// 加载 ClassPath
 			for (ClassPath classPath : DataManage.classPaths) {
-				File folder = getFile(classPath);
+				File folder = getFolder(classPath);
 				if (folder.exists()) {
 					Class<?> clazz = classPath.getClazz();
 					File[] files = folder.listFiles();
@@ -152,22 +160,33 @@ public class DataManage {
 		// 删除元素
 		classPath.delElement(classElement);
 		// 删除文件
-		File folder = getFile(classPath);
+		File folder = getFolder(classPath);
 		File file = new File(folder, classElement.getObjId());
 		file.delete();
 
 	}
 
+	// 保存类文件
 	public static final void save(ClassElement classElement) {
 		try {
 			ClassPath classPath = classElement.getParent();
-			File folder = getFile(classPath);
+			save(classElement, getFolder(classPath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 保存类文件到 指定文件夹
+	public static final void save(ClassElement classElement, File folder) {
+		try {
 			if (folder.exists() == false) {
 				folder.mkdirs();
 			}
 			File jsonFile = new File(folder, classElement.getObjId());
 			jsonFile.createNewFile();
 			FileUtil.save(jsonFile, new Json(classElement.getObject()).toString());
+			//
+			ClassPath classPath = classElement.getParent();
 			Messager.send(L.get("message.class_element_save") + "  " + classPath.getClassName() + "  "
 					+ classElement.getObjId() + "  " + new Date().toString());
 		} catch (Exception e) {
@@ -185,7 +204,7 @@ public class DataManage {
 		return new File(DataManage.class.getSimpleName());
 	}
 
-	private static final File getFile(ClassPath classPath) {
+	private static final File getFolder(ClassPath classPath) {
 		return new File(classPath.getClassName());
 	}
 
@@ -193,7 +212,49 @@ public class DataManage {
 		return classPaths;
 	}
 
-	public static final List<ImagePath> getImagePaths() {
-		return imagePaths;
+	public static final List<ResoucePath> getImagePaths() {
+		return resourcePaths;
+	}
+
+	public static final void export() {
+		// 打包规则 , 打包输出默认 本地 assets 文件夹
+		// 复制所有类的文件
+		// 复制图片的文件夹 , 有 文件夹的 图片复制到 最后一级文件夹目录 , 没有目录的复制到根目录
+		Messager.send("Export", MessageKey.H1);
+		File asssets = new File("assests");
+		FileUtil.delete(asssets);// 清空数据
+		asssets.mkdirs();
+		Messager.send("clean cache", MessageKey.H2);
+		// 打包类对象
+		for (ClassPath classPath : classPaths) {
+			Messager.send("Saving " + classPath.getClassName(), MessageKey.H1);
+			File classFolder = getFolder(classPath);
+			classFolder = new File(asssets, classFolder.getName());
+			classFolder.mkdirs();
+			for (ClassElement element : classPath.getElements()) {
+				Messager.send("saving : " + element.getObjId(), MessageKey.H2);
+				save(element, classFolder);
+			}
+		}
+		// 打包图片对象
+		Messager.send("Saving Images ", MessageKey.H1);
+		for (ResoucePath resourcePath : resourcePaths) {
+			File file = resourcePath.getFile();
+			try {
+				FileUtil.copy(file, getCopyTo(asssets, file, resourcePath));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	protected static final File getCopyTo(File folder, File file, ResoucePath resource) {
+		if (resource.getFolder() != null) {
+			File imageFolder = new File(resource.getFolder());
+			return new File(folder, imageFolder.getName() + File.separator + file.getName());
+		} else {
+			return new File(folder, file.getName());
+		}
+
 	}
 }

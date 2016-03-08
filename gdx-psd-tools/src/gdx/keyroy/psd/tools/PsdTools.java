@@ -190,6 +190,7 @@ public class PsdTools {
 		JMenuItem menu_pack = new JMenuItem(l("menu.pack"));
 		menu_pack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// ´ò°ü
 				final DialogProgress dialogProgress = new DialogProgress();
 				SwingUtil.center(frame, dialogProgress);
 				dialogProgress.setVisible(true);

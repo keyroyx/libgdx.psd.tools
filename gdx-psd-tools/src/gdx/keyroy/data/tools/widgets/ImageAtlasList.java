@@ -1,6 +1,6 @@
 package gdx.keyroy.data.tools.widgets;
 
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.TextureUnpacker;
@@ -23,7 +23,7 @@ import javax.swing.event.ListSelectionListener;
 public class ImageAtlasList extends JPanel {
 
 	@SuppressWarnings("unchecked")
-	public ImageAtlasList(final ImagePath imagePath) {
+	public ImageAtlasList(final ResoucePath imagePath) {
 		setLayout(new BorderLayout(0, 0));
 
 		JList<Region> list = new JList<Region>();
@@ -63,7 +63,7 @@ public class ImageAtlasList extends JPanel {
 			//
 			JLabel label = new JLabel(value.name + "[" + value.toString() + "]");
 			label.setOpaque(true);
-			label.setIcon(Icons.IMAGE_FILE);
+			label.setIcon(Icons.RESOURCE_FILE);
 			label.setBorder(border);
 			if (isSelected) {
 				label.setBackground(Color.LIGHT_GRAY);

@@ -3,6 +3,7 @@ package gdx.keyroy.psd.tools.util;
 import gdx.keyroy.psd.tools.models.KeyVal;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,6 +19,31 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 public class FileUtil {
+	public static void openFile(File file) throws Exception {
+		Desktop desktop = Desktop.getDesktop();
+		desktop.open(file);
+	}
+
+	public static final String readLine(File file, LineFilter lineFilter) {
+		String rt = null;
+		try {
+			FileInputStream fileInputStream = new FileInputStream(file);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				if (lineFilter.accept(line)) {
+					rt = line;
+					break;
+				}
+			}
+			fileInputStream.close();
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rt;
+	}
+
 	public static final List<KeyVal> readIni(File file) {
 		try {
 			List<KeyVal> list = new ArrayList<KeyVal>();
@@ -133,5 +159,35 @@ public class FileUtil {
 			}
 			file.delete();
 		}
+	}
+
+	public static final void copy(File from, File to) throws Exception {
+		if (to.getParentFile().exists() == false) {
+			to.getParentFile().mkdirs();
+		}
+		to.createNewFile();
+		FileInputStream in = new FileInputStream(from);
+		FileOutputStream out = new FileOutputStream(to);
+		copy(in, out);
+	}
+
+	public static final void copy(InputStream inputStream, OutputStream outputStream) throws Exception {
+		byte[] buffer = new byte[512 * 1024];
+		int length = 0;
+		while ((length = inputStream.read(buffer)) != -1) {
+			outputStream.write(buffer, 0, length);
+		}
+		try {
+			inputStream.close();
+		} catch (Exception e) {
+		}
+		try {
+			outputStream.close();
+		} catch (Exception e) {
+		}
+	}
+
+	public static interface LineFilter {
+		boolean accept(String line);
 	}
 }

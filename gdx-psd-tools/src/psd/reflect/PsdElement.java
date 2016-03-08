@@ -14,19 +14,15 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.keyroy.util.json.Json;
 
 class PsdElement {
-
-	// 设置用户对象
-	protected static final void setUserObject(psd.Element element, Actor actor) {
-		element.setUserObject(actor);
-	}
 
 	// 设置大小
 	protected static final void setBounds(psd.Element element, Actor actor) {
 		if (element != null && actor != null) {
 			actor.setBounds(element.x, element.y, element.width, element.height);
+			// 设置用户对象
+			element.setUserObject(actor);
 		}
 	}
 
@@ -57,12 +53,10 @@ class PsdElement {
 				// 加载对象
 
 				FileHandle fileHandle = Gdx.files.internal(path);
-				Json json = new Json(fileHandle.read());
-				PsdFile psdFile = json.toObject(PsdFile.class);
+				PsdFile psdFile = new PsdFile(fileHandle);
 				// 生成结构
 				PsdGroup psdGroup = new PsdGroup(psdFile);
 				PsdElement.setBounds(psdFile, psdGroup);
-				PsdElement.setUserObject(psdFile, psdGroup);
 				// 映射 参数
 				Field[] fields = reflectClass.getDeclaredFields();
 				for (Field field : fields) {
@@ -117,17 +111,13 @@ class PsdElement {
 			actor = new PsdGroup(psdFolder, psdFile, assetManager);
 		} else if (element instanceof psd.Pic) {
 			psd.Pic pic = (psd.Pic) element;
-			if (psdFile.used_texture_packer) { // 使用图片集打包
-				actor = new PsdImage(psdFile, pic, assetManager);
-			} else {
-				actor = new PsdImage(pic, assetManager);
-			}
+			actor = new PsdImage(psdFile, pic, assetManager);
 		} else if (element instanceof psd.Text) {
 			psd.Text psdText = (psd.Text) element;
 			actor = new PsdLabel(psdText);
 		}
 		PsdElement.setBounds(element, actor);
-		PsdElement.setUserObject(element, actor);
+		
 		return actor;
 	}
 

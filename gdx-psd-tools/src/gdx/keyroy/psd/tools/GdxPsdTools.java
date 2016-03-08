@@ -6,8 +6,8 @@ import gdx.keyroy.psd.tools.models.LayerParam;
 import gdx.keyroy.psd.tools.models.PSDData;
 import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.MessageKey;
+import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.PSDUtil;
 import gdx.keyroy.psd.tools.util.PSDUtil.LayerBoundary;
 
@@ -62,7 +62,9 @@ public class GdxPsdTools {
 			try {
 				send("saving json on : " + psdData.getFileName(), MessageKey.H2);
 				PsdFile psdFile = translate(psdData);
-				psdFile.used_texture_packer = EditorConfig.used_texture_packer;
+				if (EditorConfig.used_texture_packer) {
+					psdFile.atlas = psdData.getFileName() + ".atlas";
+				}
 				String json = new Json(psdFile).toString();
 				System.out.println(json);
 				File file = new File(packFolder, psdData.getFileName() + ".json");
@@ -180,6 +182,7 @@ public class GdxPsdTools {
 
 			if (actor != null) { // зјБъ
 				actor.layerName = layer.getName();
+				actor.isVisible = layer.isVisible();
 				if (actor instanceof PsdFile) {
 				} else {
 					LayerBoundary boundary = LayerBoundary.getLayerBoundary(layer);

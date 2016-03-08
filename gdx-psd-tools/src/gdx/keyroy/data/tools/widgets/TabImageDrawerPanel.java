@@ -1,6 +1,6 @@
 package gdx.keyroy.data.tools.widgets;
 
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.ScrollPane;
@@ -26,13 +26,13 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class TabImageDrawerPanel extends JPanel implements ContainerListener {
-	private ImagePath imagePath;
+	private ResoucePath imagePath;
 	private ImageView imageView;
 
 	/**
 	 * Create the panel.
 	 */
-	public TabImageDrawerPanel(ImagePath imagePath) {
+	public TabImageDrawerPanel(ResoucePath imagePath) {
 		this.imagePath = imagePath;
 		this.imageView = new ImageView();
 		try {
@@ -60,7 +60,7 @@ public class TabImageDrawerPanel extends JPanel implements ContainerListener {
 		Messager.unregister(Region.class, regionListener);
 	}
 
-	public final ImagePath getImagePath() {
+	public final ResoucePath getImagePath() {
 		return imagePath;
 	}
 
@@ -68,7 +68,7 @@ public class TabImageDrawerPanel extends JPanel implements ContainerListener {
 		private BufferedImage bufferedImage;
 		private Color color = new Color(0xff990099);
 		private Stroke stroke = new BasicStroke(3);
-		private ImagePath imagePath;
+		private ResoucePath imagePath;
 		private Region region;
 
 		public void setBufferedImage(BufferedImage bufferedImage) {
@@ -82,14 +82,14 @@ public class TabImageDrawerPanel extends JPanel implements ContainerListener {
 
 		}
 
-		public void setPage(ImagePath imagePath) {
+		public void setPage(ResoucePath imagePath) {
 			TextureUnpacker unpacker = imagePath.getUnpacker();
 			Page page = unpacker.getPages().get(0);
 			setBufferedImage(page.texture);
 			this.imagePath = imagePath;
 		}
 
-		public void setRegion(Region region, ImagePath imagePath) {
+		public void setRegion(Region region, ResoucePath imagePath) {
 			if (imagePath != null && imagePath.equals(this.imagePath)) {
 				this.region = region;
 			} else {
@@ -116,7 +116,7 @@ public class TabImageDrawerPanel extends JPanel implements ContainerListener {
 	private MessageListener<Region> regionListener = new MessageListener<TextureUnpacker.Region>() {
 		@Override
 		public void onMessage(Region t, Object[] params) {
-			imageView.setRegion(t, get(ImagePath.class, params));
+			imageView.setRegion(t, get(ResoucePath.class, params));
 			repaint();
 		}
 	};

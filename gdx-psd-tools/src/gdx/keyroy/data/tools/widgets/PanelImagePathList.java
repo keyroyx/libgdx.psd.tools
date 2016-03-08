@@ -1,7 +1,7 @@
 package gdx.keyroy.data.tools.widgets;
 
 import gdx.keyroy.data.tools.DataManage;
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
 import gdx.keyroy.psd.tools.util.Messager;
@@ -33,7 +33,7 @@ import javax.swing.border.EmptyBorder;
 // 类管理的面板
 @SuppressWarnings("serial")
 public class PanelImagePathList extends JPanel {
-	private JList<ImagePath> list;
+	private JList<ResoucePath> list;
 
 	/**
 	 * Create the panel.
@@ -42,7 +42,7 @@ public class PanelImagePathList extends JPanel {
 	public PanelImagePathList() {
 		setLayout(new BorderLayout(0, 0));
 
-		list = new JList<ImagePath>();
+		list = new JList<ResoucePath>();
 		list.setModel(new ImagePathListModel());
 		list.setCellRenderer(new ImagePathListModel());
 
@@ -53,7 +53,7 @@ public class PanelImagePathList extends JPanel {
 		SwingUtil.addDropIn(list, new DropInAdapter() {
 			@Override
 			public void onDropIn(File file) {
-				DataManage.addImage(file, true);
+				DataManage.addResource(file, true);
 				updateList();
 			}
 		});
@@ -72,7 +72,7 @@ public class PanelImagePathList extends JPanel {
 					if (n == JOptionPane.OK_OPTION) {
 						int[] indexes = list.getSelectedIndices();
 						for (int i : indexes) {
-							ImagePath classPath = (ImagePath) list.getModel().getElementAt(i);
+							ResoucePath classPath = (ResoucePath) list.getModel().getElementAt(i);
 							DataManage.getImagePaths().remove(classPath);
 						}
 						DataManage.save();
@@ -111,31 +111,31 @@ public class PanelImagePathList extends JPanel {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private class ImagePathListModel extends DefaultListModel implements ListCellRenderer<ImagePath> {
+	private class ImagePathListModel extends DefaultListModel implements ListCellRenderer<ResoucePath> {
 		private EmptyBorder border = new EmptyBorder(4, 4, 4, 4);
 		private Color TRANSLUCENT = new Color(Color.TRANSLUCENT, true);
 
 		@SuppressWarnings("unchecked")
 		public ImagePathListModel() {
-			List<ImagePath> list = DataManage.getImagePaths();
-			for (ImagePath path : list) {
+			List<ResoucePath> list = DataManage.getImagePaths();
+			for (ResoucePath path : list) {
 				addElement(path);
 			}
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList<? extends ImagePath> list, ImagePath value,
+		public Component getListCellRendererComponent(JList<? extends ResoucePath> list, ResoucePath value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			if (value == null) {
 				return null;
 			}
 			//
-			JLabel label = new JLabel(value.getFileName());
+			JLabel label = new JLabel(value.getAssetsPath());
 			label.setOpaque(true);
 			if (value.isAtlas()) {
 				label.setIcon(Icons.IMAGE_ATLAS_FILE);
 			} else {
-				label.setIcon(Icons.IMAGE_FILE);
+				label.setIcon(Icons.RESOURCE_FILE);
 			}
 			label.setBorder(border);
 			if (isSelected) {

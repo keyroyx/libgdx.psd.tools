@@ -72,8 +72,8 @@ public class ClassElementComponent extends JPanel {
 			del.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					int n = JOptionPane.showConfirmDialog(ClassElementComponent.this, "label.notice", "dialog.del_class_element",
-							JOptionPane.YES_NO_OPTION);// i=0/1
+					int n = JOptionPane.showConfirmDialog(ClassElementComponent.this, L.get("label.notice"),
+							L.get("dialog.del_class_element"), JOptionPane.YES_NO_OPTION);// i=0/1
 					if (n == JOptionPane.YES_OPTION) {
 						DataManage.delete(classElement);
 						//

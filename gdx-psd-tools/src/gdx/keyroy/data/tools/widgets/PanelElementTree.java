@@ -3,7 +3,7 @@ package gdx.keyroy.data.tools.widgets;
 import gdx.keyroy.data.tools.DataManage;
 import gdx.keyroy.data.tools.models.ClassElement;
 import gdx.keyroy.data.tools.models.ClassPath;
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.DefaultTreeNode;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
@@ -13,15 +13,15 @@ import gdx.keyroy.psd.tools.util.Messager;
 import gdx.keyroy.psd.tools.util.PopmenuListener;
 import gdx.keyroy.psd.tools.util.SwingUtil;
 import gdx.keyroy.psd.tools.util.SwingUtil.DropInAdapter;
-import gdx.keyroy.psd.tools.util.TextureUnpacker;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.Hashtable;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -50,13 +50,10 @@ public class PanelElementTree extends JPanel {
 				if (tree.getSelectionPath() != null) {
 					ElementTreeModel treeNode = (ElementTreeModel) tree.getSelectionPath()
 							.getLastPathComponent();
-					Object object = treeNode.getObject();
-					if (object == null || object instanceof Class) {
-
-					} else if (object instanceof ClassPath) {
-						Messager.send(object, MessageKey.SELECTED);
-					} else if (object instanceof ImagePath) {
-						Messager.send(object, MessageKey.SELECTED);
+					if (treeNode.classPath != null) {
+						Messager.send(treeNode.classPath, MessageKey.SELECTED);
+					} else if (treeNode.resourcePath != null) {
+						Messager.send(treeNode.resourcePath, MessageKey.SELECTED);
 					}
 				}
 			}
@@ -106,15 +103,12 @@ public class PanelElementTree extends JPanel {
 				if (tree.getSelectionPath() != null) {
 					final ElementTreeModel treeNode = (ElementTreeModel) tree.getSelectionPath()
 							.getLastPathComponent();
-					final Object object = treeNode.getObject();
-					if (object == null || object instanceof Class) { // 列表
-
-					} else if (object instanceof ClassPath) { // 类对象
+					if (treeNode.classPath != null) { // 类对象
 						// 新建对象
 						SwingUtil.addPopup(popupMenu, "menu.new_element", new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								ClassPath classPath = (ClassPath) object;
+								ClassPath classPath = treeNode.classPath;
 								ClassElement classElement = addClassElement(classPath);
 								if (classElement != null) {
 									DataManage.save(classElement);
@@ -127,7 +121,7 @@ public class PanelElementTree extends JPanel {
 						SwingUtil.addPopup(popupMenu, "menu.new_element_list", new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								ClassPath classPath = (ClassPath) object;
+								ClassPath classPath = treeNode.classPath;
 								String count = (String) JOptionPane.showInputDialog(tree,
 										L.get("text.input_element_count") + " ：\n",
 										L.get("dialog.new_element"), JOptionPane.PLAIN_MESSAGE,
@@ -146,21 +140,30 @@ public class PanelElementTree extends JPanel {
 
 							}
 						});
-					} else if (object instanceof ImagePath) { // 图片对象
+					} else if (treeNode.resourcePath != null) { // 图片对象
 						// 删除类
-						SwingUtil.addPopup(popupMenu, "menu.del_classpath", new ActionListener() {
+						SwingUtil.addPopup(popupMenu, "menu.del_element", new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								TreePath[] treePaths = tree.getSelectionPaths();
 								for (TreePath treePath : treePaths) {
 									ElementTreeModel treeModel = (ElementTreeModel) treePath
 											.getLastPathComponent();
-									if (treeModel.imagePath != null) {
-										DataManage.getImagePaths().remove(treeModel.imagePath);
-									}
+									DataManage.getImagePaths().remove(treeModel.resourcePath);
 								}
 								DataManage.save();
 								updateTree();
+							}
+						});
+					} else if (treeNode.folder != null) { // 图片文件夹
+						SwingUtil.addPopup(popupMenu, "menu.open_folder", new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								try {
+									java.awt.Desktop.getDesktop().open(treeNode.folder);
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
 							}
 						});
 					}
@@ -223,6 +226,7 @@ public class PanelElementTree extends JPanel {
 	private final void updateTree() {
 		ElementTreeModel treeModel = new ElementTreeModel();
 		tree.setModel(new DefaultTreeModel(treeModel));
+		tree.setCellRenderer(treeModel);
 		//
 		TreePath treePath = new TreePath(treeModel);
 		this.tree.expandPath(treePath);
@@ -238,22 +242,7 @@ public class PanelElementTree extends JPanel {
 			@Override
 			public void onDropIn(File file) {
 				try {
-					if (file.isDirectory()) {
-						File[] files = file.listFiles();
-						for (File cFile : files) {
-							onDropIn(cFile);
-						}
-					} else {
-						if (file.getName().endsWith(".altas")) {
-							TextureUnpacker unpacker = new TextureUnpacker(file, file.getParentFile(), false);
-							if (unpacker.getPages().size > 0) {
-								DataManage.addImage(file, false);
-							}
-						} else {
-							ImageIO.read(file);
-							DataManage.addImage(file, false);
-						}
-					}
+					DataManage.addResource(file, false);
 				} catch (Exception e) {
 				}
 			}
@@ -267,77 +256,94 @@ public class PanelElementTree extends JPanel {
 		});
 	}
 
-	class ElementTreeModel extends DefaultTreeNode {
-		private ClassPath classPath;
-		private ImagePath imagePath;
-		private Class<?> elementClass;
+	private static final Hashtable<String, ElementTreeModel> folders = new Hashtable<String, PanelElementTree.ElementTreeModel>();
 
+	class ElementTreeModel extends DefaultTreeNode {
+		// Class 元素
+		private ClassPath classPath;
+		// 图片元素
+		private ResoucePath resourcePath;
+		// 资源文件夹
+		private File folder;
+
+		// 默认构造器 , 默认加载所有 类元素,和图片
 		public ElementTreeModel() {
-			setAllowsChildren(true);
 			setUserObject(L.get("label.element_collections"));
+			setAllowsChildren(true);
 			setIcon(Icons.LAYER_FOLDER);
+			folders.clear();
 			add(new ElementTreeModel(DataManage.getClassPaths(), ClassPath.class));
-			add(new ElementTreeModel(DataManage.getImagePaths(), ImagePath.class));
+			add(new ElementTreeModel(DataManage.getImagePaths(), ResoucePath.class));
 		}
 
+		// 图片文件夹构造器
+		public ElementTreeModel(File imageFolder) {
+			this.folder = imageFolder;
+			setUserObject(imageFolder.getName());
+			setAllowsChildren(true);
+			setIcon(Icons.LAYER_FOLDER);
+		}
+
+		// 元素数组
 		public ElementTreeModel(List<?> list, Class<?> clazz) {
 			setAllowsChildren(true);
-			this.elementClass = clazz;
 			setIcon(Icons.LAYER_FOLDER);
 			if (clazz.equals(ClassPath.class)) {
 				setUserObject(L.get("label.element_class"));
-			} else if (clazz.equals(ImagePath.class)) {
-				setUserObject(L.get("label.element_images"));
+			} else if (clazz.equals(ResoucePath.class)) {
+				setUserObject(L.get("label.element_resource"));
 			}
 
 			for (Object object : list) {
 				if (object instanceof ClassPath) {
 					add(new ElementTreeModel((ClassPath) object));
-				} else if (object instanceof ImagePath) {
-					add(new ElementTreeModel((ImagePath) object));
+				} else if (object instanceof ResoucePath) {
+					ResoucePath imagePath = (ResoucePath) object;
+					if (imagePath.getFolder() != null) {
+						ElementTreeModel folderTreeModel = getFolderTreeModel(imagePath.getFolder());
+						folderTreeModel.add(new ElementTreeModel(imagePath));
+					} else {
+						add(new ElementTreeModel((ResoucePath) object));
+					}
 				} else {
 					throw new IllegalArgumentException("unsupport class : " + clazz.getName());
 				}
 			}
 		}
 
-		public ElementTreeModel(ClassPath classPath) {
+		ElementTreeModel(ClassPath classPath) {
 			this.classPath = classPath;
 			setIcon(Icons.CLASS_FILE);
 			setUserObject(classPath.getClassName() + "[" + classPath.getElements().size() + "]");
 		}
 
-		public ElementTreeModel(ImagePath imagePath) {
-			this.imagePath = imagePath;
+		ElementTreeModel(ResoucePath imagePath) {
+			this.resourcePath = imagePath;
 			if (imagePath.exist()) {
-				setUserObject(imagePath.getFileName());
-				setDropOut(imagePath.getFileName());
+				setUserObject(imagePath.getAssetsPath());
 			} else {
-				setUserObject(imagePath.getFileName() + "(not exist)");
+				setUserObject(imagePath.getAssetsPath() + "(not exist)");
 			}
-
 			if (imagePath.isAtlas()) {
 				setIcon(Icons.IMAGE_ATLAS_FILE);
 			} else {
-				setIcon(Icons.IMAGE_FILE);
+				setIcon(Icons.RESOURCE_FILE);
 			}
 
+		}
+
+		protected final ElementTreeModel getFolderTreeModel(String path) {
+			ElementTreeModel treeModel = folders.get(path);
+			if (treeModel == null) {
+				treeModel = new ElementTreeModel(new File(path));
+				folders.put(path, treeModel);
+				add(treeModel);
+			}
+			return treeModel;
 		}
 
 		protected final void updateName(ClassPath classPath) {
 			setUserObject(classPath.getClassName() + "[" + classPath.getElements().size() + "]");
-		}
-
-		public final Object getObject() {
-			if (classPath != null) {
-				return classPath;
-			} else if (imagePath != null) {
-				return imagePath;
-			} else if (elementClass != null) {
-				return elementClass;
-			} else {
-				return null;
-			}
 		}
 	}
 

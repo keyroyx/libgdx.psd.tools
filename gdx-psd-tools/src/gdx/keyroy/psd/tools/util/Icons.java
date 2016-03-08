@@ -15,7 +15,7 @@ public class Icons {
 
 	//
 	public static final Icon CLASS_FILE = new ImageIcon(Icons.class.getResource("/class.png"));
-	public static final Icon IMAGE_FILE = new ImageIcon(Icons.class.getResource("/custom.png"));
+	public static final Icon RESOURCE_FILE = new ImageIcon(Icons.class.getResource("/any_type.png"));
 	public static final Icon IMAGE_ATLAS_FILE = new ImageIcon(Icons.class.getResource("/uiForm.png"));
 	//
 	public static final Icon CLASS_ELEMENT = new ImageIcon(Icons.class.getResource("/enum.png"));

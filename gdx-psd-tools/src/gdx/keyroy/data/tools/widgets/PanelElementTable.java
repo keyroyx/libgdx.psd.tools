@@ -1,7 +1,8 @@
 package gdx.keyroy.data.tools.widgets;
 
 import gdx.keyroy.data.tools.models.ClassPath;
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
+import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
 import gdx.keyroy.psd.tools.util.MessageListener;
@@ -53,13 +54,19 @@ public class PanelElementTable extends JPanel {
 			}
 		});
 
-		Messager.register(ImagePath.class, new MessageListener<ImagePath>() {
+		Messager.register(ResoucePath.class, new MessageListener<ResoucePath>() {
 			@Override
-			public void onMessage(ImagePath t, Object[] params) {
+			public void onMessage(ResoucePath t, Object[] params) {
 				if (t.isAtlas()) {
-					addTab(t, t.getFileName(), Icons.IMAGE_ATLAS_FILE, new TabImageDrawerPanel(t));
+					addTab(t, t.getAssetsPath(), Icons.IMAGE_ATLAS_FILE, new TabImageDrawerPanel(t));
+				} else if (t.isImage()) {
+					addTab(t, t.getAssetsPath(), Icons.RESOURCE_FILE, new TabImageDrawerPanel(t));
 				} else {
-					addTab(t, t.getFileName(), Icons.IMAGE_FILE, new TabImageDrawerPanel(t));
+					try {// 使用默认的程序打开
+						FileUtil.openFile(t.getFile());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});

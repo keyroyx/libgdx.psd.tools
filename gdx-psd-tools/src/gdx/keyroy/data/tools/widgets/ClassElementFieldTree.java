@@ -3,24 +3,35 @@ package gdx.keyroy.data.tools.widgets;
 import gdx.keyroy.data.tools.DataManage;
 import gdx.keyroy.data.tools.models.ClassElement;
 import gdx.keyroy.data.tools.models.FieldAn;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.DefaultTreeNode;
 import gdx.keyroy.psd.tools.util.FieldParser;
 import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
+import gdx.keyroy.psd.tools.util.PopmenuListener;
 import gdx.keyroy.psd.tools.util.ReflectTools;
+import gdx.keyroy.psd.tools.util.SwingUtil;
+import gdx.keyroy.psd.tools.util.TextureUnpacker.Region;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
@@ -30,6 +41,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import com.badlogic.gdx.utils.Array;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -133,6 +145,69 @@ public class ClassElementFieldTree extends JPanel {
 		});
 		textField_field.setEditable(false);
 		panel.add(textField_field, "2, 2, fill, fill");
+		SwingUtil.addPopup(textField_field, new PopmenuListener() {
+			Hashtable<String, JMenu> folders = new Hashtable<String, JMenu>();
+
+			@Override
+			public void onInitPopmenu(JPopupMenu popupMenu) {
+				if (textField_field.isEditable()) {
+					folders.clear();
+					List<ResoucePath> images = DataManage.getImagePaths();
+					for (final ResoucePath imagePath : images) {
+						if (imagePath.isAtlas()) {
+							JMenu menu = new JMenu(imagePath.getAssetsPath());
+							popupMenu.add(menu);
+							//
+							Array<Region> regins = imagePath.getUnpacker().getRegions();
+							for (final Region region : regins) {
+								JMenuItem menuItem = new JMenuItem(region.name);
+								menuItem.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										textField_field.setText(region.name + "@"
+												+ imagePath.getAssetsPath().replace("\\", "/"));
+									}
+								});
+								menu.add(menuItem);
+							}
+						} else {
+							if (imagePath.getFolder() != null) {
+								JMenu menu = getMenu(imagePath.getFolder(), popupMenu);
+								JMenuItem menuItem = new JMenuItem(imagePath.getAssetsPath());
+								menuItem.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										textField_field.setText(imagePath.getFolderName() + "/"
+												+ imagePath.getAssetsPath().replace("\\", "/"));
+									}
+								});
+								menu.add(menuItem);
+							} else {
+								JMenuItem menuItem = new JMenuItem(imagePath.getAssetsPath());
+								menuItem.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										textField_field.setText(imagePath.getAssetsPath().replace("\\", "/"));
+									}
+								});
+								popupMenu.add(menuItem);
+							}
+
+						}
+					}
+				}
+			}
+
+			protected final JMenu getMenu(String folder, JPopupMenu popupMenu) {
+				JMenu menu = folders.get(folder);
+				if (menu == null) {
+					menu = new JMenu(new File(folder).getName());
+					folders.put(folder, menu);
+					popupMenu.add(menu);
+				}
+				return menu;
+			}
+		});
 	}
 
 	protected final boolean isEditable(FieldTreeModel treeNode, Class<?> type) {
@@ -202,7 +277,7 @@ public class ClassElementFieldTree extends JPanel {
 		public FieldTreeModel(Object source) {
 			this.source = source;
 			setAllowsChildren(true);
-			setUserObject(source.getClass().getSimpleName() + "["+classElement.getObjId()+"]");
+			setUserObject(source.getClass().getSimpleName() + "[" + classElement.getObjId() + "]");
 			setIcon(Icons.CLASS_FILE);
 			this.source = source;
 			//

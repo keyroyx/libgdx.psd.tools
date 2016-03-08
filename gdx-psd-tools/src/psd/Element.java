@@ -16,6 +16,8 @@ public class Element {
 	public int x, y, width, height;
 	// 绑定参数
 	public List<Param> params;
+	// 是否显示
+	public boolean isVisible;
 
 	// 自定义对象
 	@JsonAn(skip = true)

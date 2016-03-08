@@ -148,10 +148,12 @@ public class ReflectTools {
 
 	public static final List<Field> getFields(Class<?> clazz) {
 		List<Field> list = new ArrayList<Field>();
+		int modifiers = 0;
 		while (clazz != null && clazz.equals(Object.class) == false) {
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
-				if (Modifier.isFinal(field.getModifiers())) {
+				modifiers = field.getModifiers();
+				if (Modifier.isFinal(modifiers) || Modifier.isStatic(modifiers)) {
 					// ²»ÄÜÐÞ¸Ä
 				} else {
 					addField(field, list);

@@ -8,6 +8,7 @@ public class ZN {
 
 	public static class Window {
 		public static final String title = "Psd 图层信息工具";
+		public static final String data_manage = "数据编辑工具";
 	}
 
 	public static class Menu {
@@ -33,6 +34,17 @@ public class ZN {
 		public static final String about = "关于";
 		public static final String help = "帮助";
 		public static final String source_code = "源代码地址";
+		//
+		public static final String new_element = "新元素";
+		public static final String new_element_list = "批量生成新元素";
+
+		public static final String close_all = "关闭 全部 页面";
+		public static final String close_others = "关闭 其他 页面";
+		public static final String close_this = "关闭页面";
+		//
+		public static final String reset_element = "设置元素ID";
+		public static final String del_element = "删除元素";
+
 	}
 
 	public static class Label {
@@ -41,6 +53,17 @@ public class ZN {
 		public static final String param_file_count = "文件数量";
 		public static final String psd_layer_tree = "数据图层结构";
 		public static final String layer_param_table = "数据参数列表";
+		//
+		public static final String element_tree = "数据列表面板";
+		public static final String element_collections = "元素集合";
+		public static final String element_class = "类对象";
+		public static final String element_resource = "资源对象";
+		public static final String field_tree = "参数面板";
+
+		public static final String class_name = "类名";
+		public static final String field_value = "参数值";
+		//
+		public static final String notice = "注意 : 删除元素不能恢复";
 	}
 
 	public static class Dialog {
@@ -51,6 +74,9 @@ public class ZN {
 		public static final String delete_layer_param = "确定要删除 选中的图层参数?";
 		//
 		public static final String frame_config = "参数设定面板";
+		//
+		public static final String reset_element = "设置元素ID";
+		public static final String del_class_element = "删除元素";
 	}
 
 	public static class Error {
@@ -82,6 +108,9 @@ public class ZN {
 				+ "\n添加方式 : 在[数据图层结构] (右上) 面板  , 单选节点 , 右键->添加事件->选择属性->编辑属性数值"
 				+ "\n删除方式 : 在[数据参数列表] (右下) 面板 , 单选, 或者多选 , 右键 ->删除图层参数"
 				+ "\n修改方式 : 在[数据参数列表] (右下) 面板 , 双击 '值' 列 , 修改参数" + "\n\n导出数据" + "\n菜单 导出 -> 打包";
+
+		//
+		public static final String input_element_id = "输入新的元素ID";
 	}
 
 	public static void main(String[] args) {

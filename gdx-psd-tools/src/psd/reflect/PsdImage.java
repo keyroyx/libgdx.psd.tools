@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * PSD µƒÕº∆¨∂‘œÛ
@@ -23,8 +22,7 @@ public class PsdImage extends Image {
 	}
 
 	public PsdImage(psd.Pic pic, AssetManager assetManager) {
-		super(getTexture(pic, assetManager));
-		this.psdPic = pic;
+		this(null, pic, assetManager);
 	}
 
 	public PsdImage(psd.PsdFile psdFile, psd.Pic pic) {
@@ -42,35 +40,23 @@ public class PsdImage extends Image {
 	}
 
 	// ∂¡»°Õº∆¨
-	protected static final Texture getTexture(psd.Pic pic, AssetManager assetManager) {
+	protected static final TextureRegion getTexture(psd.PsdFile psdFile, psd.Pic pic,
+			AssetManager assetManager) {
 		if (assetManager == null) {
 			assetManager = PsdGroup.getAssetManager();
 		}
-		Texture texture = PsdElement.load(assetManager, pic.textureName, Texture.class);
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		return texture;
-	}
-
-	// ∂¡»°Õº∆¨
-	protected static final TextureRegion getTexture(psd.PsdFile psdFile, psd.Pic pic, AssetManager assetManager) {
-		if (assetManager == null) {
-			assetManager = PsdGroup.getAssetManager();
-		}
-
-		if (psdFile.used_texture_packer) {
-			TextureAtlas textureAtlas = PsdElement.load(assetManager, psdFile.psdName + ".atlas",
-					TextureAtlas.class);
-			Array<AtlasRegion> array = textureAtlas.getRegions();
-			for (AtlasRegion atlasRegion : array) {
-				if (atlasRegion.name.equals(pic.textureName)) {
-					atlasRegion.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-					return atlasRegion;
-				}
-			}
-		} else {
+		if (psdFile == null || psdFile.atlas == null) {
 			Texture texture = PsdElement.load(assetManager, pic.textureName, Texture.class);
 			texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			return new TextureRegion(texture);
+		} else {
+			TextureAtlas textureAtlas = PsdElement.load(assetManager, psdFile.getAtlasPath(),
+					TextureAtlas.class);
+			AtlasRegion atlasRegion = textureAtlas.findRegion(pic.textureName);
+			if (atlasRegion != null) {
+				atlasRegion.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+				return atlasRegion;
+			}
 		}
 
 		return null;

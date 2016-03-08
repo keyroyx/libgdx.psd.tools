@@ -1,7 +1,7 @@
 package gdx.keyroy.data.tools.widgets;
 
 import gdx.keyroy.data.tools.models.ClassElement;
-import gdx.keyroy.data.tools.models.ImagePath;
+import gdx.keyroy.data.tools.models.ResoucePath;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.Messager;
 
@@ -26,9 +26,9 @@ public class PanelFieldsTree extends JPanel {
 	}
 
 	private final void initMessager() {
-		Messager.register(ImagePath.class, new MessageListener<ImagePath>() {
+		Messager.register(ResoucePath.class, new MessageListener<ResoucePath>() {
 			@Override
-			public void onMessage(ImagePath t, Object[] params) {
+			public void onMessage(ResoucePath t, Object[] params) {
 				if (t.isAtlas()) {
 					scrollPane.setViewportView(new ImageAtlasList(t));
 				} else {

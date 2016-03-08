@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 
 public class GridFollowLayout implements LayoutManager {
 	private int offset = 4;
+	private boolean autoOffset = true;
 	private boolean averageOffset = true;
 
 	private final Rectangle setup(Container parent) {
@@ -44,6 +45,10 @@ public class GridFollowLayout implements LayoutManager {
 			rows += 1;
 		}
 		Rectangle rectangle = new Rectangle(cols, rows, maxWidth, maxHeight);
+		if (autoOffset) {
+			averageOffset = rows > 1;
+		}
+
 		return rectangle;
 	}
 
