@@ -105,22 +105,13 @@ public class GdxPsdTools {
 		//
 		if (EditorConfig.used_texture_packer) { // 使用 TexturePacker 打包图片
 			final Settings settings = new Settings();
-			settings.maxWidth = 2048;
-			settings.maxHeight = 2048;
+			settings.maxWidth = 1024;
+			settings.maxHeight = 1024;
 			TexturePacker packer = new TexturePacker(settings);
 			for (Layer layer : layers) {
 				packer.addImage(layer.getImage(), layer.getName());
 			}
 			String imagePath = psdData.getFileName() + ".atlas";
-			File atlas = new File(imagePath);
-			if (atlas.exists()) {
-				atlas.delete();
-			}
-			File png = new File(imagePath.replace(".atlas", ".png"));
-			if (png.exists()) {
-				png.delete();
-			}
-
 			Messager.send("saving image : " + imagePath);
 			packer.pack(packFolder, imagePath);
 
