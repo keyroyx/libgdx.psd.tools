@@ -28,6 +28,7 @@ public class PsdGroup extends WidgetGroup {
 
 	public PsdGroup(psd.Folder psdFolder, PsdFile psdFile, AssetManager assetManager) {
 		this.psdFolder = psdFolder;
+		this.setSize(psdFolder.width, psdFolder.height);
 		for (psd.Element element : this.psdFolder.childs) {
 			addActor(PsdElement.toGdxActor(psdFile, element, assetManager));
 		}
