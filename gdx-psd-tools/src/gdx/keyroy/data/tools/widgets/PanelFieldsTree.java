@@ -1,14 +1,16 @@
 package gdx.keyroy.data.tools.widgets;
 
-import gdx.keyroy.data.tools.models.ClassElement;
-import gdx.keyroy.data.tools.models.ResoucePath;
-import gdx.keyroy.psd.tools.util.MessageListener;
-import gdx.keyroy.psd.tools.util.Messager;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import gdx.keyroy.data.tools.models.ClassElement;
+import gdx.keyroy.data.tools.models.ResoucePath;
+import gdx.keyroy.psd.tools.util.MessageListener;
+import gdx.keyroy.psd.tools.util.Messager;
+import gdx.keyroy.psd.tools.util.PsdCache;
+import gdx.keyroy.psd.tools.widgets.PanelPSDLayerTree;
 
 // 类管理的面板
 @SuppressWarnings("serial")
@@ -31,6 +33,8 @@ public class PanelFieldsTree extends JPanel {
 			public void onMessage(ResoucePath t, Object[] params) {
 				if (t.isAtlas()) {
 					scrollPane.setViewportView(new ImageAtlasList(t));
+				} else if (t.isPSD()) {
+					scrollPane.setViewportView(new PanelPSDLayerTree(PsdCache.get(t.getFile())));
 				} else {
 					scrollPane.setViewportView(null);
 				}

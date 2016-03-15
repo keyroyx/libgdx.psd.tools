@@ -1,12 +1,12 @@
 package gdx.keyroy.data.tools.models;
 
-import gdx.keyroy.psd.tools.util.TextureUnpacker;
-
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
 import com.keyroy.util.json.JsonAn;
+
+import gdx.keyroy.psd.tools.util.TextureUnpacker;
 
 //类 文件的描述
 public class ResoucePath {
@@ -35,12 +35,26 @@ public class ResoucePath {
 		return folder;
 	}
 
+	public final String getFileType() {
+		String assetsName = getAssetsPath();
+		int dotIndex = assetsName.lastIndexOf('.');
+		if (dotIndex > 0 && dotIndex < assetsName.length() - 1) {
+			return assetsName.substring(dotIndex, assetsName.length());
+		} else {
+			return null;
+		}
+	}
+
 	public boolean exist() {
 		return new File(getFilePath()).exists();
 	}
 
 	public boolean isAtlas() {
 		return getAssetsPath().endsWith(".atlas");
+	}
+
+	public boolean isPSD() {
+		return getAssetsPath().endsWith(".psd");
 	}
 
 	public boolean isImage() {

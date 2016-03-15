@@ -21,6 +21,7 @@ public class ZN {
 		public static final String delete_param_file = "删除 参数 文件 ";
 		public static final String delete_layer_param = "删除图层参数";
 		//
+		public static final String refresh = "刷新 ";
 		public static final String update_param_file = "刷新参数信息 ";
 		public static final String open_param_file = "打开参数文件";
 		//
@@ -55,7 +56,7 @@ public class ZN {
 		public static final String layer_param_table = "数据参数列表";
 		//
 		public static final String element_tree = "数据列表面板";
-		public static final String element_collections = "元素集合";
+		public static final String element_collections = "资源";
 		public static final String element_class = "类对象";
 		public static final String element_resource = "资源对象";
 		public static final String field_tree = "参数面板";

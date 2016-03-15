@@ -1,4 +1,4 @@
-#Tue Mar 08 18:44:53 CST 2016
+#Mon Mar 14 14:34:52 CST 2016
 dialog.del_class_element=\u5220\u9664\u5143\u7D20
 dialog.delete_layer_param=\u786E\u5B9A\u8981\u5220\u9664 \u9009\u4E2D\u7684\u56FE\u5C42\u53C2\u6570?
 dialog.delete_param_file=\u5220\u9664\u9009\u4E2D\u7684 \u53C2\u6570\u8BBE\u5B9A \u6587\u4EF6?
@@ -12,7 +12,7 @@ error.parse_ini_file_failed=\u89E3\u6790 ini \u6587\u4EF6\u5931\u8D25
 error.parse_psd_file_failed=\u89E3\u6790 PSD \u6587\u4EF6\u5931\u8D25
 label.class_name=\u7C7B\u540D
 label.element_class=\u7C7B\u5BF9\u8C61
-label.element_collections=\u5143\u7D20\u96C6\u5408
+label.element_collections=\u8D44\u6E90
 label.element_resource=\u8D44\u6E90\u5BF9\u8C61
 label.element_tree=\u6570\u636E\u5217\u8868\u9762\u677F
 label.field_tree=\u53C2\u6570\u9762\u677F
@@ -45,6 +45,7 @@ menu.open_param_file=\u6253\u5F00\u53C2\u6570\u6587\u4EF6
 menu.open_psd=\u6253\u5F00 PSD \u6587\u4EF6
 menu.pack=\u6253\u5305
 menu.pack_config=\u6253\u5305\u53C2\u6570\u8BBE\u5B9A
+menu.refresh=\u5237\u65B0 
 menu.reset_element=\u8BBE\u7F6E\u5143\u7D20ID
 menu.source_code=\u6E90\u4EE3\u7801\u5730\u5740
 menu.system=\u7CFB\u7EDF

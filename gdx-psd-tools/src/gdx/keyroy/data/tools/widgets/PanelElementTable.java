@@ -7,7 +7,9 @@ import gdx.keyroy.psd.tools.util.Icons;
 import gdx.keyroy.psd.tools.util.L;
 import gdx.keyroy.psd.tools.util.MessageListener;
 import gdx.keyroy.psd.tools.util.Messager;
+import gdx.keyroy.psd.tools.util.PsdCache;
 import gdx.keyroy.psd.tools.util.SwingUtil;
+import gdx.keyroy.psd.tools.widgets.PanelPsdViewer;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -59,6 +61,9 @@ public class PanelElementTable extends JPanel {
 			public void onMessage(ResoucePath t, Object[] params) {
 				if (t.isAtlas()) {
 					addTab(t, t.getAssetsPath(), Icons.IMAGE_ATLAS_FILE, new TabImageDrawerPanel(t));
+				} else if (t.isPSD()) {
+					addTab(t, t.getAssetsPath(), Icons.RESOURCE_FILE,
+							new PanelPsdViewer(PsdCache.get(t.getFile())));
 				} else if (t.isImage()) {
 					addTab(t, t.getAssetsPath(), Icons.RESOURCE_FILE, new TabImageDrawerPanel(t));
 				} else {
@@ -145,8 +150,8 @@ public class PanelElementTable extends JPanel {
 							if (tabLable.equals(TabLable.this)) {
 
 							} else {
-								removeList.add(tabbedPane.getComponentAt(tabbedPane
-										.indexOfTabComponent(tabLable)));
+								removeList.add(
+										tabbedPane.getComponentAt(tabbedPane.indexOfTabComponent(tabLable)));
 							}
 						}
 
@@ -164,8 +169,8 @@ public class PanelElementTable extends JPanel {
 				menuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						tabbedPane.remove(tabbedPane.getComponentAt(tabbedPane
-								.indexOfTabComponent(TabLable.this)));
+						tabbedPane.remove(
+								tabbedPane.getComponentAt(tabbedPane.indexOfTabComponent(TabLable.this)));
 						tabbedPane.revalidate();
 						tabbedPane.repaint();
 					}

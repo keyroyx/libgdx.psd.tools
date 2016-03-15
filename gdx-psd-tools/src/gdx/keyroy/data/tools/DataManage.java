@@ -1,5 +1,16 @@
 package gdx.keyroy.data.tools;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.keyroy.util.json.Json;
+import com.keyroy.util.json.JsonAn;
+
 import gdx.keyroy.data.tools.models.ClassElement;
 import gdx.keyroy.data.tools.models.ClassPath;
 import gdx.keyroy.data.tools.models.ResoucePath;
@@ -7,15 +18,10 @@ import gdx.keyroy.psd.tools.util.FileUtil;
 import gdx.keyroy.psd.tools.util.L;
 import gdx.keyroy.psd.tools.util.MessageKey;
 import gdx.keyroy.psd.tools.util.Messager;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.keyroy.util.json.Json;
-import com.keyroy.util.json.JsonAn;
+import gdx.keyroy.psd.tools.util.PsdCache;
+import library.psd.Layer;
+import library.psd.LayersContainer;
+import library.psd.Psd;
 
 // 数据
 public class DataManage {
@@ -73,16 +79,7 @@ public class DataManage {
 					}
 				}
 			} else { // 文件
-				ResoucePath path = new ResoucePath(rootFolder, file);
-				if (path.isAtlas()) {
-					resourcePaths.add(path);
-				} else {
-					try {
-						// 检查图片在不在
-						resourcePaths.add(path);
-					} catch (Exception e) {
-					}
-				}
+				resourcePaths.add(new ResoucePath(rootFolder, file));
 			}
 		}
 	}
@@ -212,14 +209,14 @@ public class DataManage {
 		return classPaths;
 	}
 
-	public static final List<ResoucePath> getImagePaths() {
+	public static final List<ResoucePath> getResourcePaths() {
 		return resourcePaths;
 	}
 
 	public static final void export() {
 		// 打包规则 , 打包输出默认 本地 assets 文件夹
 		// 复制所有类的文件
-		// 复制图片的文件夹 , 有 文件夹的 图片复制到 最后一级文件夹目录 , 没有目录的复制到根目录
+		// 复制资源的文件夹 , 有 文件夹的 资源复制到 最后一级文件夹目录 , 没有目录的复制到根目录
 		Messager.send("Export", MessageKey.H1);
 		File asssets = new File("assests");
 		FileUtil.delete(asssets);// 清空数据
@@ -236,25 +233,47 @@ public class DataManage {
 				save(element, classFolder);
 			}
 		}
-		// 打包图片对象
+		// 打包资源对象
 		Messager.send("Saving Images ", MessageKey.H1);
 		for (ResoucePath resourcePath : resourcePaths) {
 			File file = resourcePath.getFile();
-			try {
-				FileUtil.copy(file, getCopyTo(asssets, file, resourcePath));
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (resourcePath.isPSD()) { // 打包 PSD
+				Psd psd = PsdCache.get(file);
+				List<Layer> layers = new ArrayList<Layer>();
+				filterImage(psd, layers);
+				final Settings settings = new Settings();
+				settings.pot = false;
+				settings.maxWidth = 2048;
+				settings.maxHeight = 2048;
+				TexturePacker packer = new TexturePacker(settings);
+				for (Layer layer : layers) {
+					packer.addImage(layer.getImage(), layer.getName());
+				}
+				String imagePath = resourcePath.getAssetsPath().replace(".psd", ".atlas");
+				Messager.send("saving image : " + imagePath);
+				packer.pack(asssets, imagePath);
+
+			} else { // 拷贝文件
+
+				try {
+					File copyTo = new File(asssets, resourcePath.getAssetsPath());
+					FileUtil.copy(file, copyTo);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
-	protected static final File getCopyTo(File folder, File file, ResoucePath resource) {
-		if (resource.getFolder() != null) {
-			File imageFolder = new File(resource.getFolder());
-			return new File(folder, imageFolder.getName() + File.separator + file.getName());
-		} else {
-			return new File(folder, file.getName());
+	public static final void filterImage(LayersContainer container, List<Layer> out) {
+		for (int i = 0; i < container.getLayersCount(); i++) {
+			Layer layer = container.getLayer(i);
+			if (layer.isFolder() || layer.isTextLayer()) {
+			} else if (layer.getImage() != null) {
+				out.add(layer);
+			}
+			filterImage(layer, out);
 		}
-
 	}
+
 }

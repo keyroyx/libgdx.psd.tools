@@ -1,17 +1,5 @@
 package gdx.keyroy.psd.tools.widgets;
 
-import gdx.keyroy.psd.tools.models.EditorData;
-import gdx.keyroy.psd.tools.models.KeyVal;
-import gdx.keyroy.psd.tools.models.LayerParam;
-import gdx.keyroy.psd.tools.models.PSDData;
-import gdx.keyroy.psd.tools.models.ParamData;
-import gdx.keyroy.psd.tools.util.Icons;
-import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.Messager;
-import gdx.keyroy.psd.tools.util.MessageKey;
-import gdx.keyroy.psd.tools.util.MessageListener;
-import gdx.keyroy.psd.tools.util.PSDUtil;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -40,6 +28,17 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import gdx.keyroy.psd.tools.models.EditorData;
+import gdx.keyroy.psd.tools.models.KeyVal;
+import gdx.keyroy.psd.tools.models.LayerParam;
+import gdx.keyroy.psd.tools.models.PSDData;
+import gdx.keyroy.psd.tools.models.ParamData;
+import gdx.keyroy.psd.tools.util.Icons;
+import gdx.keyroy.psd.tools.util.L;
+import gdx.keyroy.psd.tools.util.MessageKey;
+import gdx.keyroy.psd.tools.util.MessageListener;
+import gdx.keyroy.psd.tools.util.Messager;
+import gdx.keyroy.psd.tools.util.PSDUtil;
 import library.psd.Layer;
 import library.psd.Psd;
 
@@ -143,6 +142,15 @@ public class PanelPSDLayerTree extends JPanel {
 		createPopmenu();
 	}
 
+	public PanelPSDLayerTree(Psd psd) {
+		this();
+		model.setPsd(psd);
+		layersTree.setModel(new DefaultTreeModel(model));
+		layersTree.repaint();
+		layersTree.revalidate();
+	}
+	
+	
 	protected final void createPopmenu() {
 		addPopup(layersTree);
 

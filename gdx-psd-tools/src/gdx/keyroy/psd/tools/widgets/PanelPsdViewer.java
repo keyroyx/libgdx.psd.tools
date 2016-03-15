@@ -83,6 +83,12 @@ public class PanelPsdViewer extends JPanel {
 		});
 	}
 
+	public PanelPsdViewer(Psd psd) {
+		this();
+		psdView.setPsd(psd);
+		revalidate();
+	}
+
 	private class PsdView extends JComponent {
 		private static final long serialVersionUID = 1L;
 		private static final int LINE_WIDTH = 3;

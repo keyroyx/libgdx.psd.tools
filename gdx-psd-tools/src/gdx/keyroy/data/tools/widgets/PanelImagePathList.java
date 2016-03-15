@@ -73,7 +73,7 @@ public class PanelImagePathList extends JPanel {
 						int[] indexes = list.getSelectedIndices();
 						for (int i : indexes) {
 							ResoucePath classPath = (ResoucePath) list.getModel().getElementAt(i);
-							DataManage.getImagePaths().remove(classPath);
+							DataManage.getResourcePaths().remove(classPath);
 						}
 						DataManage.save();
 						updateList();
@@ -117,7 +117,7 @@ public class PanelImagePathList extends JPanel {
 
 		@SuppressWarnings("unchecked")
 		public ImagePathListModel() {
-			List<ResoucePath> list = DataManage.getImagePaths();
+			List<ResoucePath> list = DataManage.getResourcePaths();
 			for (ResoucePath path : list) {
 				addElement(path);
 			}

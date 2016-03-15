@@ -1,18 +1,5 @@
 package gdx.keyroy.data.tools.widgets;
 
-import gdx.keyroy.data.tools.DataManage;
-import gdx.keyroy.data.tools.models.ClassElement;
-import gdx.keyroy.data.tools.models.FieldAn;
-import gdx.keyroy.data.tools.models.ResoucePath;
-import gdx.keyroy.psd.tools.util.DefaultTreeNode;
-import gdx.keyroy.psd.tools.util.FieldParser;
-import gdx.keyroy.psd.tools.util.Icons;
-import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.PopmenuListener;
-import gdx.keyroy.psd.tools.util.ReflectTools;
-import gdx.keyroy.psd.tools.util.SwingUtil;
-import gdx.keyroy.psd.tools.util.TextureUnpacker.Region;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +7,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -46,6 +35,23 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
+import gdx.keyroy.data.tools.DataManage;
+import gdx.keyroy.data.tools.models.ClassElement;
+import gdx.keyroy.data.tools.models.FieldAn;
+import gdx.keyroy.data.tools.models.ResoucePath;
+import gdx.keyroy.psd.tools.util.DefaultTreeNode;
+import gdx.keyroy.psd.tools.util.FieldParser;
+import gdx.keyroy.psd.tools.util.Icons;
+import gdx.keyroy.psd.tools.util.L;
+import gdx.keyroy.psd.tools.util.PopmenuListener;
+import gdx.keyroy.psd.tools.util.PsdCache;
+import gdx.keyroy.psd.tools.util.ReflectTools;
+import gdx.keyroy.psd.tools.util.SwingUtil;
+import gdx.keyroy.psd.tools.util.TextureUnpacker.Region;
+import library.psd.Layer;
+import library.psd.Psd;
+import library.psd.util.LayerFilter;
 
 @SuppressWarnings("serial")
 public class ClassElementFieldTree extends JPanel {
@@ -79,7 +85,7 @@ public class ClassElementFieldTree extends JPanel {
 		this.tree.expandPath(treePath);
 		//
 		add(tree, BorderLayout.CENTER);
-
+		//
 		initEditPanel();
 	}
 
@@ -117,9 +123,9 @@ public class ClassElementFieldTree extends JPanel {
 		//
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new FormLayout(new ColumnSpec[] { FormFactory.DEFAULT_COLSPEC,
-				FormFactory.GROWING_BUTTON_COLSPEC, }, new RowSpec[] { FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC, }));
+		panel.setLayout(new FormLayout(
+				new ColumnSpec[] { FormFactory.DEFAULT_COLSPEC, FormFactory.GROWING_BUTTON_COLSPEC, },
+				new RowSpec[] { FormFactory.DEFAULT_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, }));
 
 		JLabel label_class = new JLabel(L.get("label.class_name"));
 		panel.add(label_class, "1, 1, fill, fill");
@@ -151,61 +157,91 @@ public class ClassElementFieldTree extends JPanel {
 			@Override
 			public void onInitPopmenu(JPopupMenu popupMenu) {
 				if (textField_field.isEditable()) {
+					// 文件类型缓存
 					folders.clear();
-					List<ResoucePath> images = DataManage.getImagePaths();
-					for (final ResoucePath imagePath : images) {
-						if (imagePath.isAtlas()) {
-							JMenu menu = new JMenu(imagePath.getAssetsPath());
-							popupMenu.add(menu);
-							//
-							Array<Region> regins = imagePath.getUnpacker().getRegions();
-							for (final Region region : regins) {
-								JMenuItem menuItem = new JMenuItem(region.name);
-								menuItem.addActionListener(new ActionListener() {
+					List<JMenu> menus = new ArrayList<>();
+					for (ResoucePath resoucePath : DataManage.getResourcePaths()) {
+						String fileType = resoucePath.getFileType();
+						if (fileType == null) {
+							fileType = "";
+						}
+						if (folders.containsKey(fileType) == false) {
+							JMenu menu = new JMenu(fileType);
+							menus.add(menu);
+							folders.put(fileType, menu);
+						}
+					}
+					// 排序 , 添加
+					menus.sort(new Comparator<JMenu>() {
+						@Override
+						public int compare(JMenu o1, JMenu o2) {
+							return o1.getText().compareTo(o2.getText());
+						}
+					});
+					for (JMenu menu : menus) {
+						popupMenu.add(menu);
+					}
+					//
+
+					for (final ResoucePath resoucePath : DataManage.getResourcePaths()) {
+						if (resoucePath.getFile().exists()) {
+							AbstractButton button = null;
+							if (resoucePath.isAtlas()) {
+								JMenu menu = new JMenu(resoucePath.getAssetsPath());
+								Array<Region> regins = resoucePath.getUnpacker().getRegions();
+								for (final Region region : regins) {
+									JMenuItem menuItem = new JMenuItem(region.name);
+									menuItem.addActionListener(new ActionListener() {
+										@Override
+										public void actionPerformed(ActionEvent e) {
+											textField_field.setText(region.name + "@"
+													+ resoucePath.getAssetsPath().replace("\\", "/"));
+										}
+									});
+									menu.add(menuItem);
+								}
+								button = menu;
+							} else if (resoucePath.isPSD()) {
+								final JMenu menu = new JMenu(resoucePath.getAssetsPath());
+								final Psd psd = PsdCache.get(resoucePath.getFile());
+								psd.getLayer(new LayerFilter() {
 									@Override
-									public void actionPerformed(ActionEvent e) {
-										textField_field.setText(region.name + "@"
-												+ imagePath.getAssetsPath().replace("\\", "/"));
+									public boolean accept(final Layer layer) {
+										JMenuItem menuItem = new JMenuItem(layer.getName());
+										menuItem.addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												textField_field.setText(layer.getName() + "@"
+														+ resoucePath.getAssetsPath().replace("\\", "/"));
+											}
+										});
+										menu.add(menuItem);
+										return false;
 									}
 								});
-								menu.add(menuItem);
-							}
-						} else {
-							if (imagePath.getFolder() != null) {
-								JMenu menu = getMenu(imagePath.getFolder(), popupMenu);
-								JMenuItem menuItem = new JMenuItem(imagePath.getAssetsPath());
-								menuItem.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										textField_field.setText(imagePath.getFolderName() + "/"
-												+ imagePath.getAssetsPath().replace("\\", "/"));
-									}
-								});
-								menu.add(menuItem);
+								button = menu;
 							} else {
-								JMenuItem menuItem = new JMenuItem(imagePath.getAssetsPath());
+								JMenuItem menuItem = new JMenuItem(resoucePath.getAssetsPath());
 								menuItem.addActionListener(new ActionListener() {
 									@Override
 									public void actionPerformed(ActionEvent e) {
-										textField_field.setText(imagePath.getAssetsPath().replace("\\", "/"));
+										textField_field
+												.setText(resoucePath.getAssetsPath().replace("\\", "/"));
 									}
 								});
-								popupMenu.add(menuItem);
+								button = menuItem;
 							}
 
+							String fileType = resoucePath.getFileType();
+							if (fileType == null) {
+								fileType = "";
+							}
+							// 判断上级的 menu 是否存在
+							JMenu menu = folders.get(fileType);
+							menu.add(button);
 						}
 					}
 				}
-			}
-
-			protected final JMenu getMenu(String folder, JPopupMenu popupMenu) {
-				JMenu menu = folders.get(folder);
-				if (menu == null) {
-					menu = new JMenu(new File(folder).getName());
-					folders.put(folder, menu);
-					popupMenu.add(menu);
-				}
-				return menu;
 			}
 		});
 	}
