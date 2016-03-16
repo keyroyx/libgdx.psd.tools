@@ -252,9 +252,7 @@ public class DataManage {
 				String imagePath = resourcePath.getAssetsPath().replace(".psd", ".atlas");
 				Messager.send("saving image : " + imagePath);
 				packer.pack(asssets, imagePath);
-
 			} else { // ¿½±´ÎÄ¼þ
-
 				try {
 					File copyTo = new File(asssets, resourcePath.getAssetsPath());
 					FileUtil.copy(file, copyTo);

@@ -103,6 +103,7 @@ public class GdxPsdTools {
 		//
 		if (EditorConfig.used_texture_packer) { // 使用 TexturePacker 打包图片
 			final Settings settings = new Settings();
+			settings.pot = false;
 			settings.maxWidth = 2048;
 			settings.maxHeight = 2048;
 			TexturePacker packer = new TexturePacker(settings);

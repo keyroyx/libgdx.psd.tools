@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import a.test.Monster;
 import gdx.keyroy.data.tools.DataManage;
 import gdx.keyroy.data.tools.widgets.Lable;
 import gdx.keyroy.data.tools.widgets.PanelElementTable;
@@ -33,17 +32,40 @@ public class GameKit {
 	protected static float scale = 0.5f;
 	private JFrame frame;
 
+	public static final void start(Class<?>... classes) {
+		try {
+			for (Class<?> clazz : classes) {
+				DataManage.addClass(clazz, false);
+			}
+			init();
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						GameKit window = new GameKit();
+						SwingUtil.center(window.frame);
+						window.frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, L.get("error.init_data_failed"), L.get("Error"),
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 	private static final void init() throws Exception {
 		// LOOK AND FEEL
 		SwingUtil.initWindowsLookAndFeel();
 		// 加载语言
 		L.load("/zn");
 		// 加载编辑器 数据
-		DataManage.addClass(Monster.class, false);
+		// DataManage.addClass(Monster.class, false);
 		DataManage.load();
 		// 加载配置信息
 		EditorConfig.load();
-
 		scale = 1;
 	}
 

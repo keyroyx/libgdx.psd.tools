@@ -83,6 +83,10 @@ public class ResoucePath {
 		return getFile().getAbsolutePath();
 	}
 
+	public final String getFileName() {
+		return new File(name).getName();
+	}
+
 	public final String getAssetsPath() {
 		return name;
 	}

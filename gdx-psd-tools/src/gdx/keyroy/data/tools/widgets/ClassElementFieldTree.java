@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -187,7 +188,7 @@ public class ClassElementFieldTree extends JPanel {
 						if (resoucePath.getFile().exists()) {
 							AbstractButton button = null;
 							if (resoucePath.isAtlas()) {
-								JMenu menu = new JMenu(resoucePath.getAssetsPath());
+								JMenu menu = new JMenu(resoucePath.getFileName());
 								Array<Region> regins = resoucePath.getUnpacker().getRegions();
 								for (final Region region : regins) {
 									JMenuItem menuItem = new JMenuItem(region.name);
@@ -202,7 +203,7 @@ public class ClassElementFieldTree extends JPanel {
 								}
 								button = menu;
 							} else if (resoucePath.isPSD()) {
-								final JMenu menu = new JMenu(resoucePath.getAssetsPath());
+								final JMenu menu = new JMenu(resoucePath.getFileName());
 								final Psd psd = PsdCache.get(resoucePath.getFile());
 								psd.getLayer(new LayerFilter() {
 									@Override
@@ -221,7 +222,7 @@ public class ClassElementFieldTree extends JPanel {
 								});
 								button = menu;
 							} else {
-								JMenuItem menuItem = new JMenuItem(resoucePath.getAssetsPath());
+								JMenuItem menuItem = new JMenuItem(resoucePath.getFileName());
 								menuItem.addActionListener(new ActionListener() {
 									@Override
 									public void actionPerformed(ActionEvent e) {
@@ -236,9 +237,26 @@ public class ClassElementFieldTree extends JPanel {
 							if (fileType == null) {
 								fileType = "";
 							}
-							// 判断上级的 menu 是否存在
-							JMenu menu = folders.get(fileType);
-							menu.add(button);
+							String rPath = resoucePath.getAssetsPath().replace(File.separator, "/");
+							String[] paths = rPath.split("/");
+							if (paths.length > 1) {
+								String path = fileType;
+								for (int i = 0; i < paths.length - 1; i++) {
+									String newPath = path + "/" + paths[i];
+									if (folders.containsKey(newPath) == false) {
+										JMenu menu = new JMenu(paths[i]);
+										folders.put(newPath, menu);
+										folders.get(path).add(menu);
+									}
+									path = newPath;
+								}
+								JMenu menu = folders.get(path);
+								menu.add(button);
+							} else {
+								JMenu menu = folders.get(fileType);
+								menu.add(button);
+							}
+
 						}
 					}
 				}
