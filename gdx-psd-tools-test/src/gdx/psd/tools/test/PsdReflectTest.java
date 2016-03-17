@@ -1,14 +1,5 @@
 package gdx.psd.tools.test;
 
-import psd.Element;
-import psd.ElementFilter;
-import psd.PsdFile;
-import psd.reflect.PsdAn;
-import psd.reflect.PsdGroup;
-import psd.reflect.PsdImage;
-import psd.reflect.PsdReflectListener;
-import psd.reflect.PsdStage;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -20,17 +11,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.keyroy.util.json.Json;
 
+import psd.Element;
+import psd.PsdFile;
+import psd.reflect.PsdAn;
+import psd.reflect.PsdGroup;
+import psd.reflect.PsdImage;
+import psd.reflect.PsdStage;
+import psd.utils.ElementFilter;
+import psd.utils.PsdReflectAdapter;
+
 public class PsdReflectTest {
 	public static void main(String[] args) {
 		try {
-			Json json = new Json(GdxTest.class.getResourceAsStream("/xianshiguanka.json"));
+			Json json = new Json(PsdReflectTest.class.getResourceAsStream("/xianshiguanka.json"));
 			System.out.println(json);
-			final PsdFile psdFile = json.toObject(PsdFile.class);
+			PsdFile psdFile = json.toObject(PsdFile.class);
 			LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 			config.width = psdFile.width / 2;
 			config.height = psdFile.height / 2;
 			System.out.println("screen : " + config.width + "x" + config.height);
-
 			new LwjglApplication(new ApplicationAdapter() {
 				GroupReflect groupReflect = new GroupReflect();
 				PsdStage stage;
@@ -60,7 +59,7 @@ public class PsdReflectTest {
 	}
 
 	@PsdAn("xianshiguanka.json")
-	public static final class GroupReflect implements PsdReflectListener {
+	public static final class GroupReflect extends PsdReflectAdapter {
 
 		@PsdAn("buttonPlay")
 		protected psd.Pic buttonPlayPic;
@@ -69,12 +68,12 @@ public class PsdReflectTest {
 		protected PsdImage buttonPlay;
 
 		@Override
-		public void onReflectSuccess(PsdGroup psdGroup) {
+		public void onCreate(PsdGroup psdGroup) {
 			buttonPlay.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					System.out.println("click onReflectSuccess "
-							+ buttonPlay.equals(buttonPlayPic.getUserObject()));
+					System.out.println(
+							"click onReflectSuccess " + buttonPlay.equals(buttonPlayPic.getUserObject()));
 					System.out.println();
 				}
 			});
@@ -84,7 +83,7 @@ public class PsdReflectTest {
 				public boolean accept(Element element) {
 					return "buttonPlay".equals(element.layerName);
 				}
-			}).getUserObject());
+			}).getActor());
 			initButtonStyle(image);
 		}
 
@@ -149,5 +148,6 @@ public class PsdReflectTest {
 				}
 			});
 		}
+
 	}
 }

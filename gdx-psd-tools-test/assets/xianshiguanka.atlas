@@ -1,123 +1,124 @@
 
 xianshiguanka.png
+size: 832,769
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 buttonPlay
   rotate: false
-  xy: 0, 0
+  xy: 2, 2
   size: 297, 101
   orig: 297, 101
   offset: 0, 0
   index: -1
 buttonclose
   rotate: false
-  xy: 394, 28
+  xy: 396, 30
   size: 69, 73
   orig: 69, 73
   offset: 0, 0
   index: -1
 buttonhelp
   rotate: false
-  xy: 693, 366
+  xy: 695, 368
   size: 39, 40
   orig: 39, 40
   offset: 0, 0
   index: -1
 imageleve
   rotate: false
-  xy: 788, 445
+  xy: 790, 447
   size: 24, 46
   orig: 24, 46
   offset: 0, 0
   index: -1
 imagelevelback
   rotate: false
-  xy: 0, 103
+  xy: 2, 105
   size: 691, 662
   orig: 691, 662
   offset: 0, 0
   index: -1
 imageok
   rotate: false
-  xy: 299, 18
+  xy: 301, 20
   size: 93, 83
   orig: 93, 83
   offset: 0, 0
   index: -1
 imageok
   rotate: false
-  xy: 299, 18
+  xy: 301, 20
   size: 93, 83
   orig: 93, 83
   offset: 0, 0
   index: -1
 imageok
   rotate: false
-  xy: 693, 408
+  xy: 695, 410
   size: 93, 83
   orig: 93, 83
   offset: 0, 0
   index: -1
 imageok
   rotate: false
-  xy: 693, 408
+  xy: 695, 410
   size: 93, 83
   orig: 93, 83
   offset: 0, 0
   index: -1
 imagescore
   rotate: false
-  xy: 465, 67
+  xy: 467, 69
   size: 24, 34
   orig: 24, 34
   offset: 0, 0
   index: -1
 imageshop
   rotate: false
-  xy: 693, 340
+  xy: 695, 342
   size: 15, 24
   orig: 15, 24
   offset: 0, 0
   index: -1
 imageshop
   rotate: false
-  xy: 693, 340
+  xy: 695, 342
   size: 15, 24
   orig: 15, 24
   offset: 0, 0
   index: -1
 imageshop
   rotate: false
-  xy: 734, 382
+  xy: 736, 384
   size: 15, 24
   orig: 15, 24
   offset: 0, 0
   index: -1
 imageshop
   rotate: false
-  xy: 734, 382
+  xy: 736, 384
   size: 15, 24
   orig: 15, 24
   offset: 0, 0
   index: -1
 imagestar
   rotate: false
-  xy: 693, 630
+  xy: 695, 632
   size: 135, 135
   orig: 135, 135
   offset: 0, 0
   index: -1
 imagestar
   rotate: false
-  xy: 693, 630
+  xy: 695, 632
   size: 135, 135
   orig: 135, 135
   offset: 0, 0
   index: -1
 imagestar
   rotate: false
-  xy: 693, 493
+  xy: 695, 495
   size: 135, 135
   orig: 135, 135
   offset: 0, 0
