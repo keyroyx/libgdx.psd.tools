@@ -3,13 +3,15 @@ package psd.reflect;
 import java.util.ArrayList;
 import java.util.List;
 
-import psd.Element;
-import psd.ElementFilter;
-import psd.PsdFile;
-
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+
+import psd.Element;
+import psd.PsdFile;
+import psd.utils.ElementFilter;
+import psd.utils.FileManage;
+import psd.utils.PsdReflectUtil;
 
 /**
  * PSD 的文件夹
@@ -17,8 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
  * @author roy
  */
 public class PsdGroup extends WidgetGroup {
-	// 默认的资源加载器
-	private static AssetManager assetManager;
+
 	// 文件夹的源
 	private final psd.Folder psdFolder;
 
@@ -30,7 +31,7 @@ public class PsdGroup extends WidgetGroup {
 		this.psdFolder = psdFolder;
 		this.setSize(psdFolder.width, psdFolder.height);
 		for (psd.Element element : this.psdFolder.childs) {
-			addActor(PsdElement.toGdxActor(psdFile, element, assetManager));
+			addActor(PsdReflectUtil.toGdxActor(psdFile, element, assetManager));
 		}
 	}
 
@@ -38,7 +39,7 @@ public class PsdGroup extends WidgetGroup {
 	public <T extends Actor> T findActor(final String name) {
 		Element element = psdFolder.get(name);
 		if (element != null) {
-			return element.getUserObject();
+			return element.getActor();
 		}
 		return null;
 	}
@@ -46,15 +47,14 @@ public class PsdGroup extends WidgetGroup {
 	// 过滤元素
 	public final List<Actor> filter(final ActorFilter filter) {
 		List<Element> elements = psdFolder.filter(new ElementFilter() {
-
 			@Override
 			public boolean accept(Element element) {
-				return filter.accept(element, (Actor) element.getUserObject());
+				return filter.accept(element, (Actor) element.getActor());
 			}
 		});
 		List<Actor> actors = new ArrayList<Actor>(elements.size());
 		for (Element element : elements) {
-			actors.add((Actor) element.getUserObject());
+			actors.add((Actor) element.getActor());
 		}
 		return actors;
 	}
@@ -65,14 +65,11 @@ public class PsdGroup extends WidgetGroup {
 	}
 
 	public static final PsdGroup reflect(Object object) {
-		return PsdElement.reflect(object);
+		return PsdReflectUtil.reflect(object);
 	}
 
 	public static final AssetManager getAssetManager() {
-		if (assetManager == null) {
-			assetManager = new AssetManager();
-		}
-		return assetManager;
+		return FileManage.getAssetManager();
 	}
 
 	public static interface ActorFilter {

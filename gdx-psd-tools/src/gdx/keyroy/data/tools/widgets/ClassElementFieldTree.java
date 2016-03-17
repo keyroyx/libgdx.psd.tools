@@ -160,7 +160,7 @@ public class ClassElementFieldTree extends JPanel {
 				if (textField_field.isEditable()) {
 					// 文件类型缓存
 					folders.clear();
-					List<JMenu> menus = new ArrayList<>();
+					List<JMenu> menus = new ArrayList<JMenu>();
 					for (ResoucePath resoucePath : DataManage.getResourcePaths()) {
 						String fileType = resoucePath.getFileType();
 						if (fileType == null) {

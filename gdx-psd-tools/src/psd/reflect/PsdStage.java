@@ -1,57 +1,51 @@
 package psd.reflect;
 
-import psd.PsdFile;
-
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import psd.utils.PsdReflectListener;
+import psd.utils.PsdReflectUtil;
 
 /**
  * PSD 的舞台
- * 
- * @author roy
  */
 public class PsdStage extends Stage {
-	// PSD 文件
-	protected PsdFile psdFile;
-	// 加载缓存
-	protected AssetManager assetManager;
 
-	public PsdStage(PsdFile psdFile) {
-		super(new ScalingViewport(Scaling.stretch, psdFile.width, psdFile.height, new OrthographicCamera()));
-		this.psdFile = psdFile;
-		this.assetManager = new AssetManager();
-		//
-		for (psd.Element element : psdFile.childs) {
-			Actor actor = PsdElement.toGdxActor(psdFile, element, assetManager);
-			addActor(actor);
-		}
+	//
+	public PsdStage(Object reflectObject) {
+		this(reflectObject, PsdReflectUtil.reflect(reflectObject));
 	}
 
-	public PsdStage(PsdGroup psdGroup) {
-		super(new ScalingViewport(Scaling.stretch, psdGroup.getWidth(), psdGroup.getHeight(),
-				new OrthographicCamera()));
-		if (psdGroup.getPsdFolder() instanceof PsdFile) {
-			this.psdFile = (PsdFile) psdGroup.getPsdFolder();
-		}
+	//
+	public PsdStage(Object reflectObject, Viewport viewport) {
+		this(reflectObject, PsdReflectUtil.reflect(reflectObject), viewport);
+	}
+
+	//
+	public PsdStage(Object reflectObject, PsdGroup psdGroup) {
+		this(reflectObject, psdGroup, new ScalingViewport(Scaling.stretch, psdGroup.getWidth(),
+				psdGroup.getHeight(), new OrthographicCamera()));
+	}
+
+	//
+	public PsdStage(Object reflectObject, PsdGroup psdGroup, Viewport viewport) {
+		super(viewport);
 		addActor(psdGroup);
-	}
+		if (reflectObject instanceof PsdReflectListener) {
+			((PsdReflectListener) reflectObject).onViewportChange(getViewport());
+		}
 
-	//
-	public PsdFile getPsdFile() {
-		return psdFile;
-	}
-
-	//
-	public AssetManager getAssetManager() {
-		return assetManager;
 	}
 
 	public static final PsdStage reflect(Object object) {
-		return new PsdStage(PsdElement.reflect(object));
+		return new PsdStage(object, PsdReflectUtil.reflect(object));
+	}
+
+	public static final PsdStage reflect(Object object, Viewport viewport) {
+		return new PsdStage(object, PsdReflectUtil.reflect(object), viewport);
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import library.psd.Psd;
 
 public class PsdCache {
-	private static final Hashtable<String, Psd> HASHTABLE = new Hashtable<>();
+	private static final Hashtable<String, Psd> HASHTABLE = new Hashtable<String, Psd>();
 
 	public static final Psd get(File file) {
 		return get(file.getAbsolutePath());

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import psd.utils.PsdReflectUtil;
+
 /**
  * PSD µÄÍ¼Æ¬¶ÔÏó
  * 
@@ -46,11 +48,11 @@ public class PsdImage extends Image {
 			assetManager = PsdGroup.getAssetManager();
 		}
 		if (psdFile == null || psdFile.atlas == null) {
-			Texture texture = PsdElement.load(assetManager, pic.textureName, Texture.class);
+			Texture texture = PsdReflectUtil.load(assetManager, pic.textureName, Texture.class);
 			texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			return new TextureRegion(texture);
 		} else {
-			TextureAtlas textureAtlas = PsdElement.load(assetManager, psdFile.getAtlasPath(),
+			TextureAtlas textureAtlas = PsdReflectUtil.load(assetManager, psdFile.getAtlasPath(),
 					TextureAtlas.class);
 			AtlasRegion atlasRegion = textureAtlas.findRegion(pic.textureName);
 			if (atlasRegion != null) {

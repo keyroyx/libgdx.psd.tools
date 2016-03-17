@@ -153,7 +153,7 @@ public class ResourceTree extends JPanel {
 				fileTypeTreeModel.add(new ResourceTreeModel(resoucePath));
 			}
 
-			List<ResourceTreeModel> models = new ArrayList<>(fileTypes.size());
+			List<ResourceTreeModel> models = new ArrayList<ResourceTreeModel>(fileTypes.size());
 			models.addAll(fileTypes.values());
 			models.sort(new Comparator<ResourceTreeModel>() {
 				@Override

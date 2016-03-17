@@ -2,6 +2,7 @@ package psd;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.keyroy.util.json.Json;
+import com.keyroy.util.json.JsonAn;
 
 /**
  * PSD 的文件描述
@@ -17,6 +18,7 @@ public class PsdFile extends Folder {
 	// 图片集
 	public String atlas;
 	// 文件句柄
+	@JsonAn(skip = true)
 	public FileHandle handle;
 
 	public PsdFile() {

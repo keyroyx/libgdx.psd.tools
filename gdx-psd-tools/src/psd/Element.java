@@ -2,6 +2,7 @@ package psd;
 
 import java.util.List;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.keyroy.util.json.JsonAn;
 
 /**
@@ -21,8 +22,11 @@ public class Element {
 	// 自定义对象
 	@JsonAn(skip = true)
 	protected Object userObject;
+	// 自定义对象
+	@JsonAn(skip = true)
+	protected Actor actor;
 
-	//
+	// 设置用户自定义的缓存数据
 	public final void setUserObject(Object userObject) {
 		this.userObject = userObject;
 	}
@@ -31,5 +35,16 @@ public class Element {
 	@SuppressWarnings("unchecked")
 	public final <T> T getUserObject() {
 		return (T) userObject;
+	}
+
+	// 设置用户自定义的 Actor 对象
+	public final void setActor(Actor actor) {
+		this.actor = actor;
+	}
+
+	//
+	@SuppressWarnings("unchecked")
+	public final <T extends Actor> T getActor() {
+		return (T) actor;
 	}
 }
