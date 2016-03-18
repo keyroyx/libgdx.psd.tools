@@ -13,12 +13,12 @@ import com.keyroy.util.json.Json;
 
 import psd.Element;
 import psd.PsdFile;
+import psd.framework.PsdReflectAdapter;
 import psd.reflect.PsdAn;
 import psd.reflect.PsdGroup;
 import psd.reflect.PsdImage;
 import psd.reflect.PsdStage;
 import psd.utils.ElementFilter;
-import psd.utils.PsdReflectAdapter;
 
 public class PsdReflectTest {
 	public static void main(String[] args) {
