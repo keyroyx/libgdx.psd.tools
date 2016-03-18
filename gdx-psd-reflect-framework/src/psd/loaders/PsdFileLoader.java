@@ -1,4 +1,4 @@
-package psd.utils;
+package psd.loaders;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -9,18 +9,18 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 import psd.PsdFile;
-import psd.utils.PsdFileAssetsLoader.PsdFileParameter;
+import psd.loaders.PsdFileLoader.PsdFileParameter;
 
-public class PsdFileAssetsLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParameter> {
-
-	public PsdFileAssetsLoader(FileHandleResolver resolver) {
+//
+public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParameter> {
+	//
+	public PsdFileLoader(FileHandleResolver resolver) {
 		super(resolver);
 	}
 
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file,
 			PsdFileParameter parameter) {
-
 	}
 
 	@Override

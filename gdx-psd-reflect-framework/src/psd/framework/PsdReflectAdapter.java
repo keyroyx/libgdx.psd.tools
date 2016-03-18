@@ -3,9 +3,9 @@ package psd.framework;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import psd.loaders.FileManage;
 import psd.reflect.PsdGroup;
 import psd.reflect.PsdReflectListener;
-import psd.utils.FileManage;
 
 /** 简易的反射对象 */
 public abstract class PsdReflectAdapter extends FileManage implements PsdReflectListener {

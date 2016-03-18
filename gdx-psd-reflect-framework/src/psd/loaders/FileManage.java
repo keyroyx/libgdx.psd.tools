@@ -1,4 +1,4 @@
-package psd.utils;
+package psd.loaders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 
 import psd.PsdFile;
+import psd.utils.Filter;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class FileManage {
@@ -123,7 +124,10 @@ public class FileManage {
 		}
 
 		private final void initLoader(FileHandleResolver resolver) {
-			setLoader(PsdFile.class, new PsdFileAssetsLoader(resolver));
+			// 抗锯齿 的图片加载器
+			setLoader(Texture.class, new LinearTextureLoader(resolver));
+			// 读取PSD源
+			setLoader(PsdFile.class, new PsdFileLoader(resolver));
 		}
 
 		private final void mark(String tag) {
@@ -138,6 +142,11 @@ public class FileManage {
 
 		public final synchronized <T> void load(String fileName, Class<T> type,
 				AssetLoaderParameters<T> parameter) {
+			// 检查 Loader是否存在 , 默认为 JSON 解析
+			if (getLoader(type) == null) {
+				setLoader(type, new JsonDataAssetLoader<>(fileHandleResolver, type));
+			}
+
 			super.load(fileName, type, parameter);
 			if (currentMark != null) {
 				currentMark.record(fileName, type, parameter);

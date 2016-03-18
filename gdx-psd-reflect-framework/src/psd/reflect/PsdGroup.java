@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import psd.Element;
 import psd.PsdFile;
+import psd.loaders.FileManage;
 import psd.utils.ElementFilter;
-import psd.utils.FileManage;
 import psd.utils.PsdReflectUtil;
 
 /**
