@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import library.psd.Layer;
 import library.psd.LayersContainer;
 import library.psd.Psd;
+import library.psd.parser.object.PsdText;
 import psd.Element;
 import psd.Folder;
 import psd.Param;
@@ -157,7 +158,7 @@ public class GdxPsdTools {
 		if (layerParams != null && layerParams.size() > 0) {
 			psdFile.params = new ArrayList<Param>(layerParams.size());
 			for (LayerParam layerParam : layerParams) {
-				psdFile.params.add(new Param(layerParam));
+				psdFile.params.add(new Param(layerParam.getParamId(), layerParam.getData()));
 			}
 		}
 		addChild(psdData, psd, psdFile);
@@ -171,8 +172,10 @@ public class GdxPsdTools {
 			if (layer.isFolder()) { // 这是一个文件夹
 				actor = new Folder();
 			} else if (layer.isTextLayer()) { // 这是一个文本对象
-				actor = new Text();
-				((Text) actor).setPsdText(layer.getPsdText());
+				Text text = new Text();
+				PsdText psdText = layer.getPsdText();
+				text.setPsdText(psdText.value, psdText.a, psdText.r, psdText.g, psdText.b, psdText.fontSize);
+				actor = text;
 			} else if (layer.getImage() != null) { // 这是一个图片
 				actor = new Pic();
 				if (EditorConfig.used_texture_packer) {
@@ -209,7 +212,7 @@ public class GdxPsdTools {
 				if (layerParams != null && layerParams.size() > 0) {
 					actor.params = new ArrayList<Param>(layerParams.size());
 					for (LayerParam layerParam : layerParams) {
-						actor.params.add(new Param(layerParam));
+						actor.params.add(new Param(layerParam.getParamId(), layerParam.getData()));
 					}
 				}
 				//

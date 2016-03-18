@@ -1,7 +1,5 @@
 package psd;
 
-import gdx.keyroy.psd.tools.models.LayerParam;
-
 public class Param {
 	// ²ÎÊýID
 	protected String paramId;
@@ -11,9 +9,9 @@ public class Param {
 	public Param() {
 	}
 
-	public Param(LayerParam param) {
-		this.paramId = param.getParamId();
-		this.data = param.getData();
+	public Param(String paramId, String data) {
+		this.paramId = paramId;
+		this.data = data;
 	}
 
 	public String getParamId() {

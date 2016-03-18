@@ -1,18 +1,20 @@
 package psd.reflect;
 
+import java.lang.reflect.Method;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import psd.utils.PsdReflectListener;
 import psd.utils.PsdReflectUtil;
 
 /**
  * PSD 的舞台
  */
 public class PsdStage extends Stage {
+	private final Object reflectObject;
 
 	//
 	public PsdStage(Object reflectObject) {
@@ -33,11 +35,45 @@ public class PsdStage extends Stage {
 	//
 	public PsdStage(Object reflectObject, PsdGroup psdGroup, Viewport viewport) {
 		super(viewport);
+		this.reflectObject = reflectObject;
 		addActor(psdGroup);
-		if (reflectObject instanceof PsdReflectListener) {
-			((PsdReflectListener) reflectObject).onViewportChange(getViewport());
-		}
+		// 尝试 反射 onViewPortChange 函数
+		doMethod("onViewportChange", getViewport());
+	}
 
+	/** 标记这个舞台是否失去了控制权 */
+	public final void onControl(boolean isControl) {
+
+	}
+
+	// 执行函数
+	protected final void doMethod(String methodName, Object... args) {
+		try {
+			Class<?>[] classes = null;
+			if (args != null) {
+				classes = new Class<?>[args.length];
+				for (int i = 0; i < args.length; i++) {
+					if (args[i] != null) {
+						classes[i] = args[i].getClass();
+					}
+				}
+			}
+
+			Method method = reflectObject.getClass().getMethod(methodName, classes);
+			if (method != null) {
+				method.setAccessible(true);
+				method.invoke(reflectObject, args);
+			}
+		} catch (NoSuchMethodException e) {
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public final <T> T getReflectObject() {
+		return (T) reflectObject;
 	}
 
 	public static final PsdStage reflect(Object object) {

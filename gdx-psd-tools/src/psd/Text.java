@@ -1,9 +1,8 @@
 package psd;
 
-import library.psd.parser.object.PsdText;
-
 /***
  * PSD 的文字
+ * 
  * @author roy
  */
 public class Text extends Element {
@@ -14,12 +13,12 @@ public class Text extends Element {
 	// 文字大小
 	public int fontSize;
 
-	public void setPsdText(PsdText psdText) {
-		this.text = psdText.value;
-		this.a = psdText.a;
-		this.r = psdText.r;
-		this.g = psdText.g;
-		this.b = psdText.b;
-		this.fontSize = psdText.fontSize;
+	public void setPsdText(String text, float a, float r, float g, float b, int fontSize) {
+		this.text = text;
+		this.a = a;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.fontSize = fontSize;
 	}
 }

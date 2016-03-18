@@ -4,20 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 
 import psd.PsdFile;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class FileManage {
+	// 默认的 文件处理句柄
+	private static FileHandleResolver fileHandleResolver;
 	// 默认的资源加载器
 	private static AssetManagerProxy assetManager;
+
+	/** 加载文件资源 **/
+	public static final FileHandle file(String fileName) {
+		if (fileHandleResolver != null) {
+			return fileHandleResolver.resolve(fileName);
+		}
+		return Gdx.files.internal(fileName);
+	}
 
 	/** 获取资源加载器 **/
 	public static final AssetManager getAssetManager() {
@@ -28,8 +41,10 @@ public class FileManage {
 	}
 
 	/** 设置资源加载的文档适配器 , 用于数据的解密操作 **/
-	public static final void setHandleResolver(FileHandleResolver fileHandleResolver) {
-		assetManager = new AssetManagerProxy(fileHandleResolver);
+	public static final void setHandleResolver(FileHandleResolver resolver) {
+		fileHandleResolver = resolver;
+		assetManager = new AssetManagerProxy(resolver);
+
 	}
 
 	/** 标记资源 */
@@ -62,17 +77,29 @@ public class FileManage {
 	}
 
 	/** 重新加载图片 , 用于解决返回时 图片丢失的问题 */
-	public synchronized void reload(List<String> textures) {
+	public static void reload(List<String> textures) {
 		if (assetManager != null) {
 			assetManager.reload(textures);
 		}
 	}
 
 	/** 重新加载图片 , 用于解决返回时 图片丢失的问题 */
-	public synchronized void reload(Mark mark) {
-		if (assetManager != null) {
+	public static void reload(Mark mark) {
+		if (assetManager != null && mark != null) {
 			List<AssetDescriptor> descriptors = mark.filter(Texture.class);
 			assetManager.load(descriptors);
+		}
+	}
+
+	/** 重新加载图片 , 用于解决返回时 图片丢失的问题 */
+	public static void reload() {
+		reload(getCurrentMark());
+	}
+
+	/** 设置文件加载器 */
+	public static void setLoader(Class type, AssetLoader loader) {
+		if (assetManager != null) {
+			assetManager.setLoader(type, loader);
 		}
 	}
 
@@ -147,7 +174,6 @@ public class FileManage {
 		}
 
 		// 记录
-		@SuppressWarnings("unchecked")
 		private final void record(String fileName, Class<?> type, AssetLoaderParameters<?> parameter) {
 			for (AssetDescriptor assetDescriptor : elements) {
 				if (assetDescriptor.fileName.equals(fileName) && assetDescriptor.type.equals(type)) {
