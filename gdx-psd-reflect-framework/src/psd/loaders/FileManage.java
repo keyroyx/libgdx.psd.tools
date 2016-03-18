@@ -34,7 +34,7 @@ public class FileManage {
 	}
 
 	/** 获取资源加载器 **/
-	public static final AssetManager getAssetManager() {
+	public static final AssetManagerProxy getAssetManager() {
 		if (assetManager == null) {
 			assetManager = new AssetManagerProxy();
 		}
@@ -50,45 +50,54 @@ public class FileManage {
 
 	/** 标记资源 */
 	public static final void mark(String tag) {
-		if (assetManager != null) {
-			assetManager.mark(tag);
-		}
+		getAssetManager().mark(tag);
 	}
 
 	/** 获取标记资源 */
 	public static Mark getCurrentMark() {
-		if (assetManager != null) {
-			return assetManager.getCurrentMark();
-		}
-		return null;
+		return getAssetManager().getCurrentMark();
 	}
 
 	/** 释放资源 */
 	public static void unload(List<AssetDescriptor> descriptors) {
-		if (assetManager != null) {
-			assetManager.unload(descriptors);
+		getAssetManager().unload(descriptors);
+	}
+
+	/** 立即获取资源 */
+	public static <T> T get(String fileName, Class<T> clazz) {
+		AssetManager assetManager = getAssetManager();
+		if (assetManager.isLoaded(fileName, clazz) == false) {
+			assetManager.load(fileName, clazz);
+			assetManager.finishLoading();
 		}
+		return assetManager.get(fileName, clazz);
+	}
+
+	/** 加载资源 */
+	public static void load(String fileName, Class<?> clazz) {
+		getAssetManager().load(fileName, clazz);
 	}
 
 	/** 加载资源 */
 	public static void load(List<AssetDescriptor> descriptors) {
-		if (assetManager != null) {
-			assetManager.load(descriptors);
-		}
+		getAssetManager().load(descriptors);
+	}
+
+	/** 查询是否加载了资源 */
+	public static boolean isLoad(String fileName, Class<?> clazz) {
+		return getAssetManager().isLoaded(fileName, clazz);
 	}
 
 	/** 重新加载图片 , 用于解决返回时 图片丢失的问题 */
 	public static void reload(List<String> textures) {
-		if (assetManager != null) {
-			assetManager.reload(textures);
-		}
+		getAssetManager().reload(textures);
 	}
 
 	/** 重新加载图片 , 用于解决返回时 图片丢失的问题 */
 	public static void reload(Mark mark) {
-		if (assetManager != null && mark != null) {
+		if (mark != null) {
 			List<AssetDescriptor> descriptors = mark.filter(Texture.class);
-			assetManager.load(descriptors);
+			getAssetManager().load(descriptors);
 		}
 	}
 
@@ -99,9 +108,7 @@ public class FileManage {
 
 	/** 设置文件加载器 */
 	public static void setLoader(Class type, AssetLoader loader) {
-		if (assetManager != null) {
-			assetManager.setLoader(type, loader);
-		}
+		getAssetManager().setLoader(type, loader);
 	}
 
 	/**
@@ -113,17 +120,19 @@ public class FileManage {
 	private static class AssetManagerProxy extends AssetManager {
 		private Stack<Mark> markTags = new Stack<Mark>();
 		private Mark currentMark;
+		private FileHandleResolver resolver;
 
 		public AssetManagerProxy() {
 			this(new InternalFileHandleResolver());
 		}
 
-		public AssetManagerProxy(FileHandleResolver fileHandleResolver) {
+		public AssetManagerProxy(FileHandleResolver resolver) {
 			super(fileHandleResolver);
-			initLoader(fileHandleResolver);
+			this.resolver = resolver;
+			initLoader();
 		}
 
-		private final void initLoader(FileHandleResolver resolver) {
+		private final void initLoader() {
 			// 抗锯齿 的图片加载器
 			setLoader(Texture.class, new LinearTextureLoader(resolver));
 			// 读取PSD源
@@ -144,7 +153,7 @@ public class FileManage {
 				AssetLoaderParameters<T> parameter) {
 			// 检查 Loader是否存在 , 默认为 JSON 解析
 			if (getLoader(type) == null) {
-				setLoader(type, new JsonDataAssetLoader<>(fileHandleResolver, type));
+				setLoader(type, new JsonDataAssetLoader<>(resolver	, type));
 			}
 
 			super.load(fileName, type, parameter);

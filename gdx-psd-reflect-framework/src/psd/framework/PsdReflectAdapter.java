@@ -1,6 +1,5 @@
 package psd.framework;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import psd.loaders.FileManage;
@@ -31,16 +30,6 @@ public abstract class PsdReflectAdapter extends FileManage implements PsdReflect
 
 	/** 返回显示 */
 	protected void onShow() {
-	}
-
-	/** 加载数据 */
-	protected final <T> T get(Class<T> clazz, String fileName) {
-		AssetManager assetManager = getAssetManager();
-		if (assetManager.isLoaded(fileName, clazz) == false) {
-			assetManager.load(fileName, clazz);
-			assetManager.finishLoading();
-		}
-		return assetManager.get(fileName, clazz);
 	}
 
 	/** 显示对象 */
