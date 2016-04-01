@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import psd.Element;
 import psd.PsdFile;
+import psd.loaders.FileManage;
 import psd.reflect.PsdAn;
 import psd.reflect.PsdGroup;
 import psd.reflect.PsdImage;
@@ -56,7 +57,7 @@ public class PsdReflectUtil {
 				}
 				// 加载对象
 
-				FileHandle fileHandle = Gdx.files.internal(path);
+				FileHandle fileHandle = FileManage.file(path);
 				PsdFile psdFile = new PsdFile(fileHandle);
 				// 生成结构
 				PsdGroup psdGroup = new PsdGroup(psdFile);

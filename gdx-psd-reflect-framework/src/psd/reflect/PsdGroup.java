@@ -40,6 +40,16 @@ public class PsdGroup extends WidgetGroup {
 	}
 
 	@Override
+	public float getPrefWidth() {
+		return getWidth();
+	}
+
+	@Override
+	public float getPrefHeight() {
+		return getHeight();
+	}
+
+	@Override
 	public <T extends Actor> T findActor(final String name) {
 		Element element = psdFolder.get(name);
 		if (element != null) {
