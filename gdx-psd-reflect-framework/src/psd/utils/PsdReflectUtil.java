@@ -107,7 +107,8 @@ public class PsdReflectUtil {
 	}
 
 	// 将 JSON 对象 , 转换成 Actor 对象
-	public static final Actor toGdxActor(PsdFile psdFile, psd.Element element, AssetManager assetManager) {
+	public static final Actor toGdxActor(PsdFile psdFile, psd.Element element, AssetManager assetManager)
+			throws Exception {
 		Actor actor = null;
 		if (element instanceof psd.Folder) {
 			psd.Folder psdFolder = (psd.Folder) element;

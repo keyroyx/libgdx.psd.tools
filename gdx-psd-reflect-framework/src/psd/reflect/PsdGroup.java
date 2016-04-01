@@ -31,7 +31,11 @@ public class PsdGroup extends WidgetGroup {
 		this.psdFolder = psdFolder;
 		this.setSize(psdFolder.width, psdFolder.height);
 		for (psd.Element element : this.psdFolder.childs) {
-			addActor(PsdReflectUtil.toGdxActor(psdFile, element, assetManager));
+			try {
+				addActor(PsdReflectUtil.toGdxActor(psdFile, element, assetManager));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
