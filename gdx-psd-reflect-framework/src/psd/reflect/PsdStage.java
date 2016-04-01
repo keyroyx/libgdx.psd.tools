@@ -4,10 +4,13 @@ import java.lang.reflect.Method;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import psd.PsdFile;
+import psd.loaders.FileManage;
 import psd.utils.PsdReflectUtil;
 
 /**
@@ -15,6 +18,10 @@ import psd.utils.PsdReflectUtil;
  */
 public class PsdStage extends Stage {
 	private final Object reflectObject;
+
+	public PsdStage(String fileName) {
+		this(null, new PsdGroup(FileManage.get(fileName, PsdFile.class)));
+	}
 
 	//
 	public PsdStage(Object reflectObject) {
@@ -36,6 +43,8 @@ public class PsdStage extends Stage {
 	public PsdStage(Object reflectObject, PsdGroup psdGroup, Viewport viewport) {
 		super(viewport);
 		this.reflectObject = reflectObject;
+		// 默认添加到屏幕中心
+		psdGroup.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
 		addActor(psdGroup);
 		// 尝试 反射 onViewPortChange 函数
 		doMethod("onViewportChange", getViewport());
@@ -48,26 +57,30 @@ public class PsdStage extends Stage {
 
 	// 执行函数
 	protected final void doMethod(String methodName, Object... args) {
-		try {
-			Class<?>[] classes = null;
-			if (args != null) {
-				classes = new Class<?>[args.length];
-				for (int i = 0; i < args.length; i++) {
-					if (args[i] != null) {
-						classes[i] = args[i].getClass();
+		if (reflectObject == null) {
+
+		} else {
+			try {
+				Class<?>[] classes = null;
+				if (args != null) {
+					classes = new Class<?>[args.length];
+					for (int i = 0; i < args.length; i++) {
+						if (args[i] != null) {
+							classes[i] = args[i].getClass();
+						}
 					}
 				}
-			}
 
-			Method method = reflectObject.getClass().getMethod(methodName, classes);
-			if (method != null) {
-				method.setAccessible(true);
-				method.invoke(reflectObject, args);
-			}
-		} catch (NoSuchMethodException e) {
+				Method method = reflectObject.getClass().getMethod(methodName, classes);
+				if (method != null) {
+					method.setAccessible(true);
+					method.invoke(reflectObject, args);
+				}
+			} catch (NoSuchMethodException e) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

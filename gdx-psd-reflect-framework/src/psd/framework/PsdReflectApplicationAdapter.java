@@ -1,5 +1,7 @@
 package psd.framework;
 
+import java.lang.reflect.Constructor;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,6 +14,7 @@ import psd.reflect.PsdStage;
  */
 public abstract class PsdReflectApplicationAdapter extends ApplicationAdapter {
 	private static PsdReflectStageGroup stageGroup = new PsdReflectStageGroup();
+	private static Class<? extends PsdStage> stageClass;
 
 	@Override
 	public void create() {
@@ -71,9 +74,19 @@ public abstract class PsdReflectApplicationAdapter extends ApplicationAdapter {
 			return null;
 		} else if (object instanceof Stage) {
 			return (Stage) object;
-		} else {
-			return new PsdStage(object);
+		} else if (stageClass != null) {
+			try {
+				Constructor<? extends PsdStage> constructor = stageClass.getConstructor(Object.class);
+				return constructor.newInstance(object);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		return new PsdStage(object);
+	}
+
+	public static void setStageClass(Class<? extends PsdStage> stageClass) {
+		PsdReflectApplicationAdapter.stageClass = stageClass;
 	}
 
 }

@@ -24,10 +24,15 @@ public class PsdLabel extends Label {
 	}
 
 	private static final LabelStyle getLabelStyle(psd.Text psdText) {
-		Label.LabelStyle style = new LabelStyle(new BitmapFont(), new Color(psdText.r, psdText.g, psdText.b,
-				psdText.a));
-		// GDX 的默认大小为 15pt ,com/badlogic/gdx/utils/arial-15.png
-		style.font.scale((float) psdText.fontSize / 15f);
+		Label.LabelStyle style = new LabelStyle(new BitmapFont(),
+				new Color(psdText.r, psdText.g, psdText.b, psdText.a));
+		try {
+			// GDX 的默认大小为 15pt ,com/badlogic/gdx/utils/arial-15.png
+			if (style.font != null) {
+				style.font.scale((float) psdText.fontSize / 15f);
+			}
+		} catch (Exception e) {
+		}
 		return style;
 	}
 }
