@@ -4,9 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -32,7 +30,7 @@ public class PsdReflectUtil {
 	}
 
 	// 准备项目
-	public static final <T> T load(AssetManager assetManager, String fileName, Class<T> clazz) {
+	public static synchronized final <T> T load(AssetManager assetManager, String fileName, Class<T> clazz) {
 		if (assetManager.isLoaded(fileName, clazz)) {
 		} else {
 			assetManager.load(fileName, clazz);
@@ -56,9 +54,7 @@ public class PsdReflectUtil {
 					path = an.value()[0];
 				}
 				// 加载对象
-
-				FileHandle fileHandle = FileManage.file(path);
-				PsdFile psdFile = new PsdFile(fileHandle);
+				PsdFile psdFile = FileManage.get(path, PsdFile.class);
 				// 生成结构
 				PsdGroup psdGroup = new PsdGroup(psdFile);
 				PsdReflectUtil.setBounds(psdFile, psdGroup);
@@ -68,7 +64,13 @@ public class PsdReflectUtil {
 					an = field.getAnnotation(PsdAn.class);
 					if (an != null && (Actor.class.isAssignableFrom(field.getType())
 							|| Element.class.isAssignableFrom(field.getType()))) {
-						Element element = psdFile.get(new NameFilter(field, an));
+						Element element = null;
+						if (an.value().length > 0) {// 尝试直接获取指定对象
+							element = psdFile.get(an.value()[0], an.index());
+						}
+						if (element == null) {// 尝试按照变量名获取
+							element = psdFile.get(new NameFilter(field, an));
+						}
 						if (element != null && element.getActor() != null) {
 							Actor actor = element.getActor();
 							field.setAccessible(true);
@@ -86,6 +88,12 @@ public class PsdReflectUtil {
 					an = method.getAnnotation(PsdAn.class);
 					if (an != null) {
 						List<Element> elements = psdFile.filter(new NameFilter(method, an));
+						if (an.value().length > 0) {// 尝试直接获取指定对象
+							Element element = psdFile.get(an.value()[0], an.index());
+							if (elements.contains(element) == false) {
+								elements.add(element);
+							}
+						}
 						for (Element element : elements) {
 							Actor actor = element.getActor();
 							if (actor != null) {

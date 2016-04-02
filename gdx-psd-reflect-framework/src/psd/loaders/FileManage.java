@@ -13,6 +13,7 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
 import psd.PsdFile;
@@ -137,6 +138,8 @@ public class FileManage {
 			setLoader(Texture.class, new LinearTextureLoader(resolver));
 			// 读取PSD源
 			setLoader(PsdFile.class, new PsdFileLoader(resolver));
+			// TextureAtlas 的源 , 不知道为什么 , 使用默认的不行
+			setLoader(TextureAtlas.class, new PsdTextureAtlasLoader(resolver));
 		}
 
 		private final void mark(String tag) {
@@ -153,7 +156,7 @@ public class FileManage {
 				AssetLoaderParameters<T> parameter) {
 			// 检查 Loader是否存在 , 默认为 JSON 解析
 			if (getLoader(type) == null) {
-				setLoader(type, new JsonDataAssetLoader<>(resolver	, type));
+				setLoader(type, new JsonDataAssetLoader<>(resolver, type));
 			}
 
 			super.load(fileName, type, parameter);

@@ -17,4 +17,7 @@ import java.lang.annotation.Target;
 public @interface PsdAn {
 	// 引用 PSD 元素
 	public String[] value() default {};
+
+	// 引用 PSD 元素的下标
+	public int index() default 0;
 }
