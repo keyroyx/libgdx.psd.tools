@@ -90,13 +90,13 @@ public class PsdReflectUtil {
 						List<Element> elements = psdFile.filter(new NameFilter(method, an));
 						if (an.value().length > 0) {// 尝试直接获取指定对象
 							Element element = psdFile.get(an.value()[0], an.index());
-							if (elements.contains(element) == false) {
+							if (element != null && elements.contains(element) == false) {
 								elements.add(element);
 							}
 						}
 						for (Element element : elements) {
-							Actor actor = element.getActor();
-							if (actor != null) {
+							if (element != null && element.getActor() != null) {
+								Actor actor = element.getActor();
 								actor.addListener(new MethordClickListener(object, method, actor, element));
 							}
 						}
