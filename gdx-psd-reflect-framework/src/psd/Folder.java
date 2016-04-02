@@ -89,7 +89,12 @@ public class Folder extends Element {
 		Folder folder = this;
 		Element rt = null;
 		for (int i = 0; i < paths.length; i++) {
-			rt = getChild(folder, paths[i], index);
+			if (i == paths.length - 1) {
+				rt = getChild(folder, paths[i], index);
+			} else {
+				rt = getChild(folder, paths[i], 0);
+			}
+			//
 			if (rt != null && rt instanceof Folder) {
 				folder = (Folder) rt;
 			} else if (i != paths.length - 1) {
