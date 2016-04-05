@@ -48,7 +48,7 @@ public abstract class PsdReflectAdapter extends FileManage implements PsdReflect
 	}
 
 	/** ªÒ»°‘¥ */
-	protected final PsdGroup getSource() {
+	protected  PsdGroup getSource() {
 		return source;
 	}
 
