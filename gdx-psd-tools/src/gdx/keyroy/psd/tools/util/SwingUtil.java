@@ -227,7 +227,6 @@ public class SwingUtil {
 		}
 
 		protected void onMousePressed(MouseEvent e) {
-
 		}
 
 		@Override

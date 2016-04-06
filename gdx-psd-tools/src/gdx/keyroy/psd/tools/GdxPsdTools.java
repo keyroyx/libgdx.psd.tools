@@ -1,16 +1,5 @@
 package gdx.keyroy.psd.tools;
 
-import gdx.keyroy.psd.tools.models.EditorConfig;
-import gdx.keyroy.psd.tools.models.EditorData;
-import gdx.keyroy.psd.tools.models.LayerParam;
-import gdx.keyroy.psd.tools.models.PSDData;
-import gdx.keyroy.psd.tools.util.FileUtil;
-import gdx.keyroy.psd.tools.util.L;
-import gdx.keyroy.psd.tools.util.MessageKey;
-import gdx.keyroy.psd.tools.util.Messager;
-import gdx.keyroy.psd.tools.util.PSDUtil;
-import gdx.keyroy.psd.tools.util.PSDUtil.LayerBoundary;
-
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,6 +11,20 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.keyroy.util.json.Json;
+
+import gdx.keyroy.psd.tools.models.EditorConfig;
+import gdx.keyroy.psd.tools.models.EditorData;
+import gdx.keyroy.psd.tools.models.LayerParam;
+import gdx.keyroy.psd.tools.models.PSDData;
+import gdx.keyroy.psd.tools.util.FileUtil;
+import gdx.keyroy.psd.tools.util.L;
+import gdx.keyroy.psd.tools.util.MessageKey;
+import gdx.keyroy.psd.tools.util.Messager;
+import gdx.keyroy.psd.tools.util.PSDUtil;
+import gdx.keyroy.psd.tools.util.PSDUtil.LayerBoundary;
 import library.psd.Layer;
 import library.psd.LayersContainer;
 import library.psd.Psd;
@@ -32,10 +35,6 @@ import psd.Param;
 import psd.Pic;
 import psd.PsdFile;
 import psd.Text;
-
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
-import com.keyroy.util.json.Json;
 
 public class GdxPsdTools {
 
@@ -174,7 +173,12 @@ public class GdxPsdTools {
 			} else if (layer.isTextLayer()) { // 这是一个文本对象
 				Text text = new Text();
 				PsdText psdText = layer.getPsdText();
-				text.setPsdText(psdText.value, psdText.a, psdText.r, psdText.g, psdText.b, psdText.fontSize);
+				text.text = psdText.value;
+				text.a = psdText.a;
+				text.r = psdText.r;
+				text.g = psdText.g;
+				text.b = psdText.b;
+				text.fontSize = psdText.fontSize;
 				actor = text;
 			} else if (layer.getImage() != null) { // 这是一个图片
 				actor = new Pic();

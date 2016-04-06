@@ -80,6 +80,9 @@ public class PSDUtil {
 					layerBoundary.mix(updateLayerBoundary(cLayer));
 				}
 			}
+			if (layerBoundary == null) {
+				layerBoundary = new LayerBoundary(layer);
+			}
 			LayerBoundary.setLayerBoundary(layer, layerBoundary);
 			return layerBoundary;
 		} else {
@@ -98,7 +101,7 @@ public class PSDUtil {
 
 	protected static final void sortByY(Layer layer) {
 		// System.out.println();
-		// System.out.println("sortByY : " + layer.getName() + "    " +
+		// System.out.println("sortByY : " + layer.getName() + " " +
 		// layer.getAlpha());
 		if (layer.getLayers() != null) {
 			for (Layer cLayer : layer.getLayers()) {
@@ -147,7 +150,6 @@ public class PSDUtil {
 			this.left = layer.getLeft();
 			this.bottom = layer.getBottom();
 			this.right = layer.getRight();
-
 		}
 
 		private LayerBoundary(LayerBoundary boundary) {
