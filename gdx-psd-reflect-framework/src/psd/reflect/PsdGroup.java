@@ -51,7 +51,11 @@ public class PsdGroup extends WidgetGroup {
 
 	@Override
 	public <T extends Actor> T findActor(final String name) {
-		Element element = psdFolder.get(name);
+		return findActor(name, 0);
+	}
+
+	public <T extends Actor> T findActor(final String name, int index) {
+		Element element = psdFolder.get(name, index);
 		if (element != null) {
 			return element.getActor();
 		}
