@@ -2,6 +2,7 @@ package psd.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
@@ -68,9 +69,7 @@ public class PsdReflectUtil {
 						if (an.value().length > 0) {// 尝试直接获取指定对象
 							element = psdFile.get(an.value()[0], an.index());
 						}
-						if (element == null) {// 尝试按照变量名获取
-							element = psdFile.get(new NameFilter(field, an));
-						}
+
 						if (element != null && element.getActor() != null) {
 							Actor actor = element.getActor();
 							field.setAccessible(true);
@@ -87,9 +86,10 @@ public class PsdReflectUtil {
 				for (Method method : methods) {
 					an = method.getAnnotation(PsdAn.class);
 					if (an != null) {
-						List<Element> elements = psdFile.filter(new NameFilter(method, an));
-						if (an.value().length > 0) {// 尝试直接获取指定对象
-							Element element = psdFile.get(an.value()[0], an.index());
+						// 尝试直接获取指定对象
+						List<Element> elements = new ArrayList<Element>(2);
+						for (String actorName : an.value()) {
+							Element element = psdFile.get(actorName, an.index());
 							if (element != null && elements.contains(element) == false) {
 								elements.add(element);
 							}
@@ -181,29 +181,4 @@ public class PsdReflectUtil {
 		}
 	}
 
-	private static final class NameFilter implements ElementFilter {
-		final String elementName;
-
-		public NameFilter(Field field, PsdAn an) {
-			if (an.value().length == 0) {
-				elementName = field.getName();
-			} else {
-				elementName = an.value()[0];
-			}
-		}
-
-		public NameFilter(Method method, PsdAn an) {
-			if (an.value().length == 0) {
-				elementName = method.getName();
-			} else {
-				elementName = an.value()[0];
-			}
-		}
-
-		@Override
-		public boolean accept(Element element) {
-			return elementName.equals(element.layerName);
-		}
-
-	}
 }

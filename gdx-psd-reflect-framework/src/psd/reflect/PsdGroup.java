@@ -19,7 +19,6 @@ import psd.utils.PsdReflectUtil;
  * @author roy
  */
 public class PsdGroup extends WidgetGroup {
-
 	// 文件夹的源
 	private final psd.Folder psdFolder;
 
