@@ -68,6 +68,8 @@ public class PsdReflectUtil {
 						Element element = null;
 						if (an.value().length > 0) {// 尝试直接获取指定对象
 							element = psdFile.get(an.value()[0], an.index());
+						} else {
+							element = psdFile.get(field.getName(), 0);
 						}
 
 						if (element != null && element.getActor() != null) {
