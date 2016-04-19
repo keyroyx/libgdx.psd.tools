@@ -48,8 +48,13 @@ public abstract class PsdReflectAdapter extends FileManage implements PsdReflect
 	}
 
 	/** 获取源 */
-	protected  PsdGroup getSource() {
+	protected PsdGroup getSource() {
 		return source;
+	}
+
+	/** 获取Psd导出Json的路径 */
+	protected String getPsdJsonPath() {
+		return null;
 	}
 
 }

@@ -1,4 +1,4 @@
-package psd.utils;
+package psd.framework;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -41,28 +41,39 @@ public class PsdReflectUtil {
 	}
 
 	public static final PsdGroup reflect(Object object) {
-		Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
-		PsdAn an = reflectClass.getAnnotation(PsdAn.class);
-		if (an == null) {
-			throw new IllegalArgumentException(
-					"class : " + reflectClass.getName() + "  not annotation @PsdAn");
+		// 映射的PSD路径
+		String psdPath = null;
+		if (object instanceof PsdReflectAdapter) { // 独立的获取JSON路径函数
+			psdPath = ((PsdReflectAdapter) object).getPsdJsonPath();
+		}
+
+		if (psdPath == null) { // 没有获取到PSD 路径 , 尝试解析 @PsdAn
+			Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
+			PsdAn an = reflectClass.getAnnotation(PsdAn.class);
+			if (an != null) {
+				if (an.value().length == 0) {
+					psdPath = reflectClass.getSimpleName() + ".json";
+				} else {
+					psdPath = an.value()[0];
+				}
+			}
+		}
+
+		if (psdPath == null) { // 没有获取到映射使用的 PSD 路径
+			throw new IllegalArgumentException("can not reflect a PsdGroup by : "
+					+ object.getClass().getName() + "  , try add annotation @PsdAn");
 		} else {
 			try {
-				String path = null;
-				if (an.value().length == 0) {
-					path = reflectClass.getSimpleName() + ".json";
-				} else {
-					path = an.value()[0];
-				}
+				Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
 				// 加载对象
-				PsdFile psdFile = FileManage.get(path, PsdFile.class);
+				PsdFile psdFile = FileManage.get(psdPath, PsdFile.class);
 				// 生成结构
 				PsdGroup psdGroup = new PsdGroup(psdFile);
 				PsdReflectUtil.setBounds(psdFile, psdGroup);
 				// 映射 参数
 				Field[] fields = reflectClass.getDeclaredFields();
 				for (Field field : fields) {
-					an = field.getAnnotation(PsdAn.class);
+					PsdAn an = field.getAnnotation(PsdAn.class);
 					if (an != null && (Actor.class.isAssignableFrom(field.getType())
 							|| Element.class.isAssignableFrom(field.getType()))) {
 						Element element = null;
@@ -86,7 +97,7 @@ public class PsdReflectUtil {
 				// 映射 函数
 				Method[] methods = reflectClass.getDeclaredMethods();
 				for (Method method : methods) {
-					an = method.getAnnotation(PsdAn.class);
+					PsdAn an = method.getAnnotation(PsdAn.class);
 					if (an != null) {
 						// 尝试直接获取指定对象
 						List<Element> elements = new ArrayList<Element>(2);
@@ -113,7 +124,9 @@ public class PsdReflectUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 		}
+
 		return null;
 	}
 

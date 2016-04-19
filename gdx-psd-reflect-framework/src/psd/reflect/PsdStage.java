@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import psd.PsdFile;
+import psd.framework.PsdReflectUtil;
 import psd.loaders.FileManage;
-import psd.utils.PsdReflectUtil;
 
 /**
  * PSD µÄÎèÌ¨

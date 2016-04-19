@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import psd.utils.PsdReflectUtil;
+import psd.framework.PsdReflectUtil;
 
 /**
  * PSD µÄÍ¼Æ¬¶ÔÏó
