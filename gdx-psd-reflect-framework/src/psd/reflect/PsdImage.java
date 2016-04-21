@@ -41,6 +41,8 @@ public class PsdImage extends Image {
 		return psdPic;
 	}
 
+ 
+
 	// ∂¡»°Õº∆¨
 	protected static final TextureRegion getTexture(psd.PsdFile psdFile, psd.Pic pic,
 			AssetManager assetManager) {

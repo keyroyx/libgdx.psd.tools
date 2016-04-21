@@ -16,7 +16,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
-import psd.PsdFile;
+import psd.loaders.RunnableAssetLoader.RunnableParameter;
+import psd.reflect.PsdGroup;
 import psd.utils.Filter;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -72,6 +73,16 @@ public class FileManage {
 			assetManager.finishLoading();
 		}
 		return assetManager.get(fileName, clazz);
+	}
+
+	/**
+	 * 加载进度
+	 * 
+	 * @param runnable
+	 */
+	public static void load(Runnable runnable) {
+		AssetManagerProxy assetManager = getAssetManager();
+		assetManager.load(runnable);
 	}
 
 	/** 加载资源 */
@@ -136,12 +147,13 @@ public class FileManage {
 		private final void initLoader() {
 			// 抗锯齿 的图片加载器
 			setLoader(Texture.class, new LinearTextureLoader(resolver));
-			// 读取PSD源
-			setLoader(PsdFile.class, new PsdFileLoader(resolver));
 			// TextureAtlas 的源 , 不知道为什么 , 使用默认的不行
 			setLoader(TextureAtlas.class, new PsdTextureAtlasLoader(resolver));
+			// 加载场景组
+			setLoader(PsdGroup.class, new PsdGroupAssetLoader(resolver));
 			// 用于加载进度条
 			setLoader(Runnable.class, new RunnableAssetLoader(resolver));
+
 		}
 
 		private final void mark(String tag) {
@@ -152,6 +164,10 @@ public class FileManage {
 
 		private Mark getCurrentMark() {
 			return currentMark;
+		}
+
+		public final synchronized void load(Runnable runnable) {
+			super.load(runnable.toString(), Runnable.class, new RunnableParameter(runnable));
 		}
 
 		public final synchronized <T> void load(String fileName, Class<T> type,

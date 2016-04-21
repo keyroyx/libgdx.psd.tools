@@ -13,6 +13,8 @@ import com.keyroy.util.json.Json;
 public class JsonDataAssetLoader<T> extends AsynchronousAssetLoader<T, AssetLoaderParameters<T>> {
 	// 目标类
 	protected final Class<T> clazz;
+	// 对象
+	protected Json json;
 
 	//
 	public JsonDataAssetLoader(FileHandleResolver resolver, final Class<T> clazz) {
@@ -24,17 +26,20 @@ public class JsonDataAssetLoader<T> extends AsynchronousAssetLoader<T, AssetLoad
 	// 同步加载
 	public T loadSync(AssetManager manager, String fileName, FileHandle file,
 			AssetLoaderParameters<T> parameter) {
+		T t = null;
 		try {
-			return new Json(file.read()).toObject(clazz);
+			t = json.toObject(clazz);
+			json = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return t;
 	}
 
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file,
 			AssetLoaderParameters<T> parameter) {
+		json = new Json(file.read());
 	}
 
 	@SuppressWarnings("rawtypes")

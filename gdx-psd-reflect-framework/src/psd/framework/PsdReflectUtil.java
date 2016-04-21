@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import psd.Element;
+import psd.Folder;
 import psd.PsdFile;
 import psd.loaders.FileManage;
 import psd.reflect.PsdAn;
@@ -40,7 +41,8 @@ public class PsdReflectUtil {
 		return assetManager.get(fileName, clazz);
 	}
 
-	public static final PsdGroup reflect(Object object) {
+	// 获取Json的加载路径
+	private static final String getJsonPath(Object object) {
 		// 映射的PSD路径
 		String psdPath = null;
 		if (object instanceof PsdReflectAdapter) { // 独立的获取JSON路径函数
@@ -58,7 +60,12 @@ public class PsdReflectUtil {
 				}
 			}
 		}
+		return psdPath;
+	}
 
+	public static final PsdGroup reflect(Object object) {
+		// 映射的PSD路径
+		String psdPath = getJsonPath(object);
 		if (psdPath == null) { // 没有获取到映射使用的 PSD 路径
 			throw new IllegalArgumentException("can not reflect a PsdGroup by : "
 					+ object.getClass().getName() + "  , try add annotation @PsdAn");
@@ -66,10 +73,10 @@ public class PsdReflectUtil {
 			try {
 				Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
 				// 加载对象
-				PsdFile psdFile = FileManage.get(psdPath, PsdFile.class);
 				// 生成结构
-				PsdGroup psdGroup = new PsdGroup(psdFile);
-				PsdReflectUtil.setBounds(psdFile, psdGroup);
+				PsdGroup psdGroup = FileManage.get(psdPath, PsdGroup.class);
+				Folder folder = psdGroup.getPsdFolder();
+				PsdReflectUtil.setBounds(psdGroup.getPsdFolder(), psdGroup);
 				// 映射 参数
 				Field[] fields = reflectClass.getDeclaredFields();
 				for (Field field : fields) {
@@ -78,9 +85,9 @@ public class PsdReflectUtil {
 							|| Element.class.isAssignableFrom(field.getType()))) {
 						Element element = null;
 						if (an.value().length > 0) {// 尝试直接获取指定对象
-							element = psdFile.get(an.value()[0], an.index());
+							element = folder.get(an.value()[0], an.index());
 						} else {
-							element = psdFile.get(field.getName(), 0);
+							element = folder.get(field.getName(), 0);
 						}
 
 						if (element != null && element.getActor() != null) {
@@ -102,7 +109,7 @@ public class PsdReflectUtil {
 						// 尝试直接获取指定对象
 						List<Element> elements = new ArrayList<Element>(2);
 						for (String actorName : an.value()) {
-							Element element = psdFile.get(actorName, an.index());
+							Element element = folder.get(actorName, an.index());
 							if (element != null && elements.contains(element) == false) {
 								elements.add(element);
 							}
