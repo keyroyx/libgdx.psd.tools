@@ -16,8 +16,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
+import psd.PsdFile;
+import psd.loaders.PsdFileLoader.PsdFileParameter;
 import psd.loaders.RunnableAssetLoader.RunnableParameter;
-import psd.reflect.PsdGroup;
 import psd.utils.Filter;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -73,6 +74,18 @@ public class FileManage {
 			assetManager.finishLoading();
 		}
 		return assetManager.get(fileName, clazz);
+	}
+
+	/**
+	 * 加载 PsdGroup 需要使用的资源
+	 * 
+	 * @param fileName
+	 */
+	public static void loadPsdResource(String fileName) {
+		AssetManager assetManager = getAssetManager();
+		if (assetManager.isLoaded(fileName, PsdFile.class) == false) {
+			assetManager.load(fileName, PsdFile.class, new PsdFileParameter(true));
+		}
 	}
 
 	/**
@@ -147,10 +160,10 @@ public class FileManage {
 		private final void initLoader() {
 			// 抗锯齿 的图片加载器
 			setLoader(Texture.class, new LinearTextureLoader(resolver));
+			// PsdFile 加载器
+			setLoader(PsdFile.class, new PsdFileLoader(resolver));
 			// TextureAtlas 的源 , 不知道为什么 , 使用默认的不行
 			setLoader(TextureAtlas.class, new PsdTextureAtlasLoader(resolver));
-			// 加载场景组
-			setLoader(PsdGroup.class, new PsdGroupAssetLoader(resolver));
 			// 用于加载进度条
 			setLoader(Runnable.class, new RunnableAssetLoader(resolver));
 
@@ -174,7 +187,7 @@ public class FileManage {
 				AssetLoaderParameters<T> parameter) {
 			// 检查 Loader是否存在 , 默认为 JSON 解析
 			if (getLoader(type) == null) {
-				setLoader(type, new JsonDataAssetLoader<>(resolver, type));
+				setLoader(type, new JsonDataAssetLoader<T>(resolver, type));
 			}
 
 			super.load(fileName, type, parameter);

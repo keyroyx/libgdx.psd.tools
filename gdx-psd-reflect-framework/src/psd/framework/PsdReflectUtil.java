@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import psd.Element;
-import psd.Folder;
 import psd.PsdFile;
 import psd.loaders.FileManage;
 import psd.reflect.PsdAn;
@@ -73,10 +72,11 @@ public class PsdReflectUtil {
 			try {
 				Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
 				// 加载对象
+				PsdFile psdFile = FileManage.get(psdPath, PsdFile.class);
 				// 生成结构
-				PsdGroup psdGroup = FileManage.get(psdPath, PsdGroup.class);
-				Folder folder = psdGroup.getPsdFolder();
-				PsdReflectUtil.setBounds(psdGroup.getPsdFolder(), psdGroup);
+				PsdGroup psdGroup = new PsdGroup(psdFile);
+				// 修正组位置
+				PsdReflectUtil.setBounds(psdFile, psdGroup);
 				// 映射 参数
 				Field[] fields = reflectClass.getDeclaredFields();
 				for (Field field : fields) {
@@ -85,9 +85,9 @@ public class PsdReflectUtil {
 							|| Element.class.isAssignableFrom(field.getType()))) {
 						Element element = null;
 						if (an.value().length > 0) {// 尝试直接获取指定对象
-							element = folder.get(an.value()[0], an.index());
+							element = psdFile.get(an.value()[0], an.index());
 						} else {
-							element = folder.get(field.getName(), 0);
+							element = psdFile.get(field.getName(), 0);
 						}
 
 						if (element != null && element.getActor() != null) {
@@ -109,7 +109,7 @@ public class PsdReflectUtil {
 						// 尝试直接获取指定对象
 						List<Element> elements = new ArrayList<Element>(2);
 						for (String actorName : an.value()) {
-							Element element = folder.get(actorName, an.index());
+							Element element = psdFile.get(actorName, an.index());
 							if (element != null && elements.contains(element) == false) {
 								elements.add(element);
 							}
