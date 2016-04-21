@@ -140,6 +140,8 @@ public class FileManage {
 			setLoader(PsdFile.class, new PsdFileLoader(resolver));
 			// TextureAtlas 的源 , 不知道为什么 , 使用默认的不行
 			setLoader(TextureAtlas.class, new PsdTextureAtlasLoader(resolver));
+			// 用于加载进度条
+			setLoader(Runnable.class, new RunnableAssetLoader(resolver));
 		}
 
 		private final void mark(String tag) {
