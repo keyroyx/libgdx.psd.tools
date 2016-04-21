@@ -70,11 +70,19 @@ public class PsdReflectUtil {
 					+ object.getClass().getName() + "  , try add annotation @PsdAn");
 		} else {
 			try {
+				PsdGroup psdGroup = null;
+				PsdFile psdFile = null;
+				if (object instanceof PsdGroup) {
+					psdGroup = (PsdGroup) object;
+					psdFile = (PsdFile) psdGroup.getPsdFolder();
+				} else {
+					// 加载对象
+					psdFile = FileManage.get(psdPath, PsdFile.class);
+					// 生成结构
+					psdGroup = new PsdGroup(psdFile);
+				}
+
 				Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
-				// 加载对象
-				PsdFile psdFile = FileManage.get(psdPath, PsdFile.class);
-				// 生成结构
-				PsdGroup psdGroup = new PsdGroup(psdFile);
 				// 修正组位置
 				PsdReflectUtil.setBounds(psdFile, psdGroup);
 				// 映射 参数

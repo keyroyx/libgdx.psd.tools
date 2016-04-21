@@ -36,16 +36,14 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 	@Override
 	public PsdFile loadSync(AssetManager manager, String fileName, FileHandle file,
 			PsdFileParameter parameter) {
-		PsdFile rt = psdFile;
-		psdFile = null;
-		return rt;
+		return psdFile;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file,
 			PsdFileParameter parameter) {
-		if (parameter.loadResource) {
+		if (parameter != null && parameter.loadResource) {
 			PsdFile psdFile = new PsdFile(file);
 			List<Element> images = psdFile.filter(new ElementFilter() {
 
@@ -65,7 +63,6 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 				}
 				array.add(descriptor);
 			}
-
 			return array;
 		}
 		return null;
