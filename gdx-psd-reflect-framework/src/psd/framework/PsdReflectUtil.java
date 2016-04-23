@@ -161,6 +161,7 @@ public class PsdReflectUtil {
 		}
 		PsdReflectUtil.setBounds(element, actor);
 		actor.setVisible(element.isVisible);
+		actor.setName(element.layerName);
 		return actor;
 	}
 

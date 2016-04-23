@@ -22,12 +22,14 @@ public class PsdFile extends Folder {
 	public FileHandle handle;
 
 	public PsdFile() {
+		this.layerName = psdName;
 	}
 
 	public PsdFile(FileHandle handle) {
 		try {
 			Json.fill(this, handle.read());
 			this.handle = handle;
+			this.layerName = psdName;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

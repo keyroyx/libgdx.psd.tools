@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import psd.Element;
@@ -29,8 +30,10 @@ public class PsdGroup extends WidgetGroup {
 	public PsdGroup(psd.Folder psdFolder, PsdFile psdFile, AssetManager assetManager) {
 		this.psdFolder = psdFolder;
 		this.setSize(psdFolder.width, psdFolder.height);
+		setName(psdFolder.layerName);
 		for (psd.Element element : this.psdFolder.childs) {
 			try {
+				element.setParent(psdFolder);
 				addActor(PsdReflectUtil.toGdxActor(psdFile, element, assetManager));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -59,6 +62,24 @@ public class PsdGroup extends WidgetGroup {
 			return element.getActor();
 		}
 		return null;
+	}
+
+	// 过滤元素
+	public final List<Actor> filter(psd.utils.Filter<Actor> filter) {
+		List<Actor> actors = new ArrayList<Actor>();
+		filter(this, filter, actors);
+		return actors;
+	}
+
+	// 过滤元素
+	private final void filter(Actor actor, psd.utils.Filter<Actor> filter, List<Actor> out) {
+		if (filter.accept(actor)) {
+			out.add(actor);
+		} else if (actor instanceof Group) {
+			for (Actor cActor : ((Group) actor).getChildren()) {
+				filter(cActor, filter, out);
+			}
+		}
 	}
 
 	// 过滤元素
