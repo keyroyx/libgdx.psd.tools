@@ -183,4 +183,8 @@ public class PsdReflectStageGroup implements InputProcessor {
 		return stageArray.get(stageArray.size - 1).getBatch();
 	}
 
+	public final Array<Stage> getStageArray() {
+		return stageArray;
+	}
+
 }
