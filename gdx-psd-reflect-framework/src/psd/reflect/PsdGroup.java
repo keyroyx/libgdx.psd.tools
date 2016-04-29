@@ -24,19 +24,30 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 	private final psd.Folder psdFolder;
 
 	public PsdGroup(PsdFile psdFile) {
-		this(psdFile, psdFile, getAssetManager());
+		this(psdFile, getAssetManager(), null);
 	}
 
-	public PsdGroup(psd.Folder psdFolder, PsdFile psdFile, AssetManager assetManager) {
+	public PsdGroup(psd.Folder psdFolder, AssetManager assetManager) {
+		this(psdFolder, assetManager, null);
+	}
+
+	public PsdGroup(psd.Folder psdFolder, AssetManager assetManager, PsdReflectListener listener) {
 		this.psdFolder = psdFolder;
-		this.setSize(psdFolder.width, psdFolder.height);
 		setName(psdFolder.layerName);
 		setParams(psdFolder.params);
+		PsdReflectUtil.setBounds(psdFolder, this);
+		//
 		for (psd.Element element : this.psdFolder.childs) {
 			try {
-				element.setParent(psdFolder);
-				Actor actor = PsdReflectUtil.toGdxActor(psdFile, element, assetManager);
+				Actor actor = null;
+				if (listener != null) {
+					actor = listener.onReflectElement(PsdGroup.this, element, element.getParams(),
+							assetManager);
+				} else {
+					actor = PsdReflectUtil.toGdxActor(element, assetManager, null);
+				}
 				if (actor != null) {
+					PsdReflectUtil.setBounds(element, actor);
 					addActor(actor);
 					if (actor instanceof ParamProvider) {
 						((ParamProvider) actor).setParams(element.getParams());
@@ -46,15 +57,6 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	protected Actor onCreateActor(PsdFile psdFile, psd.Element element, AssetManager assetManager) {
-		try {
-			return PsdReflectUtil.toGdxActor(psdFile, element, assetManager);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override
@@ -168,6 +170,7 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 		return FileManage.getAssetManager();
 	}
 
+	//
 	private List<Param> params;
 
 	@Override

@@ -12,13 +12,33 @@ import psd.utils.ElementNameFilter;
  * @author roy
  */
 public class Folder extends Element {
+
 	// 子对象
 	public List<Element> childs = new ArrayList<Element>();
-	//
+
+	// 更新参数对象
+	@Override
 	protected void updateParam() {
 		super.updateParam();
 		for (Element element : childs) {
 			element.updateParam();
+		}
+	}
+
+	// 更新父类对象
+	@Override
+	protected void updateParent(Folder parent) {
+		super.updateParent(parent);
+		for (Element element : childs) {
+			element.updateParent(this);
+		}
+	}
+
+	// 设置 文件夹
+	protected void updatePsdFile(PsdFile psdFile) {
+		super.updatePsdFile(psdFile);
+		for (Element element : childs) {
+			element.updatePsdFile(psdFile);
 		}
 	}
 

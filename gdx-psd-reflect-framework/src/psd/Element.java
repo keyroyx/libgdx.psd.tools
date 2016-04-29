@@ -25,6 +25,10 @@ public class Element {
 	// 父类对象
 	@JsonAn(skip = true)
 	protected Folder parent;
+	// 文件对象
+	@JsonAn(skip = true)
+	protected PsdFile psdFile;
+
 	// 自定义对象
 	@JsonAn(skip = true)
 	protected Object userObject;
@@ -52,6 +56,16 @@ public class Element {
 		}
 	}
 
+	// 设置 文件夹
+	protected void updateParent(Folder parent) {
+		this.parent = parent;
+	}
+
+	// 设置 文件夹
+	protected void updatePsdFile(PsdFile psdFile) {
+		this.psdFile = psdFile;
+	}
+
 	// 设置用户自定义的缓存数据
 	public final void setUserObject(Object userObject) {
 		this.userObject = userObject;
@@ -63,20 +77,8 @@ public class Element {
 		return (T) userObject;
 	}
 
-	// // 设置用户自定义的 Actor 对象
-	// public final void setActor(Actor actor) {
-	// this.actor = actor;
-	// }
-	//
-	// //
-	// @SuppressWarnings("unchecked")
-	// public final <T extends Actor> T getActor() {
-	// return (T) actor;
-	// }
-
-	// 设置 文件夹
-	public final void setParent(Folder parent) {
-		this.parent = parent;
+	public final PsdFile getPsdFile() {
+		return psdFile;
 	}
 
 	// 获取 父文件夹

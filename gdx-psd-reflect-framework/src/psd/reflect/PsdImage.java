@@ -19,7 +19,7 @@ import psd.framework.PsdReflectUtil;
  * 
  * @author roy
  */
-public class PsdImage extends Image implements ParamProvider{
+public class PsdImage extends Image implements ParamProvider {
 	// ͼƬԴ
 	protected final psd.Pic psdPic;
 
@@ -28,15 +28,7 @@ public class PsdImage extends Image implements ParamProvider{
 	}
 
 	public PsdImage(psd.Pic pic, AssetManager assetManager) {
-		this(null, pic, assetManager);
-	}
-
-	public PsdImage(psd.PsdFile psdFile, psd.Pic pic) {
-		this(psdFile, pic, null);
-	}
-
-	public PsdImage(psd.PsdFile psdFile, psd.Pic pic, AssetManager assetManager) {
-		super(getTexture(psdFile, pic, assetManager));
+		super(getTexture(pic.getPsdFile(), pic, assetManager));
 		this.psdPic = pic;
 	}
 

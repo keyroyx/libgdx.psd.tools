@@ -22,7 +22,7 @@ import psd.reflect.PsdReflectListener;
 public class PsdReflectUtil {
 
 	// 设置大小
-	protected static final void setBounds(psd.Element element, Actor actor) {
+	public static final void setBounds(psd.Element element, Actor actor) {
 		if (element != null && actor != null) {
 			actor.setBounds(element.x, element.y, element.width, element.height);
 			actor.setName(element.layerName);
@@ -62,6 +62,8 @@ public class PsdReflectUtil {
 	}
 
 	public static final PsdGroup reflect(Object object) {
+		PsdReflectListener listener = (object instanceof PsdReflectListener) ? (PsdReflectListener) object
+				: null;
 		// 映射的PSD路径
 		String psdPath = getJsonPath(object);
 		if (psdPath == null) { // 没有获取到映射使用的 PSD 路径
@@ -78,7 +80,7 @@ public class PsdReflectUtil {
 					// 加载对象
 					psdFile = FileManage.get(psdPath, PsdFile.class);
 					// 生成结构
-					psdGroup = new PsdGroup(psdFile);
+					psdGroup = new PsdGroup(psdFile, PsdGroup.getAssetManager(), listener);
 				}
 
 				Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
@@ -90,7 +92,6 @@ public class PsdReflectUtil {
 					PsdAn an = field.getAnnotation(PsdAn.class);
 					if (an != null && (Actor.class.isAssignableFrom(field.getType())
 							|| Element.class.isAssignableFrom(field.getType()))) {
-
 						Actor actor = null;
 						if (an.value().length > 0) {// 尝试直接获取指定对象
 							actor = psdGroup.findActor(an.value()[0], an.index());
@@ -125,8 +126,8 @@ public class PsdReflectUtil {
 					}
 				}
 				// 激活监听
-				if (object instanceof PsdReflectListener) {
-					((PsdReflectListener) object).onReflectSuccess(psdGroup);
+				if (listener != null) {
+					listener.onReflectSuccess(psdGroup);
 				}
 				//
 				return psdGroup;
@@ -140,20 +141,19 @@ public class PsdReflectUtil {
 	}
 
 	// 将 JSON 对象 , 转换成 Actor 对象
-	public static final Actor toGdxActor(PsdFile psdFile, psd.Element element, AssetManager assetManager)
-			throws Exception {
+	public static final Actor toGdxActor(psd.Element element, AssetManager assetManager,
+			PsdReflectListener listener) throws Exception {
 		Actor actor = null;
 		if (element instanceof psd.Folder) {
 			psd.Folder psdFolder = (psd.Folder) element;
-			actor = new PsdGroup(psdFolder, psdFile, assetManager);
+			actor = new PsdGroup(psdFolder, assetManager, listener);
 		} else if (element instanceof psd.Pic) {
 			psd.Pic pic = (psd.Pic) element;
-			actor = new PsdImage(psdFile, pic, assetManager);
+			actor = new PsdImage(pic, assetManager);
 		} else if (element instanceof psd.Text) {
 			psd.Text psdText = (psd.Text) element;
 			actor = new PsdLabel(psdText);
 		}
-		PsdReflectUtil.setBounds(element, actor);
 		actor.setVisible(element.isVisible);
 		actor.setName(element.layerName);
 		return actor;

@@ -28,6 +28,8 @@ public class PsdFile extends Folder {
 	public PsdFile(FileHandle handle) {
 		try {
 			Json.fill(this, handle.read());
+			updateParent(this);
+			updatePsdFile(this);
 			updateParam();
 			this.handle = handle;
 			this.layerName = psdName;
