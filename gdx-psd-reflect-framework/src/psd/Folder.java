@@ -14,6 +14,13 @@ import psd.utils.ElementNameFilter;
 public class Folder extends Element {
 	// 子对象
 	public List<Element> childs = new ArrayList<Element>();
+	//
+	protected void updateParam() {
+		super.updateParam();
+		for (Element element : childs) {
+			element.updateParam();
+		}
+	}
 
 	// 过滤元素
 	public final List<Element> filter(ElementFilter filter) {
@@ -90,9 +97,9 @@ public class Folder extends Element {
 		Element rt = null;
 		for (int i = 0; i < paths.length; i++) {
 			String path = paths[i];
-			if(path == null || path.length() == 0){
+			if (path == null || path.length() == 0) {
 				continue;
-			}else {
+			} else {
 				if (i == paths.length - 1) {
 					rt = getChild(folder, paths[i], index);
 				} else {

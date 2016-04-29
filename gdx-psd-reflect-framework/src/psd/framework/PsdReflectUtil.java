@@ -25,8 +25,7 @@ public class PsdReflectUtil {
 	protected static final void setBounds(psd.Element element, Actor actor) {
 		if (element != null && actor != null) {
 			actor.setBounds(element.x, element.y, element.width, element.height);
-			// 设置用户对象
-			element.setActor(actor);
+			actor.setName(element.layerName);
 		}
 	}
 
@@ -91,20 +90,18 @@ public class PsdReflectUtil {
 					PsdAn an = field.getAnnotation(PsdAn.class);
 					if (an != null && (Actor.class.isAssignableFrom(field.getType())
 							|| Element.class.isAssignableFrom(field.getType()))) {
-						Element element = null;
+
+						Actor actor = null;
 						if (an.value().length > 0) {// 尝试直接获取指定对象
-							element = psdFile.get(an.value()[0], an.index());
+							actor = psdGroup.findActor(an.value()[0], an.index());
 						} else {
-							element = psdFile.get(field.getName(), 0);
+							actor = psdGroup.findActor(field.getName(), 0);
 						}
 
-						if (element != null && element.getActor() != null) {
-							Actor actor = element.getActor();
+						if (actor != null) {
 							field.setAccessible(true);
 							if (Actor.class.isAssignableFrom(field.getType())) {
 								field.set(object, actor);
-							} else if (Element.class.isAssignableFrom(field.getType())) {
-								field.set(object, element);
 							}
 						}
 					}
@@ -115,18 +112,15 @@ public class PsdReflectUtil {
 					PsdAn an = method.getAnnotation(PsdAn.class);
 					if (an != null) {
 						// 尝试直接获取指定对象
-						List<Element> elements = new ArrayList<Element>(2);
+						List<Actor> actors = new ArrayList<Actor>(2);
 						for (String actorName : an.value()) {
-							Element element = psdFile.get(actorName, an.index());
-							if (element != null && elements.contains(element) == false) {
-								elements.add(element);
+							Actor actor = psdGroup.findActor(actorName, an.index());
+							if (actor != null && actors.contains(actor) == false) {
+								actors.add(actor);
 							}
 						}
-						for (Element element : elements) {
-							if (element != null && element.getActor() != null) {
-								Actor actor = element.getActor();
-								actor.addListener(new MethordClickListener(object, method, actor, element));
-							}
+						for (Actor actor : actors) {
+							actor.addListener(new MethordClickListener(object, method, actor));
 						}
 					}
 				}
@@ -168,14 +162,12 @@ public class PsdReflectUtil {
 	protected static final class MethordClickListener extends ClickListener {
 		final Object object;
 		final Method method;
-		final Element element;
 		final Actor actor;
 		final Object[] params;
 
-		public MethordClickListener(Object object, Method method, Actor actor, Element element) {
+		public MethordClickListener(Object object, Method method, Actor actor) {
 			this.object = object;
 			this.method = method;
-			this.element = element;
 			this.actor = actor;
 			this.params = new Object[method.getParameterTypes().length];
 		}
@@ -185,10 +177,6 @@ public class PsdReflectUtil {
 			method.setAccessible(true);
 			try {
 				Class<?>[] classes = method.getParameterTypes();
-				int elementIndex = getIndex(classes, Element.class);
-				if (elementIndex != -1) {
-					params[elementIndex] = element;
-				}
 				int actorIndex = getIndex(classes, Actor.class);
 				if (actorIndex != -1) {
 					params[actorIndex] = actor;

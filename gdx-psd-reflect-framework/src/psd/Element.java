@@ -1,8 +1,8 @@
 package psd;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.keyroy.util.json.JsonAn;
 
@@ -16,6 +16,8 @@ public class Element {
 	public String layerName;
 	// 坐标 , 大小
 	public int x, y, width, height;
+	// 去掉参数以后 , 剩余的名称
+	public String name;
 	// 绑定参数
 	public List<Param> params;
 	// 是否显示
@@ -27,8 +29,28 @@ public class Element {
 	@JsonAn(skip = true)
 	protected Object userObject;
 	// 自定义对象
-	@JsonAn(skip = true)
-	protected Actor actor;
+	// @JsonAn(skip = true)
+	// protected Actor actor;
+
+	// 更新参数
+	protected void updateParam() {
+		if (layerName != null) {
+			int idx = layerName.indexOf("@");
+			if (idx != -1) {
+				String src = layerName;
+				if (idx == 0) {
+				} else {
+					this.name = src.substring(0, idx);
+					src = src.substring(idx + 1);
+				}
+				String[] ps = src.split("@");
+				params = new ArrayList<Param>(ps.length);
+				for (String param : ps) {
+					params.add(new Param(param));
+				}
+			}
+		}
+	}
 
 	// 设置用户自定义的缓存数据
 	public final void setUserObject(Object userObject) {
@@ -41,16 +63,16 @@ public class Element {
 		return (T) userObject;
 	}
 
-	// 设置用户自定义的 Actor 对象
-	public final void setActor(Actor actor) {
-		this.actor = actor;
-	}
-
+	// // 设置用户自定义的 Actor 对象
+	// public final void setActor(Actor actor) {
+	// this.actor = actor;
+	// }
 	//
-	@SuppressWarnings("unchecked")
-	public final <T extends Actor> T getActor() {
-		return (T) actor;
-	}
+	// //
+	// @SuppressWarnings("unchecked")
+	// public final <T extends Actor> T getActor() {
+	// return (T) actor;
+	// }
 
 	// 设置 文件夹
 	public final void setParent(Folder parent) {
@@ -60,6 +82,10 @@ public class Element {
 	// 获取 父文件夹
 	public final Folder getParent() {
 		return parent;
+	}
+
+	public final List<Param> getParams() {
+		return params;
 	}
 
 	// 获取当前的路径
@@ -90,6 +116,13 @@ public class Element {
 	@Override
 	public String toString() {
 		return getPath();
+	}
+
+	public static void main(String[] args) {
+		Element element = new Element();
+		element.layerName = "test@p{\"firstName\":\"John\" , \"lastName\":\"Doe\"}@p2{\"first\":\"1\" , \"last\":\"2\"}";
+		element.updateParam();
+		System.out.println(element.params);
 	}
 
 }

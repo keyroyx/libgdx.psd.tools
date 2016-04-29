@@ -1,5 +1,7 @@
 package psd.reflect;
 
+import java.util.List;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -8,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import psd.Param;
+import psd.ParamProvider;
 import psd.framework.PsdReflectUtil;
 
 /**
@@ -15,7 +19,7 @@ import psd.framework.PsdReflectUtil;
  * 
  * @author roy
  */
-public class PsdImage extends Image {
+public class PsdImage extends Image implements ParamProvider{
 	// ͼƬԴ
 	protected final psd.Pic psdPic;
 
@@ -41,7 +45,29 @@ public class PsdImage extends Image {
 		return psdPic;
 	}
 
- 
+	private List<Param> params;
+
+	@Override
+	public void setParams(List<Param> params) {
+		this.params = params;
+	}
+
+	@Override
+	public List<Param> getParams() {
+		return params;
+	}
+
+	@Override
+	public Param getParam(String key) {
+		if (params != null) {
+			for (Param param : params) {
+				if (key.equals(param.getId())) {
+					return param;
+				}
+			}
+		}
+		return null;
+	}
 
 	// ��ȡͼƬ
 	protected static final TextureRegion getTexture(psd.PsdFile psdFile, psd.Pic pic,
