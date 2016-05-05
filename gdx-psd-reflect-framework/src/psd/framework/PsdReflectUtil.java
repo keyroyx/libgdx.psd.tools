@@ -25,7 +25,7 @@ public class PsdReflectUtil {
 	public static final void setBounds(psd.Element element, Actor actor) {
 		if (element != null && actor != null) {
 			actor.setBounds(element.x, element.y, element.width, element.height);
-			actor.setName(element.name);
+			actor.setName(element.layerName);
 		}
 	}
 

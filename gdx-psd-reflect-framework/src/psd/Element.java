@@ -16,8 +16,8 @@ public class Element {
 	public String layerName;
 	// 坐标 , 大小
 	public int x, y, width, height;
-	// 去掉参数以后 , 剩余的名称
-	public String name;
+//	// 去掉参数以后 , 剩余的名称
+//	public String name;
 	// 绑定参数
 	public List<Param> params;
 	// 是否显示
@@ -44,7 +44,7 @@ public class Element {
 				String src = layerName;
 				if (idx == 0) {
 				} else {
-					this.name = src.substring(0, idx);
+					layerName = src.substring(0, idx);
 					src = src.substring(idx + 1);
 				}
 				String[] ps = src.split("@");
