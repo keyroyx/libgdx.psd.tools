@@ -16,8 +16,8 @@ public class Element {
 	public String layerName;
 	// 坐标 , 大小
 	public int x, y, width, height;
-//	// 去掉参数以后 , 剩余的名称
-//	public String name;
+	// // 去掉参数以后 , 剩余的名称
+	// public String name;
 	// 绑定参数
 	public List<Param> params;
 	// 是否显示
@@ -50,10 +50,14 @@ public class Element {
 				String[] ps = src.split("@");
 				params = new ArrayList<Param>(ps.length);
 				for (String param : ps) {
-					params.add(new Param(param));
+					onParam(param);
 				}
 			}
 		}
+	}
+
+	protected void onParam(String paramString) {
+		params.add(new Param(paramString));
 	}
 
 	// 设置 文件夹
