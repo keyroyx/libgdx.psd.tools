@@ -8,5 +8,4 @@ public class PsdTextureAtlasLoader extends TextureAtlasLoader {
 	public PsdTextureAtlasLoader(FileHandleResolver resolver) {
 		super(resolver);
 	}
-
 }

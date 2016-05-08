@@ -23,6 +23,8 @@ import psd.utils.Filter;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class FileManage {
+	// 默认的资源加载器组
+	private static final Array<AssetManagerProxy> assets = new Array<AssetManagerProxy>();
 	// 默认的 文件处理句柄
 	private static FileHandleResolver fileHandleResolver;
 	// 默认的资源加载器
@@ -36,19 +38,74 @@ public class FileManage {
 		return Gdx.files.internal(fileName);
 	}
 
-	/** 获取资源加载器 **/
-	public static final AssetManagerProxy getAssetManager() {
-		if (assetManager == null) {
-			assetManager = new AssetManagerProxy();
-		}
-		return assetManager;
-	}
-
 	/** 设置资源加载的文档适配器 , 用于数据的解密操作 **/
 	public static final void setHandleResolver(FileHandleResolver resolver) {
 		fileHandleResolver = resolver;
 		assetManager = new AssetManagerProxy(resolver);
+		assets.clear();
+		assets.add(assetManager);
+	}
 
+	/** 获取资源加载器 **/
+	public static final AssetManagerProxy getAssetManager() {
+		if (assetManager == null) {
+			assetManager = new AssetManagerProxy();
+			assets.clear();
+			assets.add(assetManager);
+		}
+		return assetManager;
+	}
+
+	/** 获取 assetManage组 **/
+	public static final AssetManagerProxy getAssetManager(String key) {
+		if (key == null) {
+			for (AssetManagerProxy proxy : assets) {
+				if (proxy == null) {
+					return proxy;
+				}
+			}
+		} else {
+			for (AssetManagerProxy proxy : assets) {
+				if (key.equals(proxy.key)) {
+					return proxy;
+				}
+			}
+		}
+		return null;
+	}
+
+	/** 插入新的 assetManage组 **/
+	public static final AssetManagerProxy setAssetManager(String key) {
+		AssetManagerProxy proxy = getAssetManager(key);
+		if (proxy != null) {
+			assetManager = proxy;
+		} else {
+			if (fileHandleResolver != null) {
+				proxy = new AssetManagerProxy(fileHandleResolver);
+			} else {
+				proxy = new AssetManagerProxy();
+			}
+			proxy.key = key;
+			assets.add(proxy);
+			assetManager = proxy;
+		}
+		return assetManager;
+	}
+
+	/** 删除 assetManage组 **/
+	public static final AssetManagerProxy removeAssetManager(String key) {
+		AssetManagerProxy proxy = getAssetManager(key);
+		if (proxy != null) {
+			assets.removeValue(proxy, false);
+			if (assetManager.equals(proxy)) {
+				assetManager = null;
+			}
+			if (assets.size > 0) {
+				assetManager = assets.get(assets.size - 1);
+			}
+			return proxy;
+		}
+		return null;
 	}
 
 	/** 标记资源 */
@@ -66,9 +123,14 @@ public class FileManage {
 		getAssetManager().unload(descriptors);
 	}
 
+	/** 释放资源 */
+	public static void unloadMark(String tag) {
+		getAssetManager().unloadMark(tag);
+	}
+
 	/** 立即获取资源 */
-	public static <T> T get(String fileName, Class<T> clazz) {
-		AssetManager assetManager = getAssetManager();
+	public static final <T> T get(String fileName, Class<T> clazz) {
+		AssetManagerProxy assetManager = getAssetManager();
 		if (assetManager.isLoaded(fileName, clazz) == false) {
 			assetManager.load(fileName, clazz);
 			assetManager.finishLoading();
@@ -142,10 +204,11 @@ public class FileManage {
 	 * 功能 2 , 设置资源加载记录点<br>
 	 * 功能 3 , 批量恢复加载资源
 	 */
-	private static class AssetManagerProxy extends AssetManager {
+	public static class AssetManagerProxy extends AssetManager {
 		private Stack<Mark> markTags = new Stack<Mark>();
 		private Mark currentMark;
 		private FileHandleResolver resolver;
+		private String key;
 
 		public AssetManagerProxy() {
 			this(new InternalFileHandleResolver());
@@ -175,6 +238,15 @@ public class FileManage {
 			currentMark = markTag;
 		}
 
+		private final Mark getMark(String tag) {
+			for (Mark mark : markTags) {
+				if (mark.tag.equals(tag)) {
+					return mark;
+				}
+			}
+			return null;
+		}
+
 		private Mark getCurrentMark() {
 			return currentMark;
 		}
@@ -193,6 +265,22 @@ public class FileManage {
 			super.load(fileName, type, parameter);
 			if (currentMark != null) {
 				currentMark.record(fileName, type, parameter);
+			}
+		}
+
+		public synchronized void unloadMark(String tag) {
+			Mark mark = getMark(tag);
+			if (mark != null) {
+				for (AssetDescriptor assetDescriptor : mark.elements) {
+					System.out.println("unloadMark : " + assetDescriptor.fileName);
+					if (assetDescriptor.fileName.indexOf(".atlas") != -1
+							|| assetDescriptor.fileName.indexOf(".png") != -1) {
+						System.out.println();
+					}
+					unload(assetDescriptor.fileName);
+				}
+				// 删除引用
+				markTags.remove(mark);
 			}
 		}
 
