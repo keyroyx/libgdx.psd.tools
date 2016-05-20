@@ -57,7 +57,12 @@ public class Element {
 	}
 
 	protected void onParam(String paramString) {
-		params.add(new Param(paramString));
+		try {
+			params.add(new Param(paramString));
+		} catch (Exception e) {
+			System.out.println("path : " + layerName);
+			params.add(new Param(paramString));
+		}
 	}
 
 	// ÉèÖÃ ÎÄ¼ş¼Ğ

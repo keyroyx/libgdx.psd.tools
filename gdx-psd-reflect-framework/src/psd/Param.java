@@ -19,7 +19,22 @@ public class Param {
 		int st, ed;
 		if ((st = text.indexOf("{")) != -1 && (ed = text.lastIndexOf("}")) != -1) {
 			this.id = text.substring(0, st);
-			this.json = new JSONObject(text.substring(st, ed + 1));
+			String jsonStr = text.substring(st, ed + 1);
+			try {
+				this.json = new JSONObject(jsonStr);
+			} catch (Exception e) {// 错误的字符串尝试新的解析方式
+				jsonStr = jsonStr.replace("{", "").replace("}", "");
+				this.json = new JSONObject();
+				try {
+					for (String keyVal : jsonStr.split(",")) {
+						String[] sp = keyVal.split(":");
+						if (sp.length == 2) {
+							json.put(sp[0], sp[1]);
+						}
+					}
+				} catch (Exception e2) {
+				}
+			}
 		} else {
 			this.id = text;
 		}

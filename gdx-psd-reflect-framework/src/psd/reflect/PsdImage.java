@@ -70,9 +70,11 @@ public class PsdImage extends Image implements ParamProvider {
 		TextureRegion region = null;
 
 		if (psdFile == null || psdFile.atlas == null) {
-			Texture texture = PsdReflectUtil.load(assetManager, pic.textureName, Texture.class);
-			texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-			region = new TextureRegion(texture);
+			if (pic.textureName != null && pic.textureName.length() > 0) {
+				Texture texture = PsdReflectUtil.load(assetManager, pic.textureName, Texture.class);
+				texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+				region = new TextureRegion(texture);
+			}
 		} else {
 			TextureAtlas textureAtlas = PsdReflectUtil.load(assetManager, psdFile.getAtlasPath(),
 					TextureAtlas.class);

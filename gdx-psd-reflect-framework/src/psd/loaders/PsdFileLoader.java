@@ -55,6 +55,9 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 			Array<AssetDescriptor> array = new Array<AssetDescriptor>();
 			for (Element element : images) {
 				Pic pic = (Pic) element;
+				if (pic.textureName.indexOf("@") != -1) {
+					System.out.println("ssssssssssssssssssssssssssssssss");
+				}
 				AssetDescriptor descriptor = null;
 				if (psdFile == null || psdFile.atlas == null) {
 					if (pic.textureName != null) {
@@ -63,7 +66,9 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 				} else {
 					descriptor = new AssetDescriptor(psdFile.getAtlasPath(), TextureAtlas.class);
 				}
-				array.add(descriptor);
+				if (descriptor != null) {
+					array.add(descriptor);
+				}
 			}
 			return array;
 		}
