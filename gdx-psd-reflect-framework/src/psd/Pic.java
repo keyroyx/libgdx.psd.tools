@@ -12,6 +12,6 @@ public class Pic extends Element {
 	@Override
 	protected void onParam(String paramString) {
 		super.onParam(paramString);
-		textureName = textureName.replace("@" + paramString, "");
+		textureName = textureName.replace(paramString, "").replace("@", "");
 	}
 }

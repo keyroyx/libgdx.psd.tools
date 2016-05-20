@@ -57,7 +57,9 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 				Pic pic = (Pic) element;
 				AssetDescriptor descriptor = null;
 				if (psdFile == null || psdFile.atlas == null) {
-					descriptor = new AssetDescriptor(pic.textureName, Texture.class);
+					if (pic.textureName != null) {
+						descriptor = new AssetDescriptor(pic.textureName, Texture.class);
+					}
 				} else {
 					descriptor = new AssetDescriptor(psdFile.getAtlasPath(), TextureAtlas.class);
 				}
