@@ -1,5 +1,7 @@
 package psd;
 
+import java.io.InputStream;
+
 import com.badlogic.gdx.files.FileHandle;
 import com.keyroy.util.json.Json;
 import com.keyroy.util.json.JsonAn;
@@ -25,12 +27,21 @@ public class PsdFile extends Folder {
 		this.layerName = psdName;
 	}
 
-	public PsdFile(FileHandle handle) {
+	public PsdFile(InputStream inputStream) {
 		try {
-			Json.fill(this, handle.read());
+			Json.fill(this, inputStream);
 			updateParent(this);
 			updatePsdFile(this);
 			updateParam();
+			this.layerName = psdName;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public PsdFile(FileHandle handle) {
+		this(handle.read());
+		try {
 			this.handle = handle;
 			this.layerName = psdName;
 		} catch (Exception e) {

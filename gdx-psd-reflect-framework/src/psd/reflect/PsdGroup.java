@@ -41,8 +41,7 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 			try {
 				Actor actor = null;
 				if (listener != null) {
-					actor = listener.onReflectElement(PsdGroup.this, element, element.getParams(),
-							assetManager);
+					actor = listener.onReflectElement(PsdGroup.this, element, assetManager);
 				} else {
 					actor = PsdReflectUtil.toGdxActor(element, assetManager, null);
 				}

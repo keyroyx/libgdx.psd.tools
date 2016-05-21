@@ -2,6 +2,8 @@ package psd;
 
 import org.json.m.JSONObject;
 
+import com.keyroy.util.json.Json;
+
 public class Param {
 	// 参数ID
 	protected String id;
@@ -48,6 +50,17 @@ public class Param {
 	// 获取 JSON 参数对象
 	public final JSONObject getJson() {
 		return json;
+	}
+
+	public final <T> T reflect(Class<T> clazz) {
+		try {
+			if (json != null) {
+				return new Json(json).toObject(clazz);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	//

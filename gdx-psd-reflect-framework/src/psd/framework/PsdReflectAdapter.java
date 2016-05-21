@@ -1,13 +1,10 @@
 package psd.framework;
 
-import java.util.List;
-
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import psd.Element;
-import psd.Param;
 import psd.loaders.FileManage;
 import psd.reflect.PsdGroup;
 import psd.reflect.PsdReflectListener;
@@ -64,8 +61,9 @@ public abstract class PsdReflectAdapter extends FileManage implements PsdReflect
 	}
 
 	/** 反射对象完成 */
-	public Actor onReflectElement(PsdGroup parent, Element element, List<Param> params,
-			AssetManager assetManager) throws Exception {
+	@Override
+	public Actor onReflectElement(PsdGroup parent, Element element, AssetManager assetManager)
+			throws Exception {
 		return PsdReflectUtil.toGdxActor(element, assetManager, this);
 	}
 
