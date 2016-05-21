@@ -105,10 +105,11 @@ public class Element {
 		paths.add(layerName);
 		Folder folder = parent;
 		while (folder != null) {
-			if (folder.layerName != null) {
-				paths.add(folder.layerName);
-			} else if (folder instanceof PsdFile) {
+			if (folder instanceof PsdFile) {
 				paths.add(((PsdFile) folder).psdName);
+				break;
+			} else if (folder.layerName != null) {
+				paths.add(folder.layerName);
 			}
 			folder = folder.parent;
 		}

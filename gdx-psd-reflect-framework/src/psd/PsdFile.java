@@ -38,6 +38,14 @@ public class PsdFile extends Folder {
 		}
 	}
 
+	// 更新父类对象
+	@Override
+	protected void updateParent(Folder parent) {
+		for (Element element : childs) {
+			element.updateParent(this);
+		}
+	}
+
 	public String getAtlasPath() {
 		if (handle != null) {
 			String path = handle.parent().path().replace("\\", "/");
