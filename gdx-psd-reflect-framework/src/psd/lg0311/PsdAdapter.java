@@ -11,14 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.keyroy.util.json.Json;
 
 import psd.Element;
 import psd.Folder;
 import psd.Param;
 import psd.framework.PsdReflectAdapter;
+import psd.lg0311.params.Color;
 import psd.lg0311.params.FS;
+import psd.lg0311.params.Fnt;
 import psd.lg0311.params.Particle;
+import psd.lg0311.widget.ColorWidget;
 import psd.lg0311.widget.FntWidget;
 import psd.lg0311.widget.FrameAnimationWidget;
 import psd.lg0311.widget.ParticleWidge;
@@ -358,13 +360,13 @@ public abstract class PsdAdapter extends PsdReflectAdapter {
 		Actor actor = null;
 		if (element.getParams() != null) {
 			for (Param param : element.getParams()) {
-				if(param.getId().equals(FntWidget.getId())){
-					
-				}
-				
-				
-				
-				if (param.getId().equals("fs") && element instanceof Folder) {
+				if (param.getId().equals(FntWidget.getId())) {
+					Fnt fnt = param.reflect(Fnt.class);
+					if (fnt != null) {
+						FntWidget fntWidget = new FntWidget(fnt.getPath());
+						actor = fntWidget;
+					}
+				} else if (param.getId().equals(FrameAnimationWidget.getId()) && element instanceof Folder) {
 					actor = super.onReflectElement(parent, element, assetManager);
 					if (actor instanceof PsdGroup) {
 						FrameAnimationWidget fsWidget = new FrameAnimationWidget((PsdGroup) actor);
@@ -379,13 +381,21 @@ public abstract class PsdAdapter extends PsdReflectAdapter {
 						}
 						actor = fsWidget;
 					}
-				} else if (param.getId().equals("part")) {
-					Particle particle = new Json(param.getJson()).toObject(Particle.class);
-					ParticleWidge particleWidge = new ParticleWidge(particle.getPath());
-					//
-					actor = particleWidge;
-				} else {
-					System.out.println(param.getId());
+				} else if (param.getId().equals(ParticleWidge.class)) {
+					Particle particle = param.reflect(Particle.class);
+					if (particle != null && particle.getPath() != null) {
+						ParticleWidge particleWidge = new ParticleWidge(particle.getPath());
+						actor = particleWidge;
+					}
+				} else if (param.getId().equals(ColorWidget.class)) {
+					Color color = param.reflect(Color.class);
+					if (color != null && color.rgba != null) {
+						ColorWidget colorWidget = new ColorWidget(
+								com.badlogic.gdx.graphics.Color.valueOf(color.rgba));
+						colorWidget.setFillScreen(color.fillScreen);
+						//
+						actor = colorWidget;
+					}
 				}
 			}
 		}

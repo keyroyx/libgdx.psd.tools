@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
-import psd.lg0311.widget.ColorPainter;
+import psd.lg0311.widget.ColorWidget;
 import psd.reflect.PsdGroup;
 
 public abstract class DialogAdapter extends PsdAdapter {
@@ -84,9 +84,9 @@ public abstract class DialogAdapter extends PsdAdapter {
 
 	// 设置背景色
 	protected final void setBackgroundColor(int rgba) {
-		ColorPainter colorPainter = new ColorPainter(rgba);
+		ColorWidget colorPainter = new ColorWidget(rgba);
 		colorPainter.setSize(getSource().getWidth(), getSource().getHeight());
-		colorPainter.setFillStage(true);
+		colorPainter.setFillScreen(true);
 		getSource().addActorAt(0, colorPainter);
 		//
 		colorPainter.addListener(new ClickListener() {
