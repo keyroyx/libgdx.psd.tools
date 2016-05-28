@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import psd.reflect.PsdStage;
 
 /***
- * ÎèÌ¨×é
+ * èˆå°ç»„
  */
 public abstract class PsdReflectApplicationAdapter extends ApplicationAdapter {
 	private static PsdReflectStageGroup stageGroup = new PsdReflectStageGroup();
@@ -22,29 +22,29 @@ public abstract class PsdReflectApplicationAdapter extends ApplicationAdapter {
 		onCreate();
 	}
 
-	// ³õÊ¼»¯µ÷ÓÃ
+	// åˆå§‹åŒ–è°ƒç”¨
 	protected abstract void onCreate();
 
 	@Override
 	public void render() {
-		// Çå³ıÆÁÄ»ÑÕÉ«
+		// æ¸…é™¤å±å¹•é¢œè‰²
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		// Ö§³ÖÑÕÉ«»ìºÏ
+		// æ”¯æŒé¢œè‰²æ··åˆ
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
-		// Ö§³ÖÍ¸Ã÷Í¨µÀ
+		// æ”¯æŒé€æ˜é€šé“
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		// Ö´ĞĞ¶¯»­
+		// æ‰§è¡ŒåŠ¨ç”»
 		stageGroup.act();
-		// Ö´ĞĞ»æÖÆ
+		// æ‰§è¡Œç»˜åˆ¶
 		stageGroup.draw();
 	}
 
-	// »ñÈ¡µ½¶ÔÏó
+	// è·å–åˆ°å¯¹è±¡
 	public static PsdReflectStageGroup getStageGroup() {
 		return stageGroup;
 	}
 
-	/** ÉèÖÃµ±Ç°Ò³Ãæ */
+	/** è®¾ç½®å½“å‰é¡µé¢ */
 	public static final void set(Object object) {
 		Stage stage = toStage(object);
 		if (stage != null) {
@@ -55,7 +55,7 @@ public abstract class PsdReflectApplicationAdapter extends ApplicationAdapter {
 		}
 	}
 
-	/** Ñ¹Õ» , ÏÔÊ¾ĞÂÒ³Ãæ */
+	/** å‹æ ˆ , æ˜¾ç¤ºæ–°é¡µé¢ */
 	public static final void push(Object object) {
 		Stage stage = toStage(object);
 		if (stage != null) {

@@ -7,16 +7,16 @@ import psd.utils.ElementFilter;
 import psd.utils.ElementNameFilter;
 
 /**
- * PSD µÄÎÄ¼ş¼ĞÍ¼²ã
+ * PSD çš„æ–‡ä»¶å¤¹å›¾å±‚
  * 
  * @author roy
  */
 public class Folder extends Element {
 
-	// ×Ó¶ÔÏó
+	// å­å¯¹è±¡
 	public List<Element> childs = new ArrayList<Element>();
 
-	// ¸üĞÂ²ÎÊı¶ÔÏó
+	// æ›´æ–°å‚æ•°å¯¹è±¡
 	@Override
 	protected void updateParam() {
 		super.updateParam();
@@ -25,7 +25,7 @@ public class Folder extends Element {
 		}
 	}
 
-	// ¸üĞÂ¸¸Àà¶ÔÏó
+	// æ›´æ–°çˆ¶ç±»å¯¹è±¡
 	@Override
 	protected void updateParent(Folder parent) {
 		super.updateParent(parent);
@@ -34,7 +34,7 @@ public class Folder extends Element {
 		}
 	}
 
-	// ÉèÖÃ ÎÄ¼ş¼Ğ
+	// è®¾ç½® æ–‡ä»¶å¤¹
 	protected void updatePsdFile(PsdFile psdFile) {
 		super.updatePsdFile(psdFile);
 		for (Element element : childs) {
@@ -42,7 +42,7 @@ public class Folder extends Element {
 		}
 	}
 
-	// ¹ıÂËÔªËØ
+	// è¿‡æ»¤å…ƒç´ 
 	public final List<Element> filter(ElementFilter filter) {
 		List<Element> list = new ArrayList<Element>(3);
 		filter(this, filter, list);
@@ -62,12 +62,12 @@ public class Folder extends Element {
 
 	}
 
-	// »ñÈ¡Ò»¸ö
+	// è·å–ä¸€ä¸ª
 	public final Element get(ElementFilter filter) {
 		return filterOne(this, filter);
 	}
 
-	// ¹ıÂË º¯Êı
+	// è¿‡æ»¤ å‡½æ•°
 	private static final void filter(Element element, ElementFilter filter, List<Element> out) {
 		if (filter.accept(element)) {
 			out.add(element);
@@ -98,12 +98,12 @@ public class Folder extends Element {
 		return null;
 	}
 
-	// ¸ù¾İÂ·¾¶²éÕÒ¶ÔÏó
+	// æ ¹æ®è·¯å¾„æŸ¥æ‰¾å¯¹è±¡
 	public final Element getElementByPath(String path) {
 		return getElementByPath(path, 0);
 	}
 
-	// ¸ù¾İÂ·¾¶²éÕÒ¶ÔÏó
+	// æ ¹æ®è·¯å¾„æŸ¥æ‰¾å¯¹è±¡
 	public final Element getElementByPath(String path, int index) {
 		if (path != null) {
 			return getElementByPath(path.split("/"), index);
@@ -111,7 +111,7 @@ public class Folder extends Element {
 		return null;
 	}
 
-	// ¸ù¾İÂ·¾¶²éÕÒ¶ÔÏó
+	// æ ¹æ®è·¯å¾„æŸ¥æ‰¾å¯¹è±¡
 	private final Element getElementByPath(String[] paths, int index) {
 		Folder folder = this;
 		Element rt = null;
@@ -136,7 +136,7 @@ public class Folder extends Element {
 		return rt;
 	}
 
-	// ¸ù¾İÃû³Æ²éÕÒ×Ó¶ÔÏó
+	// æ ¹æ®åç§°æŸ¥æ‰¾å­å¯¹è±¡
 	private static final Element getChild(Folder folder, String name, int index) {
 		int counter = 0;
 		for (Element child : folder.childs) {

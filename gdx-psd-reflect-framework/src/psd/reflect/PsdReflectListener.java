@@ -6,14 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import psd.Element;
 
 /**
- * Ó³ÉäµÄ¼àÌı
+ * æ˜ å°„çš„ç›‘å¬
  * 
  */
 public interface PsdReflectListener {
-	/** ·´Éä¶ÔÏóÍê³É */
+	/** åå°„å¯¹è±¡å®Œæˆ */
 	public void onReflectSuccess(PsdGroup psdGroup);
 
-	/** ·´Éä¶ÔÏóÍê³É */
+	/** åå°„å¯¹è±¡å®Œæˆ */
 	public Actor onReflectElement(PsdGroup parent, Element element, AssetManager assetManager)
 			throws Exception;
 }

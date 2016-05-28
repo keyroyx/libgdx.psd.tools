@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -14,7 +14,7 @@ import psd.framework.PsdReflectUtil;
 import psd.loaders.FileManage;
 
 /**
- * PSD µÄÎèÌ¨
+ * PSD çš„èˆå°
  */
 public class PsdStage extends Stage {
 	private final Object reflectObject;
@@ -43,19 +43,19 @@ public class PsdStage extends Stage {
 	public PsdStage(Object reflectObject, PsdGroup psdGroup, Viewport viewport) {
 		super(viewport);
 		this.reflectObject = reflectObject;
-		// Ä¬ÈÏÌí¼Óµ½ÆÁÄ»ÖĞĞÄ
+		// é»˜è®¤æ·»åŠ åˆ°å±å¹•ä¸­å¿ƒ
 		psdGroup.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
 		addActor(psdGroup);
-		// ³¢ÊÔ ·´Éä onViewPortChange º¯Êı
+		// å°è¯• åå°„ onViewPortChange å‡½æ•°
 		doMethod("onViewportChange", getViewport());
 	}
 
-	/** ±ê¼ÇÕâ¸öÎèÌ¨ÊÇ·ñÊ§È¥ÁË¿ØÖÆÈ¨ */
-	public final void onControl(boolean isControl) {
+	/** æ ‡è®°è¿™ä¸ªèˆå°æ˜¯å¦å¤±å»äº†æ§åˆ¶æƒ */
+	public final void onControlChange(boolean isControl) {
 
 	}
 
-	// Ö´ĞĞº¯Êı
+	// æ‰§è¡Œå‡½æ•°
 	protected final void doMethod(String methodName, Object... args) {
 		if (reflectObject == null) {
 

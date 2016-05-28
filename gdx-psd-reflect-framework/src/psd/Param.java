@@ -5,9 +5,9 @@ import org.json.m.JSONObject;
 import com.keyroy.util.json.Json;
 
 public class Param {
-	// ²ÎÊıID
+	// å‚æ•°ID
 	protected String id;
-	// ²ÎÊıÄÚÈİ
+	// å‚æ•°å†…å®¹
 	protected JSONObject json;
 
 	public Param() {
@@ -24,7 +24,7 @@ public class Param {
 			String jsonStr = text.substring(st, ed + 1);
 			try {
 				this.json = new JSONObject(jsonStr);
-			} catch (Exception e) {// ´íÎóµÄ×Ö·û´®³¢ÊÔĞÂµÄ½âÎö·½Ê½
+			} catch (Exception e) {// é”™è¯¯çš„å­—ç¬¦ä¸²å°è¯•æ–°çš„è§£ææ–¹å¼
 				jsonStr = jsonStr.replace("{", "").replace("}", "");
 				this.json = new JSONObject();
 				try {
@@ -42,12 +42,12 @@ public class Param {
 		}
 	}
 
-	// »ñÈ¡²ÎÊıµÄ ID
+	// è·å–å‚æ•°çš„ ID
 	public final String getId() {
 		return id;
 	}
 
-	// »ñÈ¡ JSON ²ÎÊı¶ÔÏó
+	// è·å– JSON å‚æ•°å¯¹è±¡
 	public final JSONObject getJson() {
 		return json;
 	}

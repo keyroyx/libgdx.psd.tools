@@ -55,9 +55,6 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 			Array<AssetDescriptor> array = new Array<AssetDescriptor>();
 			for (Element element : images) {
 				Pic pic = (Pic) element;
-				if (pic.textureName.indexOf("@") != -1) {
-					System.out.println("ssssssssssssssssssssssssssssssss");
-				}
 				AssetDescriptor descriptor = null;
 				if (psdFile == null || psdFile.atlas == null) {
 					if (pic.textureName != null) {
@@ -76,7 +73,7 @@ public class PsdFileLoader extends AsynchronousAssetLoader<PsdFile, PsdFileParam
 	}
 
 	static public class PsdFileParameter extends AssetLoaderParameters<PsdFile> {
-		// 是否加载资源文件
+		// 鏄惁鍔犺浇璧勬簮鏂囦欢
 		public boolean loadResource;
 
 		public PsdFileParameter() {

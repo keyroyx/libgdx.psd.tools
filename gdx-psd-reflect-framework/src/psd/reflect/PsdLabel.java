@@ -10,12 +10,12 @@ import psd.Param;
 import psd.ParamProvider;
 
 /**
- * PSD µÄÎÄ±¾¶ÔÏó
+ * PSD çš„æ–‡æœ¬å¯¹è±¡
  * 
  * @author roy
  */
 public class PsdLabel extends Label implements ParamProvider {
-	// ÎÄ±¾Ô´
+	// æ–‡æœ¬æº
 	protected final psd.Text psdText;
 
 	public PsdLabel(psd.Text psdText) {
@@ -27,7 +27,6 @@ public class PsdLabel extends Label implements ParamProvider {
 	public psd.Text getPsdText() {
 		return psdText;
 	}
-	
 
 	private List<Param> params;
 
@@ -56,13 +55,6 @@ public class PsdLabel extends Label implements ParamProvider {
 	private static final LabelStyle getLabelStyle(psd.Text psdText) {
 		Label.LabelStyle style = new LabelStyle(new BitmapFont(),
 				new Color(psdText.r, psdText.g, psdText.b, psdText.a));
-		try {
-			// GDX µÄÄ¬ÈÏ´óĞ¡Îª 15pt ,com/badlogic/gdx/utils/arial-15.png
-			if (style.font != null) {
-				style.font.scale((float) psdText.fontSize / 15f);
-			}
-		} catch (Exception e) {
-		}
 		return style;
 	}
 }

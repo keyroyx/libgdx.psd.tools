@@ -21,7 +21,7 @@ import psd.reflect.PsdReflectListener;
 
 public class PsdReflectUtil {
 
-	// ÉèÖÃ´óĞ¡
+	// è®¾ç½®å¤§å°
 	public static final void setBounds(psd.Element element, Actor actor) {
 		if (element != null && actor != null) {
 			actor.setBounds(element.x, element.y, element.width, element.height);
@@ -29,7 +29,7 @@ public class PsdReflectUtil {
 		}
 	}
 
-	// ×¼±¸ÏîÄ¿
+	// å‡†å¤‡é¡¹ç›®
 	public static synchronized final <T> T load(AssetManager assetManager, String fileName, Class<T> clazz) {
 		if (assetManager.isLoaded(fileName, clazz)) {
 		} else {
@@ -39,15 +39,15 @@ public class PsdReflectUtil {
 		return assetManager.get(fileName, clazz);
 	}
 
-	// »ñÈ¡JsonµÄ¼ÓÔØÂ·¾¶
+	// è·å–Jsonçš„åŠ è½½è·¯å¾„
 	private static final String getJsonPath(Object object) {
-		// Ó³ÉäµÄPSDÂ·¾¶
+		// æ˜ å°„çš„PSDè·¯å¾„
 		String psdPath = null;
-		if (object instanceof PsdReflectAdapter) { // ¶ÀÁ¢µÄ»ñÈ¡JSONÂ·¾¶º¯Êı
+		if (object instanceof PsdReflectAdapter) { // ç‹¬ç«‹çš„è·å–JSONè·¯å¾„å‡½æ•°
 			psdPath = ((PsdReflectAdapter) object).getPsdJsonPath();
 		}
 
-		if (psdPath == null) { // Ã»ÓĞ»ñÈ¡µ½PSD Â·¾¶ , ³¢ÊÔ½âÎö @PsdAn
+		if (psdPath == null) { // æ²¡æœ‰è·å–åˆ°PSD è·¯å¾„ , å°è¯•è§£æ @PsdAn
 			Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
 			PsdAn an = reflectClass.getAnnotation(PsdAn.class);
 			if (an != null) {
@@ -64,9 +64,9 @@ public class PsdReflectUtil {
 	public static final PsdGroup reflect(Object object) {
 		PsdReflectListener listener = (object instanceof PsdReflectListener) ? (PsdReflectListener) object
 				: null;
-		// Ó³ÉäµÄPSDÂ·¾¶
+		// æ˜ å°„çš„PSDè·¯å¾„
 		String psdPath = getJsonPath(object);
-		if (psdPath == null) { // Ã»ÓĞ»ñÈ¡µ½Ó³ÉäÊ¹ÓÃµÄ PSD Â·¾¶
+		if (psdPath == null) { // æ²¡æœ‰è·å–åˆ°æ˜ å°„ä½¿ç”¨çš„ PSD è·¯å¾„
 			throw new IllegalArgumentException("can not reflect a PsdGroup by : "
 					+ object.getClass().getName() + "  , try add annotation @PsdAn");
 		} else {
@@ -77,23 +77,23 @@ public class PsdReflectUtil {
 					psdGroup = (PsdGroup) object;
 					psdFile = (PsdFile) psdGroup.getPsdFolder();
 				} else {
-					// ¼ÓÔØ¶ÔÏó
+					// åŠ è½½å¯¹è±¡
 					psdFile = FileManage.get(psdPath, PsdFile.class);
-					// Éú³É½á¹¹
+					// ç”Ÿæˆç»“æ„
 					psdGroup = new PsdGroup(psdFile, PsdGroup.getAssetManager(), listener);
 				}
 
 				Class<?> reflectClass = (object instanceof Class<?>) ? (Class<?>) object : object.getClass();
-				// ĞŞÕı×éÎ»ÖÃ
+				// ä¿®æ­£ç»„ä½ç½®
 				PsdReflectUtil.setBounds(psdFile, psdGroup);
-				// Ó³Éä ²ÎÊı
+				// æ˜ å°„ å‚æ•°
 				Field[] fields = reflectClass.getDeclaredFields();
 				for (Field field : fields) {
 					PsdAn an = field.getAnnotation(PsdAn.class);
 					if (an != null && (Actor.class.isAssignableFrom(field.getType())
 							|| Element.class.isAssignableFrom(field.getType()))) {
 						Actor actor = null;
-						if (an.value().length > 0) {// ³¢ÊÔÖ±½Ó»ñÈ¡Ö¸¶¨¶ÔÏó
+						if (an.value().length > 0) {// å°è¯•ç›´æ¥è·å–æŒ‡å®šå¯¹è±¡
 							actor = psdGroup.findActor(an.value()[0], an.index());
 						} else {
 							actor = psdGroup.findActor(field.getName(), 0);
@@ -107,12 +107,12 @@ public class PsdReflectUtil {
 						}
 					}
 				}
-				// Ó³Éä º¯Êı
+				// æ˜ å°„ å‡½æ•°
 				Method[] methods = reflectClass.getDeclaredMethods();
 				for (Method method : methods) {
 					PsdAn an = method.getAnnotation(PsdAn.class);
 					if (an != null) {
-						// ³¢ÊÔÖ±½Ó»ñÈ¡Ö¸¶¨¶ÔÏó
+						// å°è¯•ç›´æ¥è·å–æŒ‡å®šå¯¹è±¡
 						List<Actor> actors = new ArrayList<Actor>(2);
 						for (String actorName : an.value()) {
 							Actor actor = psdGroup.findActor(actorName, an.index());
@@ -125,7 +125,7 @@ public class PsdReflectUtil {
 						}
 					}
 				}
-				// ¼¤»î¼àÌı
+				// æ¿€æ´»ç›‘å¬
 				if (listener != null) {
 					listener.onReflectSuccess(psdGroup);
 				}
@@ -140,7 +140,7 @@ public class PsdReflectUtil {
 		return null;
 	}
 
-	// ½« JSON ¶ÔÏó , ×ª»»³É Actor ¶ÔÏó
+	// å°† JSON å¯¹è±¡ , è½¬æ¢æˆ Actor å¯¹è±¡
 	public static final Actor toGdxActor(psd.Element element, AssetManager assetManager,
 			PsdReflectListener listener) throws Exception {
 		Actor actor = null;

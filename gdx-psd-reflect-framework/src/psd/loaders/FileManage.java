@@ -23,14 +23,14 @@ import psd.utils.Filter;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class FileManage {
-	// Ä¬ÈÏµÄ×ÊÔ´¼ÓÔØÆ÷×é
+	// é»˜è®¤çš„èµ„æºåŠ è½½å™¨ç»„
 	private static final Array<AssetManagerProxy> assets = new Array<AssetManagerProxy>();
-	// Ä¬ÈÏµÄ ÎÄ¼ş´¦Àí¾ä±ú
+	// é»˜è®¤çš„ æ–‡ä»¶å¤„ç†å¥æŸ„
 	private static FileHandleResolver fileHandleResolver;
-	// Ä¬ÈÏµÄ×ÊÔ´¼ÓÔØÆ÷
+	// é»˜è®¤çš„èµ„æºåŠ è½½å™¨
 	private static AssetManagerProxy assetManager;
 
-	/** ¼ÓÔØÎÄ¼ş×ÊÔ´ **/
+	/** åŠ è½½æ–‡ä»¶èµ„æº **/
 	public static final FileHandle file(String fileName) {
 		if (fileHandleResolver != null) {
 			return fileHandleResolver.resolve(fileName);
@@ -38,7 +38,7 @@ public class FileManage {
 		return Gdx.files.internal(fileName);
 	}
 
-	/** ÉèÖÃ×ÊÔ´¼ÓÔØµÄÎÄµµÊÊÅäÆ÷ , ÓÃÓÚÊı¾İµÄ½âÃÜ²Ù×÷ **/
+	/** è®¾ç½®èµ„æºåŠ è½½çš„æ–‡æ¡£é€‚é…å™¨ , ç”¨äºæ•°æ®çš„è§£å¯†æ“ä½œ **/
 	public static final void setHandleResolver(FileHandleResolver resolver) {
 		fileHandleResolver = resolver;
 		assetManager = new AssetManagerProxy(resolver);
@@ -46,7 +46,7 @@ public class FileManage {
 		assets.add(assetManager);
 	}
 
-	/** »ñÈ¡×ÊÔ´¼ÓÔØÆ÷ **/
+	/** è·å–èµ„æºåŠ è½½å™¨ **/
 	public static final AssetManagerProxy getAssetManager() {
 		if (assetManager == null) {
 			assetManager = new AssetManagerProxy();
@@ -56,7 +56,7 @@ public class FileManage {
 		return assetManager;
 	}
 
-	/** »ñÈ¡ assetManage×é **/
+	/** è·å– assetManageç»„ **/
 	public static final AssetManagerProxy getAssetManager(String key) {
 		if (key == null) {
 			for (AssetManagerProxy proxy : assets) {
@@ -74,7 +74,7 @@ public class FileManage {
 		return null;
 	}
 
-	/** ²åÈëĞÂµÄ assetManage×é **/
+	/** æ’å…¥æ–°çš„ assetManageç»„ **/
 	public static final AssetManagerProxy setAssetManager(String key) {
 		AssetManagerProxy proxy = getAssetManager(key);
 		if (proxy != null) {
@@ -92,7 +92,7 @@ public class FileManage {
 		return assetManager;
 	}
 
-	/** É¾³ı assetManage×é **/
+	/** åˆ é™¤ assetManageç»„ **/
 	public static final AssetManagerProxy removeAssetManager(String key) {
 		AssetManagerProxy proxy = getAssetManager(key);
 		if (proxy != null) {
@@ -108,27 +108,27 @@ public class FileManage {
 		return null;
 	}
 
-	/** ±ê¼Ç×ÊÔ´ */
+	/** æ ‡è®°èµ„æº */
 	public static final void mark(String tag) {
 		getAssetManager().mark(tag);
 	}
 
-	/** »ñÈ¡±ê¼Ç×ÊÔ´ */
+	/** è·å–æ ‡è®°èµ„æº */
 	public static Mark getCurrentMark() {
 		return getAssetManager().getCurrentMark();
 	}
 
-	/** ÊÍ·Å×ÊÔ´ */
+	/** é‡Šæ”¾èµ„æº */
 	public static void unload(List<AssetDescriptor> descriptors) {
 		getAssetManager().unload(descriptors);
 	}
 
-	/** ÊÍ·Å×ÊÔ´ */
+	/** é‡Šæ”¾èµ„æº */
 	public static void unloadMark(String tag) {
 		getAssetManager().unloadMark(tag);
 	}
 
-	/** Á¢¼´»ñÈ¡×ÊÔ´ */
+	/** ç«‹å³è·å–èµ„æº */
 	public static final <T> T get(String fileName, Class<T> clazz) {
 		AssetManagerProxy assetManager = getAssetManager();
 		if (assetManager.isLoaded(fileName, clazz) == false) {
@@ -139,7 +139,7 @@ public class FileManage {
 	}
 
 	/**
-	 * ¼ÓÔØ PsdGroup ĞèÒªÊ¹ÓÃµÄ×ÊÔ´
+	 * åŠ è½½ PsdGroup éœ€è¦ä½¿ç”¨çš„èµ„æº
 	 * 
 	 * @param fileName
 	 */
@@ -151,7 +151,7 @@ public class FileManage {
 	}
 
 	/**
-	 * ¼ÓÔØ½ø¶È
+	 * åŠ è½½è¿›åº¦
 	 * 
 	 * @param runnable
 	 */
@@ -160,27 +160,27 @@ public class FileManage {
 		assetManager.load(runnable);
 	}
 
-	/** ¼ÓÔØ×ÊÔ´ */
+	/** åŠ è½½èµ„æº */
 	public static void load(String fileName, Class<?> clazz) {
 		getAssetManager().load(fileName, clazz);
 	}
 
-	/** ¼ÓÔØ×ÊÔ´ */
+	/** åŠ è½½èµ„æº */
 	public static void load(List<AssetDescriptor> descriptors) {
 		getAssetManager().load(descriptors);
 	}
 
-	/** ²éÑ¯ÊÇ·ñ¼ÓÔØÁË×ÊÔ´ */
+	/** æŸ¥è¯¢æ˜¯å¦åŠ è½½äº†èµ„æº */
 	public static boolean isLoad(String fileName, Class<?> clazz) {
 		return getAssetManager().isLoaded(fileName, clazz);
 	}
 
-	/** ÖØĞÂ¼ÓÔØÍ¼Æ¬ , ÓÃÓÚ½â¾ö·µ»ØÊ± Í¼Æ¬¶ªÊ§µÄÎÊÌâ */
+	/** é‡æ–°åŠ è½½å›¾ç‰‡ , ç”¨äºè§£å†³è¿”å›æ—¶ å›¾ç‰‡ä¸¢å¤±çš„é—®é¢˜ */
 	public static void reload(List<String> textures) {
 		getAssetManager().reload(textures);
 	}
 
-	/** ÖØĞÂ¼ÓÔØÍ¼Æ¬ , ÓÃÓÚ½â¾ö·µ»ØÊ± Í¼Æ¬¶ªÊ§µÄÎÊÌâ */
+	/** é‡æ–°åŠ è½½å›¾ç‰‡ , ç”¨äºè§£å†³è¿”å›æ—¶ å›¾ç‰‡ä¸¢å¤±çš„é—®é¢˜ */
 	public static void reload(Mark mark) {
 		if (mark != null) {
 			List<AssetDescriptor> descriptors = mark.filter(Texture.class);
@@ -188,21 +188,21 @@ public class FileManage {
 		}
 	}
 
-	/** ÖØĞÂ¼ÓÔØÍ¼Æ¬ , ÓÃÓÚ½â¾ö·µ»ØÊ± Í¼Æ¬¶ªÊ§µÄÎÊÌâ */
+	/** é‡æ–°åŠ è½½å›¾ç‰‡ , ç”¨äºè§£å†³è¿”å›æ—¶ å›¾ç‰‡ä¸¢å¤±çš„é—®é¢˜ */
 	public static void reload() {
 		reload(getCurrentMark());
 	}
 
-	/** ÉèÖÃÎÄ¼ş¼ÓÔØÆ÷ */
+	/** è®¾ç½®æ–‡ä»¶åŠ è½½å™¨ */
 	public static void setLoader(Class type, AssetLoader loader) {
 		getAssetManager().setLoader(type, loader);
 	}
 
 	/**
-	 * ×ÊÔ´¼ÓÔØÆ÷µÄ´úÀí,ÓÃÓÚ¼àÌıÊı¾İ¼ÓÔØ×´¿ö <br>
-	 * ¹¦ÄÜ 1 , ¼ÇÂ¼µ±Ç°¼ÓÔØ×´Ì¬<br>
-	 * ¹¦ÄÜ 2 , ÉèÖÃ×ÊÔ´¼ÓÔØ¼ÇÂ¼µã<br>
-	 * ¹¦ÄÜ 3 , ÅúÁ¿»Ö¸´¼ÓÔØ×ÊÔ´
+	 * èµ„æºåŠ è½½å™¨çš„ä»£ç†,ç”¨äºç›‘å¬æ•°æ®åŠ è½½çŠ¶å†µ <br>
+	 * åŠŸèƒ½ 1 , è®°å½•å½“å‰åŠ è½½çŠ¶æ€<br>
+	 * åŠŸèƒ½ 2 , è®¾ç½®èµ„æºåŠ è½½è®°å½•ç‚¹<br>
+	 * åŠŸèƒ½ 3 , æ‰¹é‡æ¢å¤åŠ è½½èµ„æº
 	 */
 	public static class AssetManagerProxy extends AssetManager {
 		private Stack<Mark> markTags = new Stack<Mark>();
@@ -221,13 +221,13 @@ public class FileManage {
 		}
 
 		private final void initLoader() {
-			// ¿¹¾â³İ µÄÍ¼Æ¬¼ÓÔØÆ÷
+			// æŠ—é”¯é½¿ çš„å›¾ç‰‡åŠ è½½å™¨
 			setLoader(Texture.class, new LinearTextureLoader(resolver));
-			// PsdFile ¼ÓÔØÆ÷
+			// PsdFile åŠ è½½å™¨
 			setLoader(PsdFile.class, new PsdFileLoader(resolver));
-			// TextureAtlas µÄÔ´ , ²»ÖªµÀÎªÊ²Ã´ , Ê¹ÓÃÄ¬ÈÏµÄ²»ĞĞ
+			// TextureAtlas çš„æº , ä¸çŸ¥é“ä¸ºä»€ä¹ˆ , ä½¿ç”¨é»˜è®¤çš„ä¸è¡Œ
 			setLoader(TextureAtlas.class, new PsdTextureAtlasLoader(resolver));
-			// ÓÃÓÚ¼ÓÔØ½ø¶ÈÌõ
+			// ç”¨äºåŠ è½½è¿›åº¦æ¡
 			setLoader(Runnable.class, new RunnableAssetLoader(resolver));
 
 		}
@@ -257,7 +257,7 @@ public class FileManage {
 
 		public final synchronized <T> void load(String fileName, Class<T> type,
 				AssetLoaderParameters<T> parameter) {
-			// ¼ì²é LoaderÊÇ·ñ´æÔÚ , Ä¬ÈÏÎª JSON ½âÎö
+			// æ£€æŸ¥ Loaderæ˜¯å¦å­˜åœ¨ , é»˜è®¤ä¸º JSON è§£æ
 			if (getLoader(type) == null) {
 				setLoader(type, new JsonDataAssetLoader<T>(resolver, type));
 			}
@@ -279,7 +279,7 @@ public class FileManage {
 					}
 					unload(assetDescriptor.fileName);
 				}
-				// É¾³ıÒıÓÃ
+				// åˆ é™¤å¼•ç”¨
 				markTags.remove(mark);
 			}
 		}
@@ -304,16 +304,16 @@ public class FileManage {
 	}
 
 	public static class Mark {
-		// ×ÊÔ´
+		// èµ„æº
 		private Array<AssetDescriptor> elements = new Array<AssetDescriptor>(50);
-		// ±êÇ©Ãû³Æ
+		// æ ‡ç­¾åç§°
 		private final String tag;
 
 		public Mark(String tag) {
 			this.tag = tag;
 		}
 
-		// ¼ÇÂ¼
+		// è®°å½•
 		private final void record(String fileName, Class<?> type, AssetLoaderParameters<?> parameter) {
 			for (AssetDescriptor assetDescriptor : elements) {
 				if (assetDescriptor.fileName.equals(fileName) && assetDescriptor.type.equals(type)) {
@@ -323,7 +323,7 @@ public class FileManage {
 			elements.add(new AssetDescriptor(fileName, type, parameter));
 		}
 
-		/** ¹ıÂË±ê¼Ç×ÊÔ´ */
+		/** è¿‡æ»¤æ ‡è®°èµ„æº */
 		public final List<AssetDescriptor> filter(Filter<AssetDescriptor> filter) {
 			List<AssetDescriptor> list = new ArrayList<AssetDescriptor>();
 			for (AssetDescriptor assetDescriptor : elements) {
@@ -334,7 +334,7 @@ public class FileManage {
 			return list;
 		}
 
-		/** ¹ıÂË±ê¼Ç×ÊÔ´ */
+		/** è¿‡æ»¤æ ‡è®°èµ„æº */
 		public final List<AssetDescriptor> filter(Filter<String> filter, Class<?> clazz) {
 			List<AssetDescriptor> list = new ArrayList<AssetDescriptor>();
 			for (AssetDescriptor assetDescriptor : elements) {
@@ -346,17 +346,17 @@ public class FileManage {
 			return list;
 		}
 
-		/** ¹ıÂË±ê¼Ç×ÊÔ´ */
+		/** è¿‡æ»¤æ ‡è®°èµ„æº */
 		public final List<AssetDescriptor> filter(Class<?> clazz) {
 			return filter(null, clazz);
 		}
 
-		// »ñÈ¡±êÇ©Ãû³Æ
+		// è·å–æ ‡ç­¾åç§°
 		public final String getTag() {
 			return tag;
 		}
 
-		// »ñÈ¡¼ÇÂ¼µÄ×ÊÔ´ÁĞ±í
+		// è·å–è®°å½•çš„èµ„æºåˆ—è¡¨
 		public final Array<AssetDescriptor> getElements() {
 			return elements;
 		}

@@ -7,19 +7,19 @@ import com.keyroy.util.json.Json;
 import com.keyroy.util.json.JsonAn;
 
 /**
- * PSD µÄÎÄ¼şÃèÊö
+ * PSD çš„æ–‡ä»¶æè¿°
  * 
  * @author roy
  */
 public class PsdFile extends Folder {
 
-	// ×î´ó´óĞ¡
+	// æœ€å¤§å¤§å°
 	public int maxWidth, maxHeight;
-	// ÎÄ¼şÃû
+	// æ–‡ä»¶å
 	public String psdName;
-	// Í¼Æ¬¼¯
+	// å›¾ç‰‡é›†
 	public String atlas;
-	// ÎÄ¼ş¾ä±ú
+	// æ–‡ä»¶å¥æŸ„
 	@JsonAn(skip = true)
 	public FileHandle handle;
 
@@ -49,7 +49,7 @@ public class PsdFile extends Folder {
 		}
 	}
 
-	// ¸üĞÂ¸¸Àà¶ÔÏó
+	// æ›´æ–°çˆ¶ç±»å¯¹è±¡
 	@Override
 	protected void updateParent(Folder parent) {
 		for (Element element : childs) {

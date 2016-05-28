@@ -15,12 +15,12 @@ import psd.framework.PsdReflectUtil;
 import psd.loaders.FileManage;
 
 /**
- * PSD µÄÎÄ¼ş¼Ğ
+ * PSD çš„æ–‡ä»¶å¤¹
  * 
  * @author roy
  */
 public class PsdGroup extends WidgetGroup implements ParamProvider {
-	// ÎÄ¼ş¼ĞµÄÔ´
+	// æ–‡ä»¶å¤¹çš„æº
 	private final psd.Folder psdFolder;
 
 	public PsdGroup(PsdFile psdFile) {
@@ -82,7 +82,7 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 		}
 	}
 
-	// ¸ù¾İÂ·¾¶²éÕÒ¶ÔÏó
+	// æ ¹æ®è·¯å¾„æŸ¥æ‰¾å¯¹è±¡
 	public final Actor getActorByPath(String path, int index) {
 		if (path != null) {
 			return getActorByPath(path.split("/"), index);
@@ -90,7 +90,7 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 		return null;
 	}
 
-	// ¸ù¾İÂ·¾¶²éÕÒ¶ÔÏó
+	// æ ¹æ®è·¯å¾„æŸ¥æ‰¾å¯¹è±¡
 	private final Actor getActorByPath(String[] paths, int index) {
 		Group group = this;
 		Actor rt = null;
@@ -115,7 +115,7 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 		return rt;
 	}
 
-	// ¸ù¾İÃû³Æ²éÕÒ×Ó¶ÔÏó
+	// æ ¹æ®åç§°æŸ¥æ‰¾å­å¯¹è±¡
 	private static final Actor getChild(Group group, String name, int index) {
 		int counter = 0;
 		for (Actor actor : group.getChildren()) {
@@ -130,14 +130,14 @@ public class PsdGroup extends WidgetGroup implements ParamProvider {
 		return null;
 	}
 
-	// ¹ıÂËÔªËØ
+	// è¿‡æ»¤å…ƒç´ 
 	public final List<Actor> filter(psd.utils.Filter<Actor> filter) {
 		List<Actor> actors = new ArrayList<Actor>();
 		filter(this, filter, actors);
 		return actors;
 	}
 
-	// ¹ıÂËÔªËØ
+	// è¿‡æ»¤å…ƒç´ 
 	private final void filter(Actor actor, psd.utils.Filter<Actor> filter, List<Actor> out) {
 		if (filter.accept(actor)) {
 			out.add(actor);

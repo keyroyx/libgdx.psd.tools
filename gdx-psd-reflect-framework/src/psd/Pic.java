@@ -1,12 +1,12 @@
 package psd;
 
 /***
- * PSD µÄÍ¼Æ¬
+ * PSD çš„å›¾ç‰‡
  * 
  * @author roy
  */
 public class Pic extends Element {
-	// Í¼Æ¬Ãû³Æ
+	// å›¾ç‰‡åç§°
 	public String textureName;
 
 	@Override

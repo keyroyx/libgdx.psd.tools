@@ -10,12 +10,12 @@ import com.badlogic.gdx.utils.Array;
 import psd.reflect.PsdStage;
 
 /***
- * ÎèÌ¨×é
+ * èˆå°ç»„
  */
 public class PsdReflectStageGroup implements InputProcessor {
-	// ÀúÊ·¼ÇÂ¼
+	// å†å²è®°å½•
 	private Stack<Array<Stage>> histories = new Stack<Array<Stage>>();
-	// µ±Ç°»æÖÆÊı×é
+	// å½“å‰ç»˜åˆ¶æ•°ç»„
 	private Array<Stage> stageArray = new Array<Stage>(2);
 
 	public PsdReflectStageGroup() {
@@ -25,30 +25,30 @@ public class PsdReflectStageGroup implements InputProcessor {
 		stageArray.add(stage);
 	}
 
-	/** Ìí¼ÓÒ»¸ö´úÀí½çÃæ */
+	/** æ·»åŠ ä¸€ä¸ªä»£ç†ç•Œé¢ */
 	public final PsdReflectStageGroup add(Stage stage) {
 		stageArray.add(stage);
 		return this;
 	}
 
-	/** É¾³ıÒ»¸ö´úÀí½çÃæ */
+	/** åˆ é™¤ä¸€ä¸ªä»£ç†ç•Œé¢ */
 	public final PsdReflectStageGroup remove(Stage stage) {
 		stageArray.removeValue(stage, false);
 		return this;
 	}
 
-	/** Çå¿Õ´úÀí½çÃæ */
+	/** æ¸…ç©ºä»£ç†ç•Œé¢ */
 	public final PsdReflectStageGroup clean() {
 		stageArray.clear();
 		return this;
 	}
 
-	/** Ñ¹Õ» */
+	/** å‹æ ˆ */
 	public final synchronized void push(Stage stage) {
 		for (Stage cStage : stageArray) {
 			if (cStage instanceof PsdStage) {
 				PsdStage psdStage = (PsdStage) cStage;
-				psdStage.onControl(false);
+				psdStage.onControlChange(false);
 			}
 		}
 
@@ -57,7 +57,7 @@ public class PsdReflectStageGroup implements InputProcessor {
 		stageArray.add(stage);
 	}
 
-	/** ÍÆÕ» */
+	/** æ¨æ ˆ */
 	public final synchronized boolean pop() {
 		if (histories.size() > 0) {
 			Array<Stage> array = histories.remove(histories.size() - 1);
@@ -67,7 +67,7 @@ public class PsdReflectStageGroup implements InputProcessor {
 			for (Stage cStage : stageArray) {
 				if (cStage instanceof PsdStage) {
 					PsdStage psdStage = (PsdStage) cStage;
-					psdStage.onControl(true);
+					psdStage.onControlChange(true);
 				}
 			}
 			return true;

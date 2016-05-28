@@ -8,16 +8,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Ó³Éä¶ÔÏó
+ * æ˜ å°„å¯¹è±¡
  * 
  * @author roy
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { TYPE, METHOD, FIELD })
 public @interface PsdAn {
-	// ÒıÓÃ PSD ÔªËØ
+	// å¼•ç”¨ PSD å…ƒç´ 
 	public String[] value() default {};
 
-	// ÒıÓÃ PSD ÔªËØµÄÏÂ±ê
+	// å¼•ç”¨ PSD å…ƒç´ çš„ä¸‹æ ‡
 	public int index() default 0;
 }

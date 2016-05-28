@@ -7,36 +7,36 @@ import com.badlogic.gdx.utils.Array;
 import com.keyroy.util.json.JsonAn;
 
 /**
- * PSD ÔªËØ
+ * PSD å…ƒç´ 
  * 
  * @author roy
  */
 public class Element {
-	// Í¼²ãÃû³Æ
+	// å›¾å±‚åç§°
 	public String layerName;
-	// ×ø±ê , ´óĞ¡
+	// åæ ‡ , å¤§å°
 	public int x, y, width, height;
-	// // È¥µô²ÎÊıÒÔºó , Ê£ÓàµÄÃû³Æ
+	// // å»æ‰å‚æ•°ä»¥å , å‰©ä½™çš„åç§°
 	// public String name;
-	// °ó¶¨²ÎÊı
+	// ç»‘å®šå‚æ•°
 	public List<Param> params;
-	// ÊÇ·ñÏÔÊ¾
+	// æ˜¯å¦æ˜¾ç¤º
 	public boolean isVisible;
-	// ¸¸Àà¶ÔÏó
+	// çˆ¶ç±»å¯¹è±¡
 	@JsonAn(skip = true)
 	protected Folder parent;
-	// ÎÄ¼ş¶ÔÏó
+	// æ–‡ä»¶å¯¹è±¡
 	@JsonAn(skip = true)
 	protected PsdFile psdFile;
 
-	// ×Ô¶¨Òå¶ÔÏó
+	// è‡ªå®šä¹‰å¯¹è±¡
 	@JsonAn(skip = true)
 	protected Object userObject;
-	// ×Ô¶¨Òå¶ÔÏó
+	// è‡ªå®šä¹‰å¯¹è±¡
 	// @JsonAn(skip = true)
 	// protected Actor actor;
 
-	// ¸üĞÂ²ÎÊı
+	// æ›´æ–°å‚æ•°
 	protected void updateParam() {
 		if (layerName != null) {
 			int idx = layerName.indexOf("@");
@@ -60,17 +60,17 @@ public class Element {
 		params.add(new Param(paramString));
 	}
 
-	// ÉèÖÃ ÎÄ¼ş¼Ğ
+	// è®¾ç½® æ–‡ä»¶å¤¹
 	protected void updateParent(Folder parent) {
 		this.parent = parent;
 	}
 
-	// ÉèÖÃ ÎÄ¼ş¼Ğ
+	// è®¾ç½® æ–‡ä»¶å¤¹
 	protected void updatePsdFile(PsdFile psdFile) {
 		this.psdFile = psdFile;
 	}
 
-	// ÉèÖÃÓÃ»§×Ô¶¨ÒåµÄ»º´æÊı¾İ
+	// è®¾ç½®ç”¨æˆ·è‡ªå®šä¹‰çš„ç¼“å­˜æ•°æ®
 	public final void setUserObject(Object userObject) {
 		this.userObject = userObject;
 	}
@@ -85,7 +85,7 @@ public class Element {
 		return psdFile;
 	}
 
-	// »ñÈ¡ ¸¸ÎÄ¼ş¼Ğ
+	// è·å– çˆ¶æ–‡ä»¶å¤¹
 	public final Folder getParent() {
 		return parent;
 	}
@@ -94,7 +94,7 @@ public class Element {
 		return params;
 	}
 
-	// »ñÈ¡µ±Ç°µÄÂ·¾¶
+	// è·å–å½“å‰çš„è·¯å¾„
 	public final String getPath() {
 		Array<String> paths = new Array<String>();
 		paths.add(layerName);

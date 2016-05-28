@@ -9,9 +9,9 @@ import psd.loaders.FileManage;
 import psd.reflect.PsdGroup;
 import psd.reflect.PsdReflectListener;
 
-/** ¼òÒ×µÄ·´Éä¶ÔÏó */
+/** ç®€æ˜“çš„åå°„å¯¹è±¡ */
 public abstract class PsdReflectAdapter extends FileManage implements PsdReflectListener {
-	// Êı¾İÔ´
+	// æ•°æ®æº
 	private PsdGroup source;
 
 	@Override
@@ -20,47 +20,47 @@ public abstract class PsdReflectAdapter extends FileManage implements PsdReflect
 		onCreate(psdGroup);
 	}
 
-	// ·´Éäº¯Êı
+	// åå°„å‡½æ•°
 	protected abstract void onCreate(PsdGroup psdGroup);
 
-	// ÉèÖÃÁËĞÂÊÓÍ¼
+	// è®¾ç½®äº†æ–°è§†å›¾
 	protected void onViewportChange(Viewport viewport) {
 	}
 
-	/** ÔİÍ£ÏÔÊ¾ */
+	/** æš‚åœæ˜¾ç¤º */
 	protected void onHide() {
 	}
 
-	/** ·µ»ØÏÔÊ¾ */
+	/** è¿”å›æ˜¾ç¤º */
 	protected void onShow() {
 	}
 
-	/** ÏÔÊ¾¶ÔÏó */
+	/** æ˜¾ç¤ºå¯¹è±¡ */
 	protected final void show(Object object) {
 		PsdReflectApplicationAdapter.set(object);
 	}
 
-	/** Ñ¹Õ»ÏÔÊ¾ÏÂÒ»¸ö¶ÔÏó */
+	/** å‹æ ˆæ˜¾ç¤ºä¸‹ä¸€ä¸ªå¯¹è±¡ */
 	protected final void push(Object object) {
 		PsdReflectApplicationAdapter.push(object);
 	}
 
-	/** ÏÔÊ¾ÉÏÒ»¸öÑ¹Õ»¶ÔÏó */
+	/** æ˜¾ç¤ºä¸Šä¸€ä¸ªå‹æ ˆå¯¹è±¡ */
 	protected final boolean back() {
 		return PsdReflectApplicationAdapter.pop();
 	}
 
-	/** »ñÈ¡Ô´ */
+	/** è·å–æº */
 	protected PsdGroup getSource() {
 		return source;
 	}
 
-	/** »ñÈ¡Psdµ¼³öJsonµÄÂ·¾¶ */
+	/** è·å–Psdå¯¼å‡ºJsonçš„è·¯å¾„ */
 	protected String getPsdJsonPath() {
 		return null;
 	}
 
-	/** ·´Éä¶ÔÏóÍê³É */
+	/** åå°„å¯¹è±¡å®Œæˆ */
 	@Override
 	public Actor onReflectElement(PsdGroup parent, Element element, AssetManager assetManager)
 			throws Exception {

@@ -1,15 +1,15 @@
 package psd;
 
 /***
- * PSD µÄÎÄ×Ö
+ * PSD çš„æ–‡å­—
  * 
  * @author roy
  */
 public class Text extends Element {
-	// ÏÔÊ¾ÎÄ×Ö
+	// æ˜¾ç¤ºæ–‡å­—
 	public String text;
-	// ÎÄ×ÖÑÕÉ«
+	// æ–‡å­—é¢œè‰²
 	public float a, r, g, b;
-	// ÎÄ×Ö´óĞ¡
+	// æ–‡å­—å¤§å°
 	public int fontSize;
 }
