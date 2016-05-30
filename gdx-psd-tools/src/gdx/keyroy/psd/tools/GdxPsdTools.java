@@ -156,9 +156,10 @@ public class GdxPsdTools {
 		List<LayerParam> layerParams = psdData.getLayerParams(null);
 		if (layerParams != null && layerParams.size() > 0) {
 			psdFile.params = new ArrayList<Param>(layerParams.size());
-			for (LayerParam layerParam : layerParams) {
-				psdFile.params.add(new Param(layerParam.getParamId(), layerParam.getData()));
-			}
+			// for (LayerParam layerParam : layerParams) {
+			//// psdFile.params.add(new Param(layerParam.getParamId(),
+			// layerParam.getData()));
+			// }
 		}
 		addChild(psdData, psd, psdFile);
 		return psdFile;
@@ -215,9 +216,10 @@ public class GdxPsdTools {
 				List<LayerParam> layerParams = psdData.getLayerParams(layer);
 				if (layerParams != null && layerParams.size() > 0) {
 					actor.params = new ArrayList<Param>(layerParams.size());
-					for (LayerParam layerParam : layerParams) {
-						actor.params.add(new Param(layerParam.getParamId(), layerParam.getData()));
-					}
+					// for (LayerParam layerParam : layerParams) {
+					//// actor.params.add(new Param(layerParam.getParamId(),
+					// layerParam.getData()));
+					// }
 				}
 				//
 				if (actor instanceof Folder) {

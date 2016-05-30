@@ -100,9 +100,6 @@ public class PSDUtil {
 	}
 
 	protected static final void sortByY(Layer layer) {
-		// System.out.println();
-		// System.out.println("sortByY : " + layer.getName() + " " +
-		// layer.getAlpha());
 		if (layer.getLayers() != null) {
 			for (Layer cLayer : layer.getLayers()) {
 				sortByY(cLayer);
