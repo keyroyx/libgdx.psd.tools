@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
@@ -145,6 +146,7 @@ public class FntWidget extends Actor {
 			for (int i = 0; i < fontData.imagePaths.length; i++) {
 				String imagePath = fontData.imagePaths[i];
 				Texture texture = FileManage.get(imagePath, Texture.class);
+				texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 				regions.add(new TextureRegion(texture));
 			}
 			fontData.getImagePaths();
