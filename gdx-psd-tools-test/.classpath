@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="assets"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gdx-psd-tools"/>
+	<classpathentry kind="lib" path="libs/com.keyroy.util.json.v2.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-natives.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-natives.jar"/>
+	<classpathentry kind="lib" path="libs/gdx.jar" sourcepath="D:/libgdx release/libgdx-1.6.1/sources/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="libs/java-psd-library.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gdx-psd-reflect-framework"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -5,20 +5,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.keyroy.util.json.Json;
 
-import psd.Element;
 import psd.PsdFile;
 import psd.framework.PsdReflectAdapter;
 import psd.reflect.PsdAn;
 import psd.reflect.PsdGroup;
 import psd.reflect.PsdImage;
 import psd.reflect.PsdStage;
-import psd.utils.ElementFilter;
 
 public class PsdReflectTest {
 	public static void main(String[] args) {
@@ -62,7 +60,7 @@ public class PsdReflectTest {
 	public static final class GroupReflect extends PsdReflectAdapter {
 
 		@PsdAn("buttonPlay")
-		protected psd.Pic buttonPlayPic;
+		protected PsdImage buttonPlayPic;
 
 		@PsdAn
 		protected PsdImage buttonPlay;
@@ -72,19 +70,11 @@ public class PsdReflectTest {
 			buttonPlay.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
-					System.out.println(
-							"click onReflectSuccess " + buttonPlay.equals(buttonPlayPic.getUserObject()));
+					System.out.println("click onReflectSuccess ");
 					System.out.println();
 				}
 			});
 
-			Image image = (Image) (psdGroup.getPsdFolder().get(new ElementFilter() {
-				@Override
-				public boolean accept(Element element) {
-					return "buttonPlay".equals(element.layerName);
-				}
-			}).getActor());
-			initButtonStyle(image);
 		}
 
 		@PsdAn
@@ -120,7 +110,7 @@ public class PsdReflectTest {
 					+ buttonPlayPic.equals(pic));
 		}
 
-		public static final void initButtonStyle(final Image image) {
+		public static final void initButtonStyle(final Actor image) {
 			image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
 			image.addListener(new ClickListener() {
 				private float pressedScale = 0.85f;
@@ -137,7 +127,7 @@ public class PsdReflectTest {
 					play(image, 1);
 				}
 
-				public void play(final Image image, float scale) {
+				public void play(final Actor image, float scale) {
 					if (image != null) {
 						image.clearActions();
 						ScaleToAction scaleToAction = new ScaleToAction();

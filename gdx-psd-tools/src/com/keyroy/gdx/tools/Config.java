@@ -14,6 +14,8 @@ public class Config {
 	public static boolean saveImage;
 	// 使用 TexturePacker 打包图片
 	public static boolean saveAtlas;
+	// 支持旋转图片
+	public static boolean rotateImage;
 	// 格式化图层名称
 	public static boolean formatLayerName;
 

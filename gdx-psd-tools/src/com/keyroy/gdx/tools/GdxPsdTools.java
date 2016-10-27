@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +44,11 @@ import psd.Text;
 
 public class GdxPsdTools {
 
-	private JFrame frmGdxpsdtools;
+	private static JFrame frmGdxpsdtools;
 	private JCheckBox cleanFolder;
 	private JCheckBox saveImage;
 	private JCheckBox saveAtlas;
+	private JCheckBox rotateImage;
 	private JCheckBox formatLayerName;
 	private JLabel filePanel;
 
@@ -54,6 +57,7 @@ public class GdxPsdTools {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					SwingUtil.initWindowsLookAndFeel();
@@ -82,7 +86,7 @@ public class GdxPsdTools {
 	private void initialize() {
 		frmGdxpsdtools = new JFrame();
 		frmGdxpsdtools.setTitle("GdxPsdTools");
-		frmGdxpsdtools.setBounds(100, 100, 480, 320);
+		frmGdxpsdtools.setBounds(100, 100, 668, 320);
 		frmGdxpsdtools.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
@@ -90,7 +94,7 @@ public class GdxPsdTools {
 		frmGdxpsdtools.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		filePanel = new JLabel("\u62D6\u62FD psd/xlsx \u6587\u4EF6\u5230\u8FD9\u4E2A\u9762\u677F");
+		filePanel = new JLabel("\u62D6\u62FD psd/xlsx/png \u6587\u4EF6\u5230\u8FD9\u4E2A\u9762\u677F");
 		filePanel.setBackground(Color.WHITE);
 		filePanel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(filePanel);
@@ -110,7 +114,10 @@ public class GdxPsdTools {
 
 		saveAtlas = new JCheckBox("\u6253\u5305\u6210 Atlas \u56FE\u7247\u96C6");
 		configPanel.add(saveAtlas);
+		configPanel.add(new JLabel(" "));
 
+		rotateImage = new JCheckBox("\u652F\u6301 Atlas \u56FE\u7247\u65CB\u8F6C");
+		configPanel.add(rotateImage);
 		configPanel.add(new JLabel(" "));
 
 		formatLayerName = new JCheckBox("\u683C\u5F0F\u5316PSD\u56FE\u5C42\u540D\u79F0");
@@ -147,6 +154,13 @@ public class GdxPsdTools {
 				Config.save();
 			}
 		});
+		rotateImage.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				Config.rotateImage = rotateImage.isSelected();
+				Config.save();
+			}
+		});
 		//
 		formatLayerName.addChangeListener(new ChangeListener() {
 			@Override
@@ -169,33 +183,70 @@ public class GdxPsdTools {
 					@Override
 					public void run() {
 						dialogProgress.setVisible(true);
+						boolean tryImage = true;
+						final File folder = new File(FileUtil.getRoot(), "GdxPsdToolsExports");
 						for (File file : files) {
 							try {
-								final File folder = new File(file.getParentFile(), "GdxPsdToolsExports");
+
 								if (Config.cleanFolder) {// 清空文件夹
 									FileUtil.delete(folder);
 								}
 								if (folder.exists() == false) { // 创建文件夹
 									folder.mkdirs();
 								}
-								onDropIn(folder, file);
+								if (onDropIn(folder, file)) {
+									tryImage = false;
+								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+						}
+
+						if (tryImage) {
+							exportAtlsafile(folder, files);
 						}
 						dialogProgress.dispose();
 					}
 				}).start();
 			}
 
-			public void onDropIn(File folder, File file) throws Exception {
+			public boolean onDropIn(File folder, File file) throws Exception {
 				if (file.getName().endsWith(".psd")) { // 打包 PSD
 					export(folder, new Psd(file));
+					return true;
 				} else if (file.getName().endsWith(".xlsx")) {
 					exportXlsx(folder, file);
+					return true;
 				}
+				return false;
 			}
 		});
+	}
+
+	// 导出图片集
+	public static final void exportAtlsafile(File folder, final List<File> files) {
+		final Settings settings = new Settings();
+		settings.maxWidth = 2048;
+		settings.maxHeight = 2048;
+		settings.paddingX = 2;
+		settings.paddingY = 2;
+		TexturePacker packer = new TexturePacker(settings);
+		String fileName = null;
+		if (Config.formatLayerName) {
+			fileName = "" + System.currentTimeMillis();
+		}
+		for (File file : files) {
+			try {
+				BufferedImage image = ImageIO.read(file);
+				packer.addImage(image, file.getName());
+				if (fileName == null) {
+					fileName = file.getName().substring(0, file.getName().indexOf("."));
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		packer.pack(folder, fileName + ".atlas");
 	}
 
 	public static final void exportXlsx(File folder, File file) throws Exception {
@@ -229,7 +280,7 @@ public class GdxPsdTools {
 			if (Config.saveAtlas) { // 保存为图片集
 				final Settings settings = new Settings();
 				settings.pot = false;
-				settings.rotation = true;
+				settings.rotation = Config.rotateImage;
 				settings.maxWidth = 2048;
 				settings.maxHeight = 2048;
 				TexturePacker packer = new TexturePacker(settings);
@@ -283,6 +334,9 @@ public class GdxPsdTools {
 		psdFile.maxWidth = rect.width;
 		psdFile.maxHeight = rect.height;
 		psdFile.psdName = psd.getName();
+		if (Config.saveAtlas) {
+			psdFile.atlas = psd.getName().replace(".psd", ".atlas");
+		}
 		// 参数
 		addChild(psd, psd, psdFile);
 		return psdFile;
